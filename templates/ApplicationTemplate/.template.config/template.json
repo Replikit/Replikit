@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Replikit Community",
+  "classifications": [
+    "Replikit",
+    "Bot",
+    "Application"
+  ],
+  "name": "Replikit Application",
+  "identity": "Replikit.Templates.Application",
+  "shortName": "replikitapp",
+  "sourceName": "ApplicationTemplate",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "symbols": {
+    "skipRestore": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "If specified, skips the automatic restore of the project on create.",
+      "defaultValue": "false",
+      "displayName": "Skip restore"
+    }
+  },
+  "preferNameDirectory": true,
+  "defaultName": "ReplikitApp1",
+  "primaryOutputs": [
+    {
+      "path": "ApplicationTemplate.csproj"
+    }
+  ],
+  "postActions": [
+    {
+      "id": "restore",
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages required by this project.",
+      "manualInstructions": [
+        {
+          "text": "Run 'dotnet restore'"
+        }
+      ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    }
+  ]
+}
