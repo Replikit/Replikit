@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\core\Replikit.Core\src\Replikit.Core.csproj" />
+    <ProjectReference Include="..\..\src\extensions\Replikit.Extensions.Sessions\src\Replikit.Extensions.Sessions.csproj" />
+  </ItemGroup>
+
+</Project>

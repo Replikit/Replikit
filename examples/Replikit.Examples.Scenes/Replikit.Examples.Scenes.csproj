@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\core\Replikit.Core\src\Replikit.Core.csproj" />
+    <ProjectReference Include="..\..\src\extensions\Replikit.Extensions.Scenes\src\Replikit.Extensions.Scenes.csproj" />
+  </ItemGroup>
+
+</Project>

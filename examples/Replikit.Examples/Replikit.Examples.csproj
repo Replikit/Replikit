@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>96a122ca-2a7e-44e6-9694-f7fa64cec005</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\adapters\Replikit.Adapters.Telegram\src\Replikit.Adapters.Telegram.csproj" />
+    <ProjectReference Include="..\..\src\core\Replikit.Core\src\Replikit.Core.csproj" />
+    <ProjectReference Include="..\Replikit.Examples.AdapterServices\Replikit.Examples.AdapterServices.csproj" />
+    <ProjectReference Include="..\Replikit.Examples.Messages\Replikit.Examples.Messages.csproj" />
+    <ProjectReference Include="..\Replikit.Examples.Scenes\Replikit.Examples.Scenes.csproj" />
+    <ProjectReference Include="..\Replikit.Examples.Sessions\Replikit.Examples.Sessions.csproj" />
+    <ProjectReference Include="..\Replikit.Examples.Views\Replikit.Examples.Views.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>
