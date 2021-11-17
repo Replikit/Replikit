@@ -5,7 +5,7 @@ using Replikit.Abstractions.Messages.Models.Options;
 
 namespace Replikit.Core.EntityCollections;
 
-internal class MessageCollection : IMessageCollection
+public class MessageCollection : IMessageCollection
 {
     private readonly Identifier _channelId;
     private readonly IMessageService _messageService;
