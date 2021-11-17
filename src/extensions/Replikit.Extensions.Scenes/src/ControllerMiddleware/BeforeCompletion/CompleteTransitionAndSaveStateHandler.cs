@@ -45,7 +45,7 @@ internal class CompleteTransitionAndSaveStateHandler : EndpointMiddleware<SceneC
         var sceneStorage = _sceneStorageProvider.Resolve();
 
         var statefulScene = scene as IStatefulScene;
-        var channelId = sceneRequest.EventContext.Event.Channel.Id;
+        var channelId = context.RequestContext.ChannelId;
 
         var messageCollection = context.RequestContext.MessageCollection;
 
@@ -77,7 +77,7 @@ internal class CompleteTransitionAndSaveStateHandler : EndpointMiddleware<SceneC
                 sceneInstance?.Transitions ?? Array.Empty<SceneTransition>());
 
             var transitionRequest = new SceneRequest(transitionStage, true,
-                sceneRequest.EventContext, newSceneInstance);
+                sceneRequest.EventContext, sceneRequest.ChannelId, sceneRequest.MessageCollection, newSceneInstance);
 
             await _sceneManager.ProcessRequest(transitionRequest, cancellationToken);
             return;

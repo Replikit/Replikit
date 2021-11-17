@@ -15,7 +15,11 @@ public class Scene : ControllerBase<SceneContext>
     protected IServiceProvider ServiceProvider => Context.ServiceProvider;
     protected CancellationToken CancellationToken => Context.CancellationToken;
     protected SceneRequest Request => Context.Request;
-    protected IEventContext<MessageReceivedEvent> EventContext => Request.EventContext;
+
+    protected IEventContext<MessageReceivedEvent> EventContext =>
+        Request.EventContext ??
+        throw new InvalidOperationException("Failed to access event context since scene was activated externally");
+
     protected MessageReceivedEvent Event => EventContext.Event;
     protected Message Message => Event.Message;
 

@@ -30,8 +30,8 @@ internal class SceneMessageAdapterHandler : MessageAdapterEventHandler<MessageRe
         var transition = sceneInstance.Transitions.FirstOrDefault(x => x.Text == Message.Text);
 
         var sceneRequest = transition is not null
-            ? new SceneRequest(transition.Stage, true, Context, sceneInstance)
-            : new SceneRequest(sceneInstance.CurrentStage, false, Context, sceneInstance);
+            ? new SceneRequest(transition.Stage, true, Context, sceneInstance: sceneInstance)
+            : new SceneRequest(sceneInstance.CurrentStage, false, Context, sceneInstance: sceneInstance);
 
         var sceneContext = new SceneContext(sceneRequest, ServiceProvider, CancellationToken);
         _sceneRequestContextAccessor.Context = sceneContext;
