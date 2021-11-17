@@ -1,3 +1,4 @@
+using Replikit.Abstractions.Common.Models;
 using Replikit.Core.Controllers;
 using Replikit.Core.Controllers.Patterns;
 using Replikit.Examples.Scenes.Scenes;
@@ -12,6 +13,13 @@ public class SceneController : Controller
     public SceneController(ISceneManager sceneManager)
     {
         _sceneManager = sceneManager;
+    }
+
+    [Command("scene")]
+    public Task EnterScene(long channelId)
+    {
+        var globalId = new GlobalIdentifier(channelId, Adapter.Id);
+        return _sceneManager.EnterScene<MainScene>(globalId, scene => scene.MainStage());
     }
 
     [Command("scene")]
