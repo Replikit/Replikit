@@ -25,16 +25,6 @@ public static class SessionManagerExtensions
             adapterId, channelId), cancellationToken);
     }
 
-    public static Task<IMemberSession<T>> GetMemberSession<T>(this ISessionManager sessionManager,
-        AdapterIdentifier adapterId, Identifier channelId, Identifier accountId,
-        CancellationToken cancellationToken = default) where T : class, new()
-    {
-        return sessionManager.GetSession<IMemberSession<T>, T>(new SessionKey(
-            typeof(T),
-            SessionType.Member,
-            adapterId, channelId, accountId), cancellationToken);
-    }
-
     public static Task<IGlobalSession<T>> GetGlobalSession<T>(this ISessionManager sessionManager,
         CancellationToken cancellationToken = default)
         where T : class, new()
@@ -73,12 +63,6 @@ public static class SessionManagerExtensions
         CancellationToken cancellationToken = default) where T : class, new()
     {
         return sessionManager.GetSession<IChannelSession<T>, T>(cancellationToken);
-    }
-
-    public static Task<IMemberSession<T>> GetMemberSession<T>(this ISessionManager sessionManager,
-        CancellationToken cancellationToken = default) where T : class, new()
-    {
-        return sessionManager.GetSession<IMemberSession<T>, T>(cancellationToken);
     }
 
     public static Task<IAdapterSession<T>> GetAdapterSession<T>(this ISessionManager sessionManager,
