@@ -51,7 +51,7 @@ internal class SceneManager : ISceneManager
             serviceProvider, requestCancellationToken);
     }
 
-    public async Task EnterScene(SceneStage stage, CancellationToken cancellationToken = default)
+    public async Task EnterSceneAsync(SceneStage stage, CancellationToken cancellationToken = default)
     {
         if (_eventContextAccessor.Context is not IEventContext<MessageReceivedEvent> context)
         {
@@ -63,7 +63,7 @@ internal class SceneManager : ISceneManager
         await ProcessRequest(sceneRequest, cancellationToken);
     }
 
-    public async Task EnterScene(GlobalIdentifier channelId, SceneStage stage,
+    public async Task EnterSceneAsync(GlobalIdentifier channelId, SceneStage stage,
         CancellationToken cancellationToken = default)
     {
         var adapter = _adapterCollection.ResolveRequired(channelId.AdapterId);

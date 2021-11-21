@@ -23,7 +23,7 @@ internal class ViewManager : IViewManager
         _viewExternalActivationDeterminant = viewExternalActivationDeterminant;
     }
 
-    public async Task SendView<TView>(IMessageCollection messageCollection, ViewRequest? request = null,
+    public async Task SendViewAsync<TView>(IMessageCollection messageCollection, ViewRequest? request = null,
         bool autoSave = true, CancellationToken cancellationToken = default)
         where TView : View
     {
@@ -40,7 +40,7 @@ internal class ViewManager : IViewManager
         await _requestHandlerAccessor.RequestHandler.HandleAsync(context, _serviceProvider, cancellationToken);
     }
 
-    public async Task Activate(ViewRequest request, CancellationToken cancellationToken = default)
+    public async Task ActivateAsync(ViewRequest request, CancellationToken cancellationToken = default)
     {
         var viewInstance = request.ViewInstance;
 

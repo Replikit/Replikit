@@ -19,12 +19,12 @@ public class SceneController : Controller
     public Task EnterScene(long channelId)
     {
         var globalId = new GlobalIdentifier(channelId, Adapter.Id);
-        return _sceneManager.EnterScene<MainScene>(globalId, scene => scene.MainStage());
+        return _sceneManager.EnterSceneAsync<MainScene>(globalId, scene => scene.MainStage());
     }
 
     [Command("scene")]
     public Task EnterScene()
     {
-        return _sceneManager.EnterScene<MainScene>(scene => scene.MainStage());
+        return _sceneManager.EnterSceneAsync<MainScene>(scene => scene.MainStage());
     }
 }

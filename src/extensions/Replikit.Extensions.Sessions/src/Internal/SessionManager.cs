@@ -25,7 +25,7 @@ internal class SessionManager : ISessionManager
             _trackedSessions.Add(session);
     }
 
-    public async Task<TSession> GetSession<TSession, TModel>(SessionKey sessionKey,
+    public async Task<TSession> GetSessionAsync<TSession, TModel>(SessionKey sessionKey,
         CancellationToken cancellationToken = default)
         where TSession : ISession<TModel>
         where TModel : class, new()
@@ -35,22 +35,22 @@ internal class SessionManager : ISessionManager
 
         internalSession.SessionKey = sessionKey;
 
-        await Load(cancellationToken);
+        await LoadAsync(cancellationToken);
 
         return session;
     }
 
-    public async Task<TSession> GetSession<TSession, TModel>(CancellationToken cancellationToken = default)
+    public async Task<TSession> GetSessionAsync<TSession, TModel>(CancellationToken cancellationToken = default)
         where TSession : ISession<TModel> where TModel : class, new()
     {
         var session = _serviceProvider.GetRequiredService<TSession>();
 
-        await Load(cancellationToken);
+        await LoadAsync(cancellationToken);
 
         return session;
     }
 
-    public async Task Load(CancellationToken cancellationToken = default)
+    public async Task LoadAsync(CancellationToken cancellationToken = default)
     {
         foreach (var trackedSession in _trackedSessions)
         {
@@ -66,7 +66,7 @@ internal class SessionManager : ISessionManager
         _trackedSessions.Clear();
     }
 
-    public async Task Save(CancellationToken cancellationToken = default)
+    public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
         foreach (var loadedSession in _loadedSessions)
         {

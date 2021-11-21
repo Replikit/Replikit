@@ -8,40 +8,40 @@ namespace Replikit.Extensions.Scenes;
 
 public static class SceneManagerExtensions
 {
-    public static Task EnterScene<TScene>(this ISceneManager sceneManager, GlobalIdentifier channelId,
+    public static Task EnterSceneAsync<TScene>(this ISceneManager sceneManager, GlobalIdentifier channelId,
         Expression<Action<TScene>> expression, CancellationToken cancellationToken = default) where TScene : Scene =>
-        EnterSceneInternal<TScene>(sceneManager, channelId, expression, cancellationToken);
+        EnterSceneInternalAsync<TScene>(sceneManager, channelId, expression, cancellationToken);
 
-    public static Task EnterScene<TScene>(this ISceneManager sceneManager, GlobalIdentifier channelId,
+    public static Task EnterSceneAsync<TScene>(this ISceneManager sceneManager, GlobalIdentifier channelId,
         Expression<Func<TScene, Task>> expression, CancellationToken cancellationToken = default)
         where TScene : Scene =>
-        EnterSceneInternal<TScene>(sceneManager, channelId, expression, cancellationToken);
+        EnterSceneInternalAsync<TScene>(sceneManager, channelId, expression, cancellationToken);
 
-    public static Task EnterScene<TScene>(this ISceneManager sceneManager,
+    public static Task EnterSceneAsync<TScene>(this ISceneManager sceneManager,
         Expression<Action<TScene>> expression, CancellationToken cancellationToken = default) where TScene : Scene =>
-        EnterSceneInternal<TScene>(sceneManager, expression, cancellationToken);
+        EnterSceneInternalAsync<TScene>(sceneManager, expression, cancellationToken);
 
-    public static Task EnterScene<TScene>(this ISceneManager sceneManager,
+    public static Task EnterSceneAsync<TScene>(this ISceneManager sceneManager,
         Expression<Func<TScene, Task>> expression, CancellationToken cancellationToken = default)
         where TScene : Scene =>
-        EnterSceneInternal<TScene>(sceneManager, expression, cancellationToken);
+        EnterSceneInternalAsync<TScene>(sceneManager, expression, cancellationToken);
 
-    private static Task EnterSceneInternal<TScene>(this ISceneManager sceneManager,
+    private static Task EnterSceneInternalAsync<TScene>(this ISceneManager sceneManager,
         GlobalIdentifier channelId, Expression expression,
         CancellationToken cancellationToken = default) where TScene : Scene
     {
         var (methodInfo, parameters) = MethodExpressionTransformer.Transform(expression);
         var stage = new SceneStage(typeof(TScene).FullName!, methodInfo.ToString()!, parameters);
 
-        return sceneManager.EnterScene(channelId, stage, cancellationToken);
+        return sceneManager.EnterSceneAsync(channelId, stage, cancellationToken);
     }
 
-    private static Task EnterSceneInternal<TScene>(this ISceneManager sceneManager, Expression expression,
+    private static Task EnterSceneInternalAsync<TScene>(this ISceneManager sceneManager, Expression expression,
         CancellationToken cancellationToken = default) where TScene : Scene
     {
         var (methodInfo, parameters) = MethodExpressionTransformer.Transform(expression);
         var stage = new SceneStage(typeof(TScene).FullName!, methodInfo.ToString()!, parameters);
 
-        return sceneManager.EnterScene(stage, cancellationToken);
+        return sceneManager.EnterSceneAsync(stage, cancellationToken);
     }
 }

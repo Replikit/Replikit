@@ -15,6 +15,6 @@ internal class LoadSessionsHandler : IAsyncHookHandler<HandlerInvokingHook>
 
     public async Task HandleAsync(HandlerInvokingHook payload, CancellationToken cancellationToken)
     {
-        await _sessionManager.Load(cancellationToken);
+        await _sessionManager.LoadAsync(cancellationToken);
     }
 }

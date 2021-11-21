@@ -5,7 +5,7 @@ namespace Replikit.Extensions.Scenes;
 
 public interface ISceneManager
 {
-    Task EnterScene(GlobalIdentifier channelId, SceneStage stage, CancellationToken cancellationToken = default);
+    Task EnterSceneAsync(GlobalIdentifier channelId, SceneStage stage, CancellationToken cancellationToken = default);
 
-    Task EnterScene(SceneStage stage, CancellationToken cancellationToken = default);
+    Task EnterSceneAsync(SceneStage stage, CancellationToken cancellationToken = default);
 }

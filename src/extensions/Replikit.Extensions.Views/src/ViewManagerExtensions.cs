@@ -9,11 +9,11 @@ namespace Replikit.Extensions.Views;
 
 public static class ViewManagerExtensions
 {
-    public static Task SendView<TView>(this IViewManager viewManager, IMessageCollection messageCollection,
+    public static Task SendViewAsync<TView>(this IViewManager viewManager, IMessageCollection messageCollection,
         Expression<Func<TView, Task>> action, CancellationToken cancellationToken = default)
         where TView : View => SendViewInternal<TView>(viewManager, messageCollection, action, cancellationToken);
 
-    public static Task SendView<TView>(this IViewManager viewManager, IMessageCollection messageCollection,
+    public static Task SendViewAsync<TView>(this IViewManager viewManager, IMessageCollection messageCollection,
         Expression<Action<TView>> action, CancellationToken cancellationToken = default)
         where TView : View => SendViewInternal<TView>(viewManager, messageCollection, action, cancellationToken);
 
@@ -26,33 +26,33 @@ public static class ViewManagerExtensions
         var viewRequest = new ViewRequest(typeof(TView).FullName!,
             method.ToString()!, parameters, messageCollection: messageCollection);
 
-        return viewManager.SendView<TView>(messageCollection, viewRequest, cancellationToken: cancellationToken);
+        return viewManager.SendViewAsync<TView>(messageCollection, viewRequest, cancellationToken: cancellationToken);
     }
 
     public static Task<bool> Activate<TView>(this IViewManager viewManager, MessageIdentifier viewId,
         Expression<Action<TView>> action, CancellationToken cancellationToken = default)
-        where TView : View => ActivateInternal(viewManager, viewId, action, cancellationToken);
+        where TView : View => ActivateInternalAsync(viewManager, viewId, action, cancellationToken);
 
     public static Task<bool> Activate<TView>(this IViewManager viewManager, MessageIdentifier viewId,
         Expression<Func<TView, Task>> action, CancellationToken cancellationToken = default)
-        where TView : View => ActivateInternal(viewManager, viewId, action, cancellationToken);
+        where TView : View => ActivateInternalAsync(viewManager, viewId, action, cancellationToken);
 
-    private static async Task<bool> ActivateInternal(this IViewManager viewManager,
+    private static async Task<bool> ActivateInternalAsync(this IViewManager viewManager,
         MessageIdentifier messageId, Expression action, CancellationToken cancellationToken)
     {
         var viewInstance = await viewManager.Storage.GetAsync(messageId, cancellationToken);
         if (viewInstance is null) return false;
 
-        await ActivateInternal(viewManager, viewInstance, action, cancellationToken);
+        await ActivateInternalAsync(viewManager, viewInstance, action, cancellationToken);
         return true;
     }
 
-    private static Task ActivateInternal(IViewManager viewManager,
+    private static Task ActivateInternalAsync(IViewManager viewManager,
         ViewInstance viewInstance, Expression action, CancellationToken cancellationToken)
     {
         var (method, parameters) = MethodExpressionTransformer.Transform(action);
 
         var viewRequest = new ViewRequest(viewInstance.Type, method.ToString()!, parameters, viewInstance);
-        return viewManager.Activate(viewRequest, cancellationToken);
+        return viewManager.ActivateAsync(viewRequest, cancellationToken);
     }
 }

@@ -16,7 +16,7 @@ public interface IViewManager
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TView"></typeparam>
     /// <returns></returns>
-    Task SendView<TView>(IMessageCollection messageCollection, ViewRequest? request = null, bool autoSave = true,
+    Task SendViewAsync<TView>(IMessageCollection messageCollection, ViewRequest? request = null, bool autoSave = true,
         CancellationToken cancellationToken = default)
         where TView : View;
 
@@ -26,5 +26,5 @@ public interface IViewManager
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Activate(ViewRequest request, CancellationToken cancellationToken = default);
+    Task ActivateAsync(ViewRequest request, CancellationToken cancellationToken = default);
 }

@@ -17,6 +17,6 @@ public class CounterController : Controller
     [Command("counter")]
     public Task CreateCounter()
     {
-        return _viewManager.SendView<CounterView>(MessageCollection);
+        return _viewManager.SendViewAsync<CounterView>(MessageCollection);
     }
 }

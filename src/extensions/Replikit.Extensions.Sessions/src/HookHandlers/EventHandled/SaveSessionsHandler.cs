@@ -15,6 +15,6 @@ internal class SaveSessionsHandler : IAsyncHookHandler<EventHandledHook>
 
     public async Task HandleAsync(EventHandledHook payload, CancellationToken cancellationToken)
     {
-        await _sessionManager.Save(cancellationToken);
+        await _sessionManager.SaveAsync(cancellationToken);
     }
 }

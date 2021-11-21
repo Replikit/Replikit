@@ -14,6 +14,6 @@ internal class LoadSessionsHandler : EndpointMiddleware<IEventContext<MessageRec
         CancellationToken cancellationToken)
     {
         var sessionManager = context.ServiceProvider.GetRequiredService<SessionManager>();
-        await sessionManager.Load(cancellationToken);
+        await sessionManager.LoadAsync(cancellationToken);
     }
 }
