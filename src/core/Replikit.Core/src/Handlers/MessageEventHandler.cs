@@ -4,7 +4,7 @@ using Replikit.Abstractions.Repositories.Models;
 
 namespace Replikit.Core.Handlers;
 
-public abstract class MessageAdapterEventHandler<TEvent> : ChannelAdapterEventHandler<TEvent>
+public abstract class MessageEventHandler<TEvent> : ChannelEventHandler<TEvent>
     where TEvent : MessageEvent
 {
     protected AccountInfo Account => Event.Account;

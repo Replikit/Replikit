@@ -5,13 +5,13 @@ using Replikit.Extensions.Common.Scenes;
 
 namespace Replikit.Extensions.Scenes.Internal;
 
-internal class SceneMessageAdapterHandler : MessageAdapterEventHandler<MessageReceivedEvent>
+internal class SceneMessageHandler : MessageEventHandler<MessageReceivedEvent>
 {
     private readonly ISceneStorageProvider _sceneStorageProvider;
     private readonly SceneRequestHandlerAccessor _sceneRequestHandlerAccessor;
     private readonly SceneRequestContextAccessor _sceneRequestContextAccessor;
 
-    public SceneMessageAdapterHandler(ISceneStorageProvider sceneStorageProvider,
+    public SceneMessageHandler(ISceneStorageProvider sceneStorageProvider,
         SceneRequestHandlerAccessor sceneRequestHandlerAccessor,
         SceneRequestContextAccessor sceneRequestContextAccessor)
     {

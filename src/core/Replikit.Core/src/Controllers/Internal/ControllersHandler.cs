@@ -10,7 +10,7 @@ using Replikit.Core.Resources;
 
 namespace Replikit.Core.Controllers.Internal;
 
-internal class ControllersHandler : MessageAdapterEventHandler<MessageReceivedEvent>
+internal class ControllersHandler : MessageEventHandler<MessageReceivedEvent>
 {
     private readonly RequestHandlerAccessor _requestHandlerAccessor;
     private readonly IHookDispatcher _hookDispatcher;
