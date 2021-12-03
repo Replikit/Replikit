@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Core.Controllers;
 using Replikit.Core.EntityCollections;
+using Replikit.Core.GlobalServices;
 using Replikit.Core.Handlers.Internal;
 using Replikit.Core.Hosting;
 using Replikit.Core.Localization;
@@ -29,6 +30,7 @@ public class ReplikitCoreModule : ReplikitModule
         services.AddReplikitControllers();
         services.AddReplikitLocalization();
         services.AddReplikitEntityCollections();
+        services.AddReplikitGlobalServices();
         services.AddReplikitAdapters(_configuration);
     }
 }
