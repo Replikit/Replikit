@@ -29,11 +29,11 @@ public static class ViewManagerExtensions
         return viewManager.SendViewAsync<TView>(messageCollection, viewRequest, cancellationToken: cancellationToken);
     }
 
-    public static Task<bool> Activate<TView>(this IViewManager viewManager, MessageIdentifier viewId,
+    public static Task<bool> ActivateAsync<TView>(this IViewManager viewManager, MessageIdentifier viewId,
         Expression<Action<TView>> action, CancellationToken cancellationToken = default)
         where TView : View => ActivateInternalAsync(viewManager, viewId, action, cancellationToken);
 
-    public static Task<bool> Activate<TView>(this IViewManager viewManager, MessageIdentifier viewId,
+    public static Task<bool> ActivateAsync<TView>(this IViewManager viewManager, MessageIdentifier viewId,
         Expression<Func<TView, Task>> action, CancellationToken cancellationToken = default)
         where TView : View => ActivateInternalAsync(viewManager, viewId, action, cancellationToken);
 
