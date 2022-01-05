@@ -22,7 +22,8 @@ internal static class CommandMatcherFactory
 
         var patternBuilder = new StringBuilder();
 
-        patternBuilder.AppendGroup(options.Value.Prefixes.Select(Regex.Escape));
+        patternBuilder.Append("^");
+        patternBuilder.AppendGroup(options.Value.Prefixes);
 
         if (context.Info.Controller.Properties.TryGetValue(ReplikitControllerProperties.CommandGroupName,
                 out var value))
