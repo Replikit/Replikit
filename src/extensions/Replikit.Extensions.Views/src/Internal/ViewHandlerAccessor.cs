@@ -23,8 +23,8 @@ internal class ViewHandlerAccessor : IViewIntrospectionInfoAccessor
         var introspectionBuilder = new IntrospectionBuilder<ViewContext>();
 
         introspectionBuilder.SetServiceProvider(serviceProvider);
-        introspectionBuilder.AddEndpointMatching();
         introspectionBuilder.AddDefaultTransformation();
+        introspectionBuilder.AddEndpointMatching();
 
         IntrospectionInfo = introspectionBuilder.CreateIntrospectionInfo(lookupTypes);
 

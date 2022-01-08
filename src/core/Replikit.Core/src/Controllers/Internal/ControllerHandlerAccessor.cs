@@ -27,9 +27,9 @@ internal class ControllerHandlerAccessor : IControllerIntrospectionInfoAccessor
         var introspectionBuilder = new IntrospectionBuilder<IEventContext<MessageReceivedEvent>>();
 
         introspectionBuilder.SetServiceProvider(serviceProvider);
+        introspectionBuilder.AddDefaultTransformation();
         introspectionBuilder.AddEndpointMatching();
         introspectionBuilder.AddTextParameterConversion(converterCollection);
-        introspectionBuilder.AddDefaultTransformation();
 
         IntrospectionInfo = introspectionBuilder.CreateIntrospectionInfo(lookupTypes);
 

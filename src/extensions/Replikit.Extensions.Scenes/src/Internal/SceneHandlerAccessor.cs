@@ -22,8 +22,8 @@ internal class SceneHandlerAccessor : ISceneIntrospectionInfoAccessor
         var introspectionBuilder = new IntrospectionBuilder<SceneContext>();
 
         introspectionBuilder.SetServiceProvider(serviceProvider);
-        introspectionBuilder.AddEndpointMatching();
         introspectionBuilder.AddDefaultTransformation();
+        introspectionBuilder.AddEndpointMatching();
 
         IntrospectionInfo = introspectionBuilder.CreateIntrospectionInfo(lookupTypes);
 
