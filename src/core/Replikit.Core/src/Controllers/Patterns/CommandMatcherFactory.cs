@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
+using Kantaiko.Controllers.Introspection;
 using Kantaiko.Controllers.Introspection.Factory.Context;
 using Kantaiko.Controllers.Matching;
 using Kantaiko.Routing.Events;
@@ -32,6 +33,11 @@ internal static class CommandMatcherFactory
 
         foreach (var parameter in context.Endpoint.Parameters)
         {
+            if (VisibilityParameterProperties.Of(parameter) is { IsHidden: true })
+            {
+                continue;
+            }
+
             if (CommandParameterProperties.Of(parameter) is not { ParameterNames: var parameterNames })
             {
                 patternBuilder.Append(parameter.IsOptional ? @"\s?" : ' ');
