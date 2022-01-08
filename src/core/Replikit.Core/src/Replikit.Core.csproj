@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Kantaiko.ConsoleFormatting" Version="0.2.0" />
+    <PackageReference Include="Kantaiko.ConsoleFormatting" Version="0.2.1" />
     <PackageReference Include="Kantaiko.Controllers" Version="0.6.1" />
     <PackageReference Include="Kantaiko.Hosting" Version="0.4.4" />
     <PackageReference Include="Kantaiko.Routing" Version="0.7.2" />
