@@ -1,24 +1,23 @@
-﻿using Kantaiko.Controllers.Design.Endpoints;
-using Kantaiko.Controllers.Design.Properties;
-using Kantaiko.Controllers.Matchers;
+﻿using Kantaiko.Controllers.Introspection.Factory.Attributes;
+using Kantaiko.Controllers.Introspection.Factory.Context;
+using Kantaiko.Controllers.Matching;
+using Kantaiko.Properties.Immutable;
 using Replikit.Extensions.Views.Internal;
 
 namespace Replikit.Extensions.Views;
 
 [AttributeUsage(AttributeTargets.Method)]
-public class ActionAttribute : Attribute, IEndpointMatcherFactory<ViewContext>,
-    IEndpointDesignPropertyProvider
+public class ActionAttribute : Attribute, IEndpointMatcherFactory<ViewContext>, IEndpointPropertyProvider
 {
     public bool AllowExternalActivation { get; init; }
 
-    public IEndpointMatcher<ViewContext> CreateEndpointMatcher(EndpointDesignContext context)
+    public IEndpointMatcher<ViewContext> CreateEndpointMatcher(EndpointFactoryContext context)
     {
-        return new ActionEndpointMatcher(context.Info);
+        return new ActionEndpointMatcher(context.Endpoint);
     }
 
-    public DesignPropertyCollection GetEndpointDesignProperties() => new()
+    public IImmutablePropertyCollection UpdateEndpointProperties(EndpointFactoryContext context)
     {
-        [ViewEndpointProperties.IsAction] = true,
-        [ViewEndpointProperties.AllowExternalActivation] = AllowExternalActivation
-    };
+        return context.Endpoint.Properties.Set(new ViewActionEndpointProperties(true, AllowExternalActivation));
+    }
 }

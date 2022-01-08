@@ -2,7 +2,7 @@
 
 public static class ReplikitParameterProperties
 {
-    private const string Prefix = nameof(ReplikitEndpointProperties);
+    private const string Prefix = nameof(CommandEndpointProperties);
 
     public const string ParameterNames = Prefix + nameof(ParameterNames);
 }

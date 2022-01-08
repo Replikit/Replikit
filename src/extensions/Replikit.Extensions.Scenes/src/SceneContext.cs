@@ -1,3 +1,4 @@
+using Kantaiko.Properties.Immutable;
 using Kantaiko.Routing.Context;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Core.EntityCollections;
@@ -7,8 +8,11 @@ namespace Replikit.Extensions.Scenes;
 
 public class SceneContext : ContextBase
 {
-    public SceneContext(SceneRequest request, IServiceProvider serviceProvider, CancellationToken cancellationToken) :
-        base(serviceProvider, cancellationToken)
+    public SceneContext(SceneRequest request,
+        IServiceProvider? serviceProvider = null,
+        IImmutablePropertyCollection? properties = null,
+        CancellationToken cancellationToken = default) :
+        base(serviceProvider, properties, cancellationToken)
     {
         Request = request;
 

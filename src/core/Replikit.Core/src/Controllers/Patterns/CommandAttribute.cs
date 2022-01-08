@@ -1,14 +1,15 @@
-﻿using Kantaiko.Controllers.Design.Endpoints;
-using Kantaiko.Controllers.Design.Properties;
-using Kantaiko.Controllers.Matchers;
+﻿using Kantaiko.Controllers.Introspection.Factory.Attributes;
+using Kantaiko.Controllers.Introspection.Factory.Context;
+using Kantaiko.Controllers.Matching;
+using Kantaiko.Properties.Immutable;
+using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Messages.Events;
-using Replikit.Core.Handlers;
 
 namespace Replikit.Core.Controllers.Patterns;
 
 [AttributeUsage(AttributeTargets.Method)]
 public class CommandAttribute : Attribute, IEndpointMatcherFactory<IEventContext<MessageReceivedEvent>>,
-    IEndpointDesignPropertyProvider
+    IEndpointPropertyProvider
 {
     private readonly string _name;
     private readonly string[] _aliases;
@@ -19,13 +20,13 @@ public class CommandAttribute : Attribute, IEndpointMatcherFactory<IEventContext
         _aliases = new[] { name }.Concat(aliases).ToArray();
     }
 
-    public IEndpointMatcher<IEventContext<MessageReceivedEvent>> CreateEndpointMatcher(EndpointDesignContext context)
+    public IEndpointMatcher<IEventContext<MessageReceivedEvent>> CreateEndpointMatcher(EndpointFactoryContext context)
     {
         return CommandMatcherFactory.CreateEndpointMatcher(context, _aliases);
     }
 
-    public DesignPropertyCollection GetEndpointDesignProperties() => new()
+    public IImmutablePropertyCollection UpdateEndpointProperties(EndpointFactoryContext context)
     {
-        [ReplikitEndpointProperties.CommandName] = _name
-    };
+        return context.Endpoint.Properties.Set(new CommandEndpointProperties(_name, _aliases));
+    }
 }

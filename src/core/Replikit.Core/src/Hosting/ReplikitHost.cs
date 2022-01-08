@@ -1,5 +1,6 @@
-﻿using Kantaiko.Hosting.Host;
-using Kantaiko.Hosting.Modules;
+﻿using Kantaiko.Hosting;
+using Kantaiko.Hosting.Managed;
+using Kantaiko.Hosting.Modularity;
 using Microsoft.Extensions.Hosting;
 using Replikit.Core.Modules;
 
@@ -9,26 +10,18 @@ public static class ReplikitHost
 {
     public static void RunModule<TModule>(string[]? args = null) where TModule : ReplikitModule
     {
-        var builder = new ReplikitHostBuilder(args);
+        static void ConfigureHost(IHostBuilder hostBuilder)
+        {
+            hostBuilder.AddModule<ReplikitCoreModule>();
+            hostBuilder.AddModule<TModule>();
+            hostBuilder.CompleteModularityConfiguration();
 
-        builder.Modules.Add<TModule>();
-        builder.AddDevelopmentUserSecrets<TModule>();
+            hostBuilder.ConfigureServices(x => x.AddModularLifecycleEvents());
+            hostBuilder.AddDevelopmentUserSecrets<TModule>();
+        }
 
-        var managedHost = builder.Build();
-        managedHost.Run();
-    }
-
-    public static IManagedHostBuilder CreateBuilder(string[]? args = null)
-    {
-        return new ReplikitHostBuilder(args);
-    }
-
-    public static IHostBuilder CreateSingleBuilder(string[]? args = null,
-        Action<IModuleCollection>? configureDelegate = null)
-    {
-        var builder = Host.CreateDefaultBuilder();
-        builder.ConfigureReplikitHosting(configureDelegate);
-
-        return builder;
+        ManagedHost.CreateDefaultBuilder(args)
+            .ConfigureHostBuilder(ConfigureHost)
+            .Build().Run();
     }
 }

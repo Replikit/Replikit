@@ -7,5 +7,5 @@ public class ExternalActivationNotAllowedException : ReplikitException
 {
     public ExternalActivationNotAllowedException(EndpointInfo endpointInfo) : base(
         $"External activation of the method \"{endpointInfo.MethodInfo.Name}\" " +
-        $"of view \"{endpointInfo.Controller.Type.Name}\" is not allowed") { }
+        $"of view \"{endpointInfo.Controller!.Type.Name}\" is not allowed") { }
 }

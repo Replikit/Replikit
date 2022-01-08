@@ -1,12 +1,14 @@
-﻿using Replikit.Core.Modules;
+﻿using Kantaiko.Hosting.Modularity;
+using Microsoft.Extensions.DependencyInjection;
+using Replikit.Core.Modules;
 using Replikit.Extensions.Sessions;
 
 namespace Replikit.Examples.Sessions;
 
 public class SessionsExampleModule : ReplikitModule
 {
-    public override void ConfigureModules(IReplikitModuleCollection modules)
+    protected override void ConfigureServices(IServiceCollection services)
     {
-        modules.Add<SessionsModule>();
+        services.AddModule<SessionsModule>();
     }
 }

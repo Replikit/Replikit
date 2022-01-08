@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Replikit.Core.Controllers;
 using Replikit.Core.EntityCollections;
 using Replikit.Core.GlobalServices;
-using Replikit.Core.Handlers.Internal;
+using Replikit.Core.Handlers;
 using Replikit.Core.Hosting;
 using Replikit.Core.Localization;
 using Replikit.Core.Logging;
@@ -21,7 +21,7 @@ public class ReplikitCoreModule : ReplikitModule
         _configuration = configuration;
     }
 
-    public override void ConfigureServices(IServiceCollection services)
+    protected override void ConfigureServices(IServiceCollection services)
     {
         services.AddScoped<ICancellationTokenProvider, CancellationTokenProvider>();
 
@@ -31,6 +31,6 @@ public class ReplikitCoreModule : ReplikitModule
         services.AddReplikitLocalization();
         services.AddReplikitEntityCollections();
         services.AddReplikitGlobalServices();
-        services.AddReplikitAdapters(_configuration);
+        services.AddReplikitHosting(_configuration);
     }
 }

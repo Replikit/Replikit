@@ -15,9 +15,6 @@ public abstract class View : ControllerBase<ViewContext>
     [Action]
     public void Init() => Update();
 
-    protected IServiceProvider ServiceProvider => Context.ServiceProvider;
-    protected CancellationToken CancellationToken => Context.CancellationToken;
-
     protected ViewRequest Request => Context.Request;
     protected ButtonPressedEvent? Event => Request?.Event;
 

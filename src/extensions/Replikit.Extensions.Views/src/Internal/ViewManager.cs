@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Replikit.Core.EntityCollections;
+﻿using Replikit.Core.EntityCollections;
 using Replikit.Extensions.Common.Views;
 using Replikit.Extensions.Views.Exceptions;
 
@@ -8,17 +7,17 @@ namespace Replikit.Extensions.Views.Internal;
 internal class ViewManager : IViewManager
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly ViewRequestHandlerAccessor _requestHandlerAccessor;
+    private readonly ViewHandlerAccessor _handlerAccessor;
     private readonly ViewExternalActivationDeterminant _viewExternalActivationDeterminant;
 
     public IViewStorage Storage { get; }
 
-    public ViewManager(IServiceProvider serviceProvider, ViewRequestHandlerAccessor requestHandlerAccessor,
+    public ViewManager(IServiceProvider serviceProvider, ViewHandlerAccessor handlerAccessor,
         IViewStorage viewStorage,
         ViewExternalActivationDeterminant viewExternalActivationDeterminant)
     {
         _serviceProvider = serviceProvider;
-        _requestHandlerAccessor = requestHandlerAccessor;
+        _handlerAccessor = handlerAccessor;
         Storage = viewStorage;
         _viewExternalActivationDeterminant = viewExternalActivationDeterminant;
     }
@@ -37,7 +36,7 @@ internal class ViewManager : IViewManager
         ValidateViewRequest(request, fullName, false);
 
         var context = CreateContext(request, cancellationToken);
-        await _requestHandlerAccessor.RequestHandler.HandleAsync(context, _serviceProvider, cancellationToken);
+        await _handlerAccessor.Handler.Handle(context);
     }
 
     public async Task ActivateAsync(ViewRequest request, CancellationToken cancellationToken = default)
@@ -52,20 +51,17 @@ internal class ViewManager : IViewManager
         ValidateViewRequest(request, viewInstance.Type, true);
 
         var context = CreateContext(request, cancellationToken);
-        await _requestHandlerAccessor.RequestHandler.HandleAsync(context, _serviceProvider, cancellationToken);
+        await _handlerAccessor.Handler.Handle(context);
     }
 
     private ViewContext CreateContext(ViewRequest request, CancellationToken cancellationToken)
     {
-        var context = new ViewContext(request, _serviceProvider, cancellationToken);
-        _serviceProvider.GetRequiredService<ViewRequestContextAccessor>().Context = context;
-
-        return context;
+        return new ViewContext(request, _serviceProvider, cancellationToken: cancellationToken);
     }
 
     private void ValidateViewRequest(ViewRequest request, string viewType, bool isExternal)
     {
-        var controllerInfo = _requestHandlerAccessor.RequestHandler.Info.Controllers
+        var controllerInfo = _handlerAccessor.IntrospectionInfo.Controllers
             .FirstOrDefault(x => x.Type.FullName == viewType);
 
         if (controllerInfo is null)

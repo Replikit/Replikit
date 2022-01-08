@@ -7,6 +7,8 @@ namespace Replikit.Core.Handlers;
 
 public abstract class ChannelEventHandler<TEvent> : AdapterEventHandler<TEvent> where TEvent : IChannelEvent
 {
-    protected IMessageCollection MessageCollection => Context.GetMessageCollection();
+    private IMessageCollection? _messageCollection;
+    protected IMessageCollection MessageCollection => _messageCollection ??= Context.GetMessageCollection();
+
     protected ChannelInfo Channel => Event.Channel;
 }

@@ -1,6 +1,6 @@
-using System.Collections.Immutable;
 using Kantaiko.Controllers.Introspection;
-using Kantaiko.Controllers.Matchers;
+using Kantaiko.Controllers.Matching;
+using Kantaiko.Properties.Immutable;
 
 namespace Replikit.Extensions.Scenes.Internal;
 
@@ -27,6 +27,6 @@ public class StageEndpointMatcher : IEndpointMatcher<SceneContext>
             return EndpointMatchResult.NotMatched;
         }
 
-        return EndpointMatchResult.Success(ImmutableDictionary<string, string>.Empty);
+        return EndpointMatchResult.Success(ImmutablePropertyCollection.Empty);
     }
 }

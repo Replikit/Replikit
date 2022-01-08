@@ -1,8 +1,9 @@
-using Kantaiko.Controllers.Design.Endpoints;
-using Kantaiko.Controllers.Matchers;
+using Kantaiko.Controllers.Introspection.Factory.Attributes;
+using Kantaiko.Controllers.Introspection.Factory.Context;
+using Kantaiko.Controllers.Matching;
+using Kantaiko.Routing.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Messages.Events;
-using Replikit.Core.Handlers;
 using Replikit.Core.Localization;
 
 namespace Replikit.Core.Controllers.Patterns;
@@ -19,7 +20,7 @@ public class KeyboardButtonAttribute : Attribute, IEndpointMatcherFactory<IEvent
         _localeName = localeName;
     }
 
-    public IEndpointMatcher<IEventContext<MessageReceivedEvent>> CreateEndpointMatcher(EndpointDesignContext context)
+    public IEndpointMatcher<IEventContext<MessageReceivedEvent>> CreateEndpointMatcher(EndpointFactoryContext context)
     {
         var localizer = context.ServiceProvider.GetRequiredService<ILocalizer>();
         return new KeyboardButtonMatcher(localizer, _localeType, _localeName);

@@ -1,4 +1,5 @@
-﻿using Kantaiko.Hosting.Modules;
+﻿using Kantaiko.Hosting.Modularity;
+using Kantaiko.Hosting.Modularity.Introspection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Core.Modules;
@@ -10,7 +11,7 @@ using Replikit.Extensions.Sessions.Services;
 
 namespace Replikit.Extensions.Sessions;
 
-[ModuleFlags(ModuleFlags.Library)]
+[Module(Flags = ModuleFlags.Library)]
 public class SessionsModule : ReplikitModule
 {
     private readonly IConfiguration _configuration;
@@ -20,7 +21,7 @@ public class SessionsModule : ReplikitModule
         _configuration = configuration;
     }
 
-    public override void ConfigureServices(IServiceCollection services)
+    protected override void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton<ISessionStorageProvider, SessionStorageProvider>();
         services.AddSingleton<MemorySessionStorage>();

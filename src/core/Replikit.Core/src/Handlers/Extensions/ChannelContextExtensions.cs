@@ -1,3 +1,4 @@
+using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Repositories.Events;
 using Replikit.Core.EntityCollections;
 
@@ -10,6 +11,11 @@ public static class ChannelContextExtensions
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        return new MessageCollection(context.Event.Channel.Id, context.Adapter.MessageService);
+        if (AdapterEventProperties.Of(context)?.Adapter is not { } adapter)
+        {
+            throw new InvalidOperationException("Failed to access adapter instance");
+        }
+
+        return new MessageCollection(context.Event.Channel.Id, adapter.MessageService);
     }
 }

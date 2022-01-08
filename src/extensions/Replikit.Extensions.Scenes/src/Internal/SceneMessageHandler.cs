@@ -1,4 +1,5 @@
 using Kantaiko.Routing;
+using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Core.Handlers;
 using Replikit.Extensions.Common.Scenes;
@@ -8,19 +9,15 @@ namespace Replikit.Extensions.Scenes.Internal;
 internal class SceneMessageHandler : MessageEventHandler<MessageReceivedEvent>
 {
     private readonly ISceneStorageProvider _sceneStorageProvider;
-    private readonly SceneRequestHandlerAccessor _sceneRequestHandlerAccessor;
-    private readonly SceneRequestContextAccessor _sceneRequestContextAccessor;
+    private readonly SceneHandlerAccessor _sceneHandlerAccessor;
 
-    public SceneMessageHandler(ISceneStorageProvider sceneStorageProvider,
-        SceneRequestHandlerAccessor sceneRequestHandlerAccessor,
-        SceneRequestContextAccessor sceneRequestContextAccessor)
+    public SceneMessageHandler(ISceneStorageProvider sceneStorageProvider, SceneHandlerAccessor sceneHandlerAccessor)
     {
         _sceneStorageProvider = sceneStorageProvider;
-        _sceneRequestHandlerAccessor = sceneRequestHandlerAccessor;
-        _sceneRequestContextAccessor = sceneRequestContextAccessor;
+        _sceneHandlerAccessor = sceneHandlerAccessor;
     }
 
-    public override async Task<Unit> HandleAsync(IEventContext<MessageReceivedEvent> context, NextAction next)
+    protected override async Task<Unit> HandleAsync(IEventContext<MessageReceivedEvent> context, NextAction next)
     {
         var sceneStorage = _sceneStorageProvider.Resolve();
 
@@ -33,10 +30,8 @@ internal class SceneMessageHandler : MessageEventHandler<MessageReceivedEvent>
             ? new SceneRequest(transition.Stage, true, Context, sceneInstance: sceneInstance)
             : new SceneRequest(sceneInstance.CurrentStage, false, Context, sceneInstance: sceneInstance);
 
-        var sceneContext = new SceneContext(sceneRequest, ServiceProvider, CancellationToken);
-        _sceneRequestContextAccessor.Context = sceneContext;
-
-        await _sceneRequestHandlerAccessor.RequestHandler.HandleAsync(sceneContext, ServiceProvider, CancellationToken);
+        var sceneContext = new SceneContext(sceneRequest, ServiceProvider, cancellationToken: CancellationToken);
+        await _sceneHandlerAccessor.Handler.Handle(sceneContext);
 
         return default;
     }

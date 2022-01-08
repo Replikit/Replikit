@@ -5,17 +5,14 @@ namespace Replikit.Core.Hosting;
 
 public static class ReplikitHostBuilderExtensions
 {
-    public static void AddDevelopmentUserSecrets<T>(this ReplikitHostBuilder hostBuilder) where T : class
+    public static void AddDevelopmentUserSecrets<T>(this IHostBuilder hostBuilder) where T : class
     {
-        hostBuilder.ConfigureHostBuilder(builder =>
+        hostBuilder.ConfigureAppConfiguration((context, configurationBuilder) =>
         {
-            builder.ConfigureAppConfiguration((context, configurationBuilder) =>
+            if (context.HostingEnvironment.IsDevelopment())
             {
-                if (context.HostingEnvironment.IsDevelopment())
-                {
-                    configurationBuilder.AddUserSecrets<T>();
-                }
-            });
+                configurationBuilder.AddUserSecrets<T>();
+            }
         });
     }
 }

@@ -1,39 +1,31 @@
-﻿using Kantaiko.Routing;
+﻿using Kantaiko.Routing.Events;
+using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Events;
-using Replikit.Core.Handlers.Internal;
+using Replikit.Core.Handlers.Lifecycle;
 
 namespace Replikit.Core.Handlers;
 
 public abstract class AdapterEventHandler : AdapterEventHandler<Event> { }
 
-public abstract class AdapterEventHandler<TEvent> :
-    IChainedHandler<IEventContext, Task<Unit>>,
-    IAutoRegistrableHandler<TEvent>
-    where TEvent : IEvent
+public abstract class AdapterEventHandler<TEvent> : ChainedEventHandler<TEvent> where TEvent : IEvent
 {
-    protected IEventContext<TEvent> Context { get; private set; } = null!;
+    private IAdapter? _adapter;
 
-    protected TEvent Event => Context.Event;
-    protected IServiceProvider ServiceProvider => Context.ServiceProvider;
-    protected IAdapter Adapter => Context.Adapter;
-    protected CancellationToken CancellationToken => Context.CancellationToken;
+    protected IAdapter Adapter => _adapter ??=
+        AdapterEventProperties.Of(Context)?.Adapter ??
+        throw new InvalidOperationException("Failed to access adapter instance");
 
-    public delegate Task<Unit> NextAction(IEventContext<TEvent>? context = default);
-
-    Task<Unit> IChainedHandler<IEventContext, Task<Unit>>.Handle(IEventContext input,
-        Func<IEventContext, Task<Unit>> next)
+    protected override async Task BeforeHandleAsync(IEventContext<TEvent> context)
     {
-        var context = (IEventContext<TEvent>) input;
+        var lifecycle = context.ServiceProvider.GetRequiredService<IHandlerLifecycle>();
 
-        BeforeHandle(context);
-        return HandleAsync(context, x => next(x ?? context));
+        using var scope = ServiceProvider.CreateScope();
+
+        var eventContext = new EventContext<EventHandlerCreatedEvent>(
+            new EventHandlerCreatedEvent((IEventContext<IEvent>) context),
+            scope.ServiceProvider, cancellationToken: CancellationToken);
+
+        await lifecycle.EventHandlerCreated.Handle(eventContext);
     }
-
-    protected virtual void BeforeHandle(IEventContext<TEvent> context)
-    {
-        Context = context;
-    }
-
-    public abstract Task<Unit> HandleAsync(IEventContext<TEvent> context, NextAction next);
 }

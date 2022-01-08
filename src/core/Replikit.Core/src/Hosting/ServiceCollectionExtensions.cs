@@ -9,16 +9,18 @@ namespace Replikit.Core.Hosting;
 
 internal static class ServiceCollectionExtensions
 {
-    public static void AddReplikitAdapters(this IServiceCollection services, IConfiguration configuration)
+    public static void AddReplikitHosting(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<AdapterLoader>();
 
-        services.Configure<AdapterLoaderOptions>(options =>
+        services.PostConfigure<AdapterLoaderOptions>(options =>
         {
             AdapterConfigurationLoader.LoadAdaptersFromConfiguration(options, configuration);
         });
 
         services.TryAddSingleton<AdapterCollection>();
         services.TryAddSingleton<IAdapterCollection>(sp => sp.GetRequiredService<AdapterCollection>());
+
+        services.AddSingleton<IReplikitLifecycle, ReplikitLifecycle>();
     }
 }

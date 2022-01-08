@@ -3,7 +3,6 @@ using Replikit.Abstractions.Messages.Models;
 using Replikit.Core.EntityCollections;
 using Replikit.Extensions.Common.Utils;
 using Replikit.Extensions.Common.Views;
-using Replikit.Extensions.Views.Internal;
 
 namespace Replikit.Extensions.Views;
 

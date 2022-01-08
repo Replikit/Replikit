@@ -1,4 +1,5 @@
-﻿using Kantaiko.Hosting.Modules;
+﻿using Kantaiko.Hosting.Modularity;
+using Kantaiko.Hosting.Modularity.Introspection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Core.Modules;
@@ -9,7 +10,7 @@ using Replikit.Extensions.Views.Options;
 
 namespace Replikit.Extensions.Views;
 
-[ModuleFlags(ModuleFlags.Library)]
+[Module(Flags = ModuleFlags.Library)]
 public class ViewsModule : ReplikitModule
 {
     private readonly IConfiguration _configuration;
@@ -19,12 +20,12 @@ public class ViewsModule : ReplikitModule
         _configuration = configuration;
     }
 
-    public override void ConfigureServices(IServiceCollection services)
+    protected override void ConfigureServices(IServiceCollection services)
     {
         services.AddScoped<IViewManager, ViewManager>();
 
-        services.AddSingleton<ViewRequestContextAccessor>();
-        services.AddSingleton<ViewRequestHandlerAccessor>();
+        services.AddSingleton<ViewHandlerAccessor>();
+        services.AddSingleton<IViewIntrospectionInfoAccessor>(sp => sp.GetRequiredService<ViewHandlerAccessor>());
 
         services.AddSingleton<IViewStorageProvider, ViewStorageProvider>();
         services.AddSingleton<MemoryViewStorage>();

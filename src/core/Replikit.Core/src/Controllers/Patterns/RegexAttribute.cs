@@ -1,8 +1,9 @@
 ﻿using System.Text.RegularExpressions;
-using Kantaiko.Controllers.Design.Endpoints;
-using Kantaiko.Controllers.Matchers;
+using Kantaiko.Controllers.Introspection.Factory.Attributes;
+using Kantaiko.Controllers.Introspection.Factory.Context;
+using Kantaiko.Controllers.Matching;
+using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Messages.Events;
-using Replikit.Core.Handlers;
 
 namespace Replikit.Core.Controllers.Patterns;
 
@@ -18,7 +19,7 @@ public class RegexAttribute : Attribute, IEndpointMatcherFactory<IEventContext<M
         _regexOptions = regexOptions;
     }
 
-    public IEndpointMatcher<IEventContext<MessageReceivedEvent>> CreateEndpointMatcher(EndpointDesignContext context)
+    public IEndpointMatcher<IEventContext<MessageReceivedEvent>> CreateEndpointMatcher(EndpointFactoryContext context)
     {
         return new RegexMatcher(_pattern, _regexOptions);
     }

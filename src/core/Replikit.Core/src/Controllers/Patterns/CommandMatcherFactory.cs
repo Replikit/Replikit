@@ -1,13 +1,11 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
-using Kantaiko.Controllers.Design.Endpoints;
-using Kantaiko.Controllers.Design.Parameters;
-using Kantaiko.Controllers.Design.Properties;
-using Kantaiko.Controllers.Matchers;
+using Kantaiko.Controllers.Introspection.Factory.Context;
+using Kantaiko.Controllers.Matching;
+using Kantaiko.Routing.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Replikit.Abstractions.Messages.Events;
-using Replikit.Core.Handlers;
 using Replikit.Core.Options;
 
 namespace Replikit.Core.Controllers.Patterns;
@@ -15,34 +13,26 @@ namespace Replikit.Core.Controllers.Patterns;
 internal static class CommandMatcherFactory
 {
     public static IEndpointMatcher<IEventContext<MessageReceivedEvent>> CreateEndpointMatcher(
-        EndpointDesignContext context,
-        string[] aliases)
+        EndpointFactoryContext context, string[] commandNames)
     {
         var options = context.ServiceProvider.GetRequiredService<IOptions<ControllersOptions>>();
 
         var patternBuilder = new StringBuilder();
 
-        patternBuilder.Append("^");
+        patternBuilder.Append('^');
         patternBuilder.AppendGroup(options.Value.Prefixes);
 
-        if (context.Info.Controller.Properties.TryGetValue(ReplikitControllerProperties.CommandGroupName,
-                out var value))
+        if (CommandGroupControllerProperties.Of(context.Endpoint.Controller!) is { CommandGroupName: { } groupName })
         {
-            var commandGroupName = (string) value;
-            patternBuilder.Append(commandGroupName);
+            patternBuilder.Append(groupName);
             patternBuilder.Append(' ');
         }
 
-        patternBuilder.AppendGroup(aliases);
+        patternBuilder.AppendGroup(commandNames);
 
-        foreach (var parameter in context.Info.Parameters)
+        foreach (var parameter in context.Endpoint.Parameters)
         {
-            if (parameter.Properties.TryGetProperty<bool>(KantaikoParameterProperties.IsHidden, out var isHidden) &&
-                isHidden)
-                continue;
-
-            if (!parameter.Properties.TryGetProperty<IReadOnlyList<string>>(ReplikitParameterProperties.ParameterNames,
-                    out var parameterNames))
+            if (CommandParameterProperties.Of(parameter) is not { ParameterNames: var parameterNames })
             {
                 patternBuilder.Append(parameter.IsOptional ? @"\s?" : ' ');
                 patternBuilder.AddParameter(parameter.Name);

@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Kantaiko.Routing.Context;
+using Kantaiko.Routing.Events;
+using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Common.Exceptions;
 using Replikit.Abstractions.Repositories.Events;
-using Replikit.Core.Handlers;
 using Replikit.Core.Handlers.Extensions;
 
 namespace Replikit.Core.EntityCollections;
@@ -12,9 +13,9 @@ internal static class ServiceCollectionExtensions
     {
         services.AddScoped(sp =>
         {
-            var eventContextAccessor = sp.GetRequiredService<IEventContextAccessor>();
+            var context = sp.GetRequiredService<IContext>();
 
-            return eventContextAccessor.Context is IEventContext<IChannelEvent> channelEventContext
+            return context is IEventContext<IChannelEvent> channelEventContext
                 ? channelEventContext.GetMessageCollection()
                 : throw new ReplikitException("Cannot access message collection outside a channel event scope");
         });

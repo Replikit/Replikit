@@ -1,4 +1,5 @@
 ﻿using Kantaiko.Controllers;
+using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Messages.Builder;
 using Replikit.Abstractions.Messages.Events;
@@ -15,11 +16,17 @@ public abstract class Controller : ControllerBase<IEventContext<MessageReceivedE
     protected MessageReceivedEvent Event => Context.Event;
     protected AccountInfo Account => Event.Account;
     protected ChannelInfo Channel => Event.Channel;
-    protected IMessageCollection MessageCollection => Context.GetMessageCollection();
-    protected IAdapter Adapter => Context.Adapter;
+
+    private IMessageCollection? _messageCollection;
+    protected IMessageCollection MessageCollection => _messageCollection ??= Context.GetMessageCollection();
+
+    private IAdapter? _adapter;
+
+    protected IAdapter Adapter => _adapter ??=
+        AdapterEventProperties.Of(Context)?.Adapter
+        ?? throw new InvalidOperationException("Failed to access adapter instance");
+
     protected Message Message => Event.Message;
-    protected IServiceProvider ServiceProvider => Context.ServiceProvider;
-    protected CancellationToken CancellationToken => Context.CancellationToken;
 
     protected static MessageBuilder CreateBuilder() => new();
 }

@@ -1,10 +1,10 @@
 using System.Linq.Expressions;
 using Kantaiko.Controllers;
+using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Repositories.Models;
 using Replikit.Core.EntityCollections;
-using Replikit.Core.Handlers;
 using Replikit.Extensions.Scenes.Internal;
 using Replikit.Extensions.Scenes.Messages;
 
@@ -12,8 +12,6 @@ namespace Replikit.Extensions.Scenes;
 
 public class Scene : ControllerBase<SceneContext>
 {
-    protected IServiceProvider ServiceProvider => Context.ServiceProvider;
-    protected CancellationToken CancellationToken => Context.CancellationToken;
     protected SceneRequest Request => Context.Request;
 
     protected IEventContext<MessageReceivedEvent> EventContext =>

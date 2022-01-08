@@ -3,29 +3,27 @@ using Replikit.Core.Handlers;
 using Replikit.Extensions.Views.Messages;
 using System.Text.Json;
 using Kantaiko.Routing;
+using Kantaiko.Routing.Events;
 using Microsoft.Extensions.Logging;
-using Replikit.Abstractions.Messages.Models;
 using Replikit.Extensions.Common.Views;
 
 namespace Replikit.Extensions.Views.Internal;
 
 internal class ViewButtonHandler : AdapterEventHandler<ButtonPressedEvent>
 {
-    private readonly ViewRequestHandlerAccessor _requestHandlerAccessor;
+    private readonly ViewHandlerAccessor _handlerAccessor;
     private readonly ILogger<ViewButtonHandler> _logger;
     private readonly IViewStorage _viewStorage;
-    private readonly ViewRequestContextAccessor _viewRequestContextAccessor;
 
-    public ViewButtonHandler(ViewRequestHandlerAccessor requestHandlerAccessor, ILogger<ViewButtonHandler> logger,
-        IViewStorage viewStorage, ViewRequestContextAccessor viewRequestContextAccessor)
+    public ViewButtonHandler(ViewHandlerAccessor handlerAccessor, ILogger<ViewButtonHandler> logger,
+        IViewStorage viewStorage)
     {
-        _requestHandlerAccessor = requestHandlerAccessor;
+        _handlerAccessor = handlerAccessor;
         _logger = logger;
         _viewStorage = viewStorage;
-        _viewRequestContextAccessor = viewRequestContextAccessor;
     }
 
-    public override async Task<Unit> HandleAsync(IEventContext<ButtonPressedEvent> context, NextAction next)
+    protected override async Task<Unit> HandleAsync(IEventContext<ButtonPressedEvent> context, NextAction next)
     {
         if (context.Event.Message is null)
         {
@@ -70,12 +68,9 @@ internal class ViewButtonHandler : AdapterEventHandler<ButtonPressedEvent>
         var action = viewEntry.Actions[payload.ActionIndex];
 
         var request = new ViewRequest(viewEntry.Type, action.Method, action.Parameters, viewEntry, Event);
-        var requestContext = new ViewContext(request, ServiceProvider, CancellationToken);
+        var viewContext = new ViewContext(request, ServiceProvider, cancellationToken: CancellationToken);
 
-        _viewRequestContextAccessor.Context = requestContext;
-
-        await _requestHandlerAccessor.RequestHandler.HandleAsync(requestContext, context.ServiceProvider,
-            context.CancellationToken);
+        await _handlerAccessor.Handler.Handle(viewContext);
 
         return default;
     }

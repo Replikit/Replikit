@@ -1,7 +1,8 @@
 ﻿using System.Text.RegularExpressions;
-using Kantaiko.Controllers.Matchers;
+using Kantaiko.Controllers.Matching;
+using Kantaiko.Controllers.Matching.Text;
+using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Messages.Events;
-using Replikit.Core.Handlers;
 
 namespace Replikit.Core.Controllers.Patterns;
 

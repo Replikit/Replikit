@@ -1,10 +1,11 @@
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Kantaiko.Controllers.Matchers;
+using Kantaiko.Controllers.Matching;
+using Kantaiko.Controllers.Matching.Text;
+using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Repositories.Events;
-using Replikit.Core.Handlers;
 using Replikit.Core.Localization;
 
 namespace Replikit.Core.Controllers.Patterns;

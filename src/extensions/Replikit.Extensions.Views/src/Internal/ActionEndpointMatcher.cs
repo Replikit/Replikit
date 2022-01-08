@@ -1,6 +1,6 @@
-﻿using System.Collections.Immutable;
-using Kantaiko.Controllers.Introspection;
-using Kantaiko.Controllers.Matchers;
+﻿using Kantaiko.Controllers.Introspection;
+using Kantaiko.Controllers.Matching;
+using Kantaiko.Properties.Immutable;
 
 namespace Replikit.Extensions.Views.Internal;
 
@@ -15,7 +15,7 @@ internal class ActionEndpointMatcher : IEndpointMatcher<ViewContext>
 
     public EndpointMatchResult Match(EndpointMatchContext<ViewContext> context)
     {
-        if (context.RequestContext.Request.Type != _endpointInfo.Controller.Type.FullName)
+        if (context.RequestContext.Request.Type != _endpointInfo.Controller!.Type.FullName)
         {
             return EndpointMatchResult.NotMatched;
         }
@@ -25,6 +25,6 @@ internal class ActionEndpointMatcher : IEndpointMatcher<ViewContext>
             return EndpointMatchResult.NotMatched;
         }
 
-        return EndpointMatchResult.Success(ImmutableDictionary<string, string>.Empty);
+        return EndpointMatchResult.Success(ImmutablePropertyCollection.Empty);
     }
 }

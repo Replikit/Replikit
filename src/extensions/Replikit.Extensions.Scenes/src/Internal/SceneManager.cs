@@ -1,27 +1,26 @@
+using Kantaiko.Routing.Context;
+using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Common.Models;
+using Replikit.Abstractions.Events;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Core.EntityCollections;
-using Replikit.Core.Handlers;
 using Replikit.Extensions.Common.Scenes;
 
 namespace Replikit.Extensions.Scenes.Internal;
 
 internal class SceneManager : ISceneManager
 {
-    private readonly IEventContextAccessor _eventContextAccessor;
-    private readonly SceneRequestHandlerAccessor _requestHandlerAccessor;
-    private readonly SceneRequestContextAccessor _sceneRequestContextAccessor;
+    private readonly IContextAccessor<IEventContext<IEvent>> _eventContext;
+    private readonly SceneHandlerAccessor _handlerAccessor;
     private readonly IAdapterCollection _adapterCollection;
     private readonly IServiceProvider _serviceProvider;
 
-    public SceneManager(IEventContextAccessor eventContextAccessor, SceneRequestHandlerAccessor requestHandlerAccessor,
-        SceneRequestContextAccessor sceneRequestContextAccessor, IAdapterCollection adapterCollection,
-        IServiceProvider serviceProvider)
+    public SceneManager(IContextAccessor<IEventContext<IEvent>> eventContext, SceneHandlerAccessor handlerAccessor,
+        IAdapterCollection adapterCollection, IServiceProvider serviceProvider)
     {
-        _eventContextAccessor = eventContextAccessor;
-        _requestHandlerAccessor = requestHandlerAccessor;
-        _sceneRequestContextAccessor = sceneRequestContextAccessor;
+        _eventContext = eventContext;
+        _handlerAccessor = handlerAccessor;
         _adapterCollection = adapterCollection;
         _serviceProvider = serviceProvider;
     }
@@ -44,16 +43,13 @@ internal class SceneManager : ISceneManager
             serviceProvider = _serviceProvider;
         }
 
-        var sceneContext = new SceneContext(sceneRequest, serviceProvider, requestCancellationToken);
-        _sceneRequestContextAccessor.Context = sceneContext;
-
-        await _requestHandlerAccessor.RequestHandler.HandleAsync(sceneContext,
-            serviceProvider, requestCancellationToken);
+        var sceneContext = new SceneContext(sceneRequest, serviceProvider, cancellationToken: requestCancellationToken);
+        await _handlerAccessor.Handler.Handle(sceneContext);
     }
 
     public async Task EnterSceneAsync(SceneStage stage, CancellationToken cancellationToken = default)
     {
-        if (_eventContextAccessor.Context is not IEventContext<MessageReceivedEvent> context)
+        if (_eventContext.Context is not IEventContext<MessageReceivedEvent> context)
         {
             throw new InvalidOperationException(
                 "Cannot enter the scene outside of the message event context");

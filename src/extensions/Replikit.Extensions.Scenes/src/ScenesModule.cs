@@ -1,4 +1,5 @@
-using Kantaiko.Hosting.Modules;
+using Kantaiko.Hosting.Modularity;
+using Kantaiko.Hosting.Modularity.Introspection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Core.Modules;
@@ -9,7 +10,7 @@ using Replikit.Extensions.Scenes.Options;
 
 namespace Replikit.Extensions.Scenes;
 
-[ModuleFlags(ModuleFlags.Library)]
+[Module(Flags = ModuleFlags.Library)]
 public class ScenesModule : ReplikitModule
 {
     private readonly IConfiguration _configuration;
@@ -19,13 +20,13 @@ public class ScenesModule : ReplikitModule
         _configuration = configuration;
     }
 
-    public override void ConfigureServices(IServiceCollection services)
+    protected override void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton<MemorySceneStorage>();
-        services.AddSingleton<SceneRequestHandlerAccessor>();
+        services.AddSingleton<SceneHandlerAccessor>();
         services.AddSingleton<ISceneStorageProvider, SceneStorageProvider>();
 
-        services.AddScoped<SceneRequestContextAccessor>();
+        services.AddSingleton<ISceneIntrospectionInfoAccessor>(sp => sp.GetRequiredService<SceneHandlerAccessor>());
 
         services.AddScoped<SceneManager>();
         services.AddScoped<ISceneManager>(sp => sp.GetRequiredService<SceneManager>());

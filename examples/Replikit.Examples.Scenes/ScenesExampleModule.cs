@@ -1,3 +1,5 @@
+using Kantaiko.Hosting.Modularity;
+using Microsoft.Extensions.DependencyInjection;
 using Replikit.Core.Modules;
 using Replikit.Extensions.Scenes;
 
@@ -5,8 +7,8 @@ namespace Replikit.Examples.Scenes;
 
 public class ScenesExampleModule : ReplikitModule
 {
-    public override void ConfigureModules(IReplikitModuleCollection modules)
+    protected override void ConfigureServices(IServiceCollection services)
     {
-        modules.Add<ScenesModule>();
+        services.AddModule<ScenesModule>();
     }
 }

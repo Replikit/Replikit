@@ -1,17 +1,15 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
-using Kantaiko.Hosting.Hooks;
-using Kantaiko.Routing;
+using Kantaiko.Properties.Immutable;
+using Kantaiko.Routing.Events;
 using Kantaiko.Routing.Exceptions;
-using Kantaiko.Routing.Handlers;
-using Microsoft.Collections.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Events;
 using Replikit.Abstractions.Repositories.Events;
-using Replikit.Core.Handlers.Hooks;
+using Replikit.Core.Handlers.Lifecycle;
 
 namespace Replikit.Core.Handlers.Internal;
 
@@ -20,15 +18,18 @@ internal class AdapterEventHandler : IAdapterEventHandler
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<AdapterEventHandler> _logger;
     private readonly IHostApplicationLifetime _applicationLifetime;
-
-    public MultiValueDictionary<Type, Type> HandlerTypes { get; } = new();
+    private readonly IAdapterEventRouter _adapterEventRouter;
+    private readonly IHandlerLifecycle _handlerLifecycle;
 
     public AdapterEventHandler(IServiceProvider serviceProvider, ILogger<AdapterEventHandler> logger,
-        IHostApplicationLifetime applicationLifetime)
+        IHostApplicationLifetime applicationLifetime, IAdapterEventRouter adapterEventRouter,
+        IHandlerLifecycle handlerLifecycle)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
         _applicationLifetime = applicationLifetime;
+        _adapterEventRouter = adapterEventRouter;
+        _handlerLifecycle = handlerLifecycle;
     }
 
     public async Task HandleAsync(IEvent @event, IAdapter adapter, CancellationToken cancellationToken = default)
@@ -39,45 +40,35 @@ internal class AdapterEventHandler : IAdapterEventHandler
         _logger.LogDebug("Handling event of type {EventType}", eventType.Name);
 
         using var scope = _serviceProvider.CreateScope();
-        var hookDispatcher = scope.ServiceProvider.GetRequiredService<IHookDispatcher>();
 
         var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken,
             _applicationLifetime.ApplicationStopping);
 
-        var context = (IEventContext) Activator.CreateInstance(typeof(EventContext<>).MakeGenericType(eventType),
-            @event, adapter, scope.ServiceProvider, cancellationTokenSource.Token)!;
+        var properties = ImmutablePropertyCollection.Empty.Set(new AdapterEventProperties(adapter));
+
+        var context = (IEventContext<Event>) Activator.CreateInstance(
+            typeof(EventContext<>).MakeGenericType(eventType),
+            @event, scope.ServiceProvider, properties, cancellationTokenSource.Token)!;
+
+        UpdateCultureInfo(@event);
 
         try
         {
-            UpdateCultureInfo(@event);
+            await _adapterEventRouter.Handler.Handle(context);
 
-            var eventHandlingHook = new EventHandlingHook(context);
-            await hookDispatcher.DispatchAsync(eventHandlingHook, cancellationToken);
+            using var lifecycleEventScope = scope.ServiceProvider.CreateScope();
 
-            var eventContextAccessor = scope.ServiceProvider.GetRequiredService<EventContextAccessor>();
-            eventContextAccessor.SetContext(context);
+            var eventContext = new EventContext<EventHandledEvent>(new EventHandledEvent(context),
+                lifecycleEventScope.ServiceProvider, cancellationToken: cancellationTokenSource.Token);
 
-            var transientChainHandler = new TransientChainHandler<IEventContext, Task<Unit>>(
-                HandlerTypes[eventType],
-                DependencyInjectionHandlerFactory.Instance);
-
-            await transientChainHandler.Handle(context);
-
-            var eventHandledHook = new EventHandledHook(context);
-            await hookDispatcher.DispatchAsync(eventHandledHook, cancellationToken);
+            await _handlerLifecycle.EventHandled.Handle(eventContext);
         }
         catch (ChainEndedException)
         {
             _logger.LogDebug("Event was ignored since no appreciate handler was found");
-
-            var eventHandledHook = new EventHandledHook(context);
-            await hookDispatcher.DispatchAsync(eventHandledHook, cancellationToken);
         }
         catch (Exception exception)
         {
-            var eventHandledHook = new EventHandledHook(context, exception);
-            await hookDispatcher.DispatchAsync(eventHandledHook, cancellationToken);
-
             _logger.LogError(exception, "Exception occurred while handling an event");
             throw;
         }

@@ -1,10 +1,11 @@
-﻿using Kantaiko.Controllers.Design.Controllers;
-using Kantaiko.Controllers.Design.Properties;
+﻿using Kantaiko.Controllers.Introspection.Factory.Attributes;
+using Kantaiko.Controllers.Introspection.Factory.Context;
+using Kantaiko.Properties.Immutable;
 
 namespace Replikit.Core.Controllers.Patterns;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class CommandGroupAttribute : Attribute, IControllerDesignPropertyProvider
+public class CommandGroupAttribute : Attribute, IControllerPropertyProvider
 {
     private readonly string _groupName;
 
@@ -13,8 +14,8 @@ public class CommandGroupAttribute : Attribute, IControllerDesignPropertyProvide
         _groupName = groupName;
     }
 
-    public DesignPropertyCollection GetControllerDesignProperties() => new()
+    public IImmutablePropertyCollection UpdateControllerProperties(ControllerFactoryContext context)
     {
-        [ReplikitControllerProperties.CommandGroupName] = _groupName
-    };
+        return context.Controller.Properties.Set(new CommandGroupControllerProperties(_groupName));
+    }
 }

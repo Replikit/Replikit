@@ -1,3 +1,5 @@
+using Kantaiko.Hosting.Modularity;
+using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Adapters.Loader;
 using Replikit.Adapters.Telegram;
 using Replikit.Core.Modules;
@@ -11,17 +13,17 @@ namespace Replikit.Examples;
 
 public class MainModule : ReplikitModule
 {
-    public override void ConfigureModules(IReplikitModuleCollection modules)
+    protected override void ConfigureServices(IServiceCollection services)
     {
-        modules.Add<MessagesExampleModule>();
-        modules.Add<AdapterServicesExample>();
+        services.AddModule<MessagesExampleModule>();
+        services.AddModule<AdapterServicesExample>();
 
-        modules.Add<ScenesExampleModule>();
-        modules.Add<ViewsExampleModule>();
-        modules.Add<SessionsExampleModule>();
+        services.AddModule<ScenesExampleModule>();
+        services.AddModule<ViewsExampleModule>();
+        services.AddModule<SessionsExampleModule>();
     }
 
-    public override void ConfigureAdapters(IAdapterLoaderOptions options)
+    protected override void ConfigureAdapters(IAdapterLoaderOptions options)
     {
         options.AddTelegram();
     }
