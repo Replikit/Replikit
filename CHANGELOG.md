@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.
 
+<a name="0.3.1"></a>
+## [0.3.1](https://www.github.com/Replikit/Replikit/releases/tag/v0.3.1) (2022-1-8)
+
+### Bug Fixes
+
+* Change introspection transformer order ([84031e3](https://www.github.com/Replikit/Replikit/commit/84031e34458c3b1dc996d711466d1874cd2b63e6))
+* Update Kantaiko.ConsoleFormatting ([0090b54](https://www.github.com/Replikit/Replikit/commit/0090b54a7865a6c3b7de0d19e6f03813ebe0b9da))
+* **Core:** Exclude hidden parameters from command pattern ([b68a8f7](https://www.github.com/Replikit/Replikit/commit/b68a8f7ab815e39fbe5ae7de3f0c08667fcaceab))
+
 <a name="0.3.0"></a>
 ## [0.3.0](https://www.github.com/Replikit/Replikit/releases/tag/v0.3.0) (2022-1-8)
 
