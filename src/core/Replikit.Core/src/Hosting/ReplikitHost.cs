@@ -1,4 +1,5 @@
 ﻿using Kantaiko.Hosting;
+using Kantaiko.Hosting.Lifecycle;
 using Kantaiko.Hosting.Managed;
 using Kantaiko.Hosting.Modularity;
 using Microsoft.Extensions.Hosting;
@@ -17,10 +18,13 @@ public static class ReplikitHost
             hostBuilder.CompleteModularityConfiguration();
 
             hostBuilder.ConfigureServices(x => x.AddModularLifecycleEvents());
+            hostBuilder.ConfigureServices(x => x.AddManagedHostLifecycle());
+
             hostBuilder.AddDevelopmentUserSecrets<TModule>();
         }
 
         ManagedHost.CreateDefaultBuilder(args)
+            .UseManagedHostHandler(new LifecycleManagedHostHandler())
             .ConfigureHostBuilder(ConfigureHost)
             .Build().Run();
     }

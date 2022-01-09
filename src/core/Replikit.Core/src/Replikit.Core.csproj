@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Kantaiko.ConsoleFormatting" Version="0.2.1" />
     <PackageReference Include="Kantaiko.Controllers" Version="0.7.0" />
-    <PackageReference Include="Kantaiko.Hosting" Version="0.4.4" />
+    <PackageReference Include="Kantaiko.Hosting" Version="0.5.0" />
     <PackageReference Include="Kantaiko.Routing" Version="0.7.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
   </ItemGroup>

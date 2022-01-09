@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Kantaiko.Hosting.Modularity;
+using Kantaiko.Hosting.Modularity.Introspection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Core.Controllers;
 using Replikit.Core.EntityCollections;
@@ -12,6 +14,7 @@ using Replikit.Core.Services;
 
 namespace Replikit.Core;
 
+[Module(Flags = ModuleFlags.Library)]
 public class ReplikitCoreModule : ReplikitModule
 {
     private readonly IConfiguration _configuration;
