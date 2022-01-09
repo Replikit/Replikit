@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.
 
+<a name="0.3.2"></a>
+## [0.3.2](https://www.github.com/Replikit/Replikit/releases/tag/v0.3.2) (2022-1-9)
+
+### Bug Fixes
+
+* Update hosting infrastructure ([ee80a2a](https://www.github.com/Replikit/Replikit/commit/ee80a2a93741a5d9c0c7d23e228345db826882f2))
+
 <a name="0.3.1"></a>
 ## [0.3.1](https://www.github.com/Replikit/Replikit/releases/tag/v0.3.1) (2022-1-8)
 
