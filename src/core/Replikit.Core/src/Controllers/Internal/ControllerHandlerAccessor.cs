@@ -37,7 +37,7 @@ internal class ControllerHandlerAccessor : IControllerIntrospectionInfoAccessor
 
         pipelineBuilder.AddEndpointMatching();
         pipelineBuilder.AddSubHandlerExecution();
-        pipelineBuilder.AddTextParameterConversion();
+        pipelineBuilder.AddTextParameterConversion(ServiceHandlerFactory.Instance);
         pipelineBuilder.AddControllerInstantiation(ServiceHandlerFactory.Instance);
         pipelineBuilder.AddHandler(new DispatchControllerInstantiatedEventHandler());
         pipelineBuilder.AddEndpointInvocation();
