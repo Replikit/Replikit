@@ -41,14 +41,14 @@ internal static class CommandMatcherFactory
             if (CommandParameterProperties.Of(parameter) is not { ParameterNames: var parameterNames })
             {
                 patternBuilder.Append(parameter.IsOptional ? @"\s?" : ' ');
-                patternBuilder.AddParameter(parameter.Name);
+                patternBuilder.AddParameter(parameter.Name, parameter.IsOptional);
                 continue;
             }
 
             foreach (var parameterName in parameterNames)
             {
                 patternBuilder.Append(parameter.IsOptional ? @"\s?" : ' ');
-                patternBuilder.AddParameter(parameterName);
+                patternBuilder.AddParameter(parameterName, parameter.IsOptional);
             }
         }
 
@@ -56,11 +56,13 @@ internal static class CommandMatcherFactory
         return new RegexMatcher(pattern);
     }
 
-    private static void AddParameter(this StringBuilder patternBuilder, string name)
+    private static void AddParameter(this StringBuilder patternBuilder, string name, bool isOptional)
     {
         patternBuilder.Append("(?<");
         patternBuilder.Append(name);
-        patternBuilder.Append(@">\S+)");
+        patternBuilder.Append(@">\S");
+        patternBuilder.Append(isOptional ? '*' : '+');
+        patternBuilder.Append(')');
     }
 
     private static void AppendGroup(this StringBuilder patternBuilder, IEnumerable<string> values)
