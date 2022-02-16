@@ -7,5 +7,6 @@ public static class ServiceCollectionExtensions
     public static void AddReplikitGlobalServices(this IServiceCollection services)
     {
         services.AddSingleton<IGlobalMessageService, GlobalMessageService>();
+        services.AddSingleton<IGlobalMemberService, GlobalMemberService>();
     }
 }
