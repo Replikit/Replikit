@@ -1,4 +1,5 @@
-﻿using Replikit.Core.EntityCollections;
+﻿using Replikit.Abstractions.Messages.Models;
+using Replikit.Core.EntityCollections;
 using Replikit.Extensions.Common.Views;
 using Replikit.Extensions.Views.Exceptions;
 
@@ -22,7 +23,8 @@ internal class ViewManager : IViewManager
         _viewExternalActivationDeterminant = viewExternalActivationDeterminant;
     }
 
-    public async Task SendViewAsync<TView>(IMessageCollection messageCollection, ViewRequest? request = null,
+    public async Task<GlobalMessageIdentifier> SendViewAsync<TView>(IMessageCollection messageCollection,
+        ViewRequest? request = null,
         bool autoSave = true, CancellationToken cancellationToken = default)
         where TView : View
     {
@@ -36,7 +38,10 @@ internal class ViewManager : IViewManager
         ValidateViewRequest(request, fullName, false);
 
         var context = CreateContext(request, cancellationToken);
-        await _handlerAccessor.Handler.Handle(context);
+        var result = await _handlerAccessor.Handler.Handle(context);
+
+        // TODO find a better way to access view id
+        return ((ViewRequestResult) result.ReturnValue!).ViewId;
     }
 
     public async Task ActivateAsync(ViewRequest request, CancellationToken cancellationToken = default)

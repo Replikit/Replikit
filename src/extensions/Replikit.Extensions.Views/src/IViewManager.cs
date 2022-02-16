@@ -1,4 +1,5 @@
-﻿using Replikit.Core.EntityCollections;
+﻿using Replikit.Abstractions.Messages.Models;
+using Replikit.Core.EntityCollections;
 using Replikit.Extensions.Common.Views;
 
 namespace Replikit.Extensions.Views;
@@ -16,7 +17,9 @@ public interface IViewManager
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TView"></typeparam>
     /// <returns></returns>
-    Task SendViewAsync<TView>(IMessageCollection messageCollection, ViewRequest? request = null, bool autoSave = true,
+    Task<GlobalMessageIdentifier> SendViewAsync<TView>(IMessageCollection messageCollection,
+        ViewRequest? request = null,
+        bool autoSave = true,
         CancellationToken cancellationToken = default)
         where TView : View;
 

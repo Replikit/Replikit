@@ -9,9 +9,4 @@
     <ProjectReference Include="..\..\Replikit.Extensions.Common\src\Replikit.Extensions.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ControllerMiddleware\BeforeCompletion" />
-    <Folder Include="ControllerMiddleware\BeforeExecution" />
-  </ItemGroup>
-
 </Project>

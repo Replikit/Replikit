@@ -170,6 +170,6 @@ internal class UpdateViewAndSaveStateHandler : ControllerExecutionHandler<ViewCo
 
         await SaveChanges();
 
-        return ControllerExecutionResult.Empty;
+        return ControllerExecutionResult.Success(new ViewRequestResult(messageId));
     }
 }
