@@ -73,4 +73,14 @@ public interface IMemberService : IHasFeatures<MemberCollectionFeatures>
     /// <returns></returns>
     Task UnbanAsync(Identifier channelId, Identifier accountId, CancellationToken cancellationToken = default) =>
         throw HasFeaturesHelper.CreateUnsupportedException(this, MemberCollectionFeatures.Add);
+
+    /// <summary>
+    /// Gets the total count of members in the specified channel.
+    /// </summary>
+    /// <param name="channelId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    Task<long> GetTotalCountAsync(Identifier channelId, CancellationToken cancellationToken = default) =>
+        throw HasFeaturesHelper.CreateUnsupportedException(this, MemberCollectionFeatures.GetTotalCount);
 }

@@ -26,32 +26,30 @@ public record Identifier
 
     public static implicit operator string(Identifier identifier)
     {
-        if (identifier.Value is string value)
+        return identifier.Value switch
         {
-            return value;
-        }
-
-        throw new InvalidIdentifierException(identifier, typeof(string));
+            string value => value,
+            _ => throw new InvalidIdentifierException(identifier, typeof(string))
+        };
     }
 
     public static implicit operator int(Identifier identifier)
     {
-        if (identifier.Value is int value)
+        return identifier.Value switch
         {
-            return value;
-        }
-
-        throw new InvalidIdentifierException(identifier, typeof(int));
+            int value => value,
+            _ => throw new InvalidIdentifierException(identifier, typeof(int))
+        };
     }
 
     public static implicit operator long(Identifier identifier)
     {
-        if (identifier.Value is long value)
+        return identifier.Value switch
         {
-            return value;
-        }
-
-        throw new InvalidIdentifierException(identifier, typeof(long));
+            long longValue => longValue,
+            int intValue => intValue,
+            _ => throw new InvalidIdentifierException(identifier, typeof(long))
+        };
     }
 
     public override string? ToString() => Value.ToString();

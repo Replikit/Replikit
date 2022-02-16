@@ -65,4 +65,11 @@ internal class CommonMemberService : AdapterService, IMemberService
 
         return _memberService.UnbanAsync(channelId, accountId, cancellationToken);
     }
+
+    public Task<long> GetTotalCountAsync(Identifier channelId, CancellationToken cancellationToken = default)
+    {
+        CheckIdentifier(channelId);
+
+        return _memberService.GetTotalCountAsync(channelId, cancellationToken);
+    }
 }
