@@ -9,7 +9,7 @@ internal class CommonMemberService : AdapterService, IMemberService
 {
     private readonly IMemberService _memberService;
 
-    public MemberCollectionFeatures Features => _memberService.Features;
+    public MemberServiceFeatures Features => _memberService.Features;
 
     public CommonMemberService(IAdapter adapter, IMemberService memberService) : base(adapter)
     {

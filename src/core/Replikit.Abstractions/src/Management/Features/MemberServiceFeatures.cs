@@ -1,7 +1,7 @@
 ﻿namespace Replikit.Abstractions.Management.Features;
 
 [Flags]
-public enum MemberCollectionFeatures
+public enum MemberServiceFeatures
 {
     None = 0,
     Add = 1 << 0,

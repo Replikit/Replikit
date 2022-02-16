@@ -13,9 +13,9 @@ internal class TelegramMemberService : IMemberService
         _backend = backend;
     }
 
-    public MemberCollectionFeatures Features =>
-        MemberCollectionFeatures.GetTotalCount |
-        MemberCollectionFeatures.Remove;
+    public MemberServiceFeatures Features =>
+        MemberServiceFeatures.GetTotalCount |
+        MemberServiceFeatures.Remove;
 
     public async Task<long> GetTotalCountAsync(Identifier channelId, CancellationToken cancellationToken = default)
     {

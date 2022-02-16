@@ -7,7 +7,7 @@ namespace Replikit.Abstractions.Management.Features;
 /// <summary>
 /// Provides methods to work with members.
 /// </summary>
-public interface IMemberService : IHasFeatures<MemberCollectionFeatures>
+public interface IMemberService : IHasFeatures<MemberServiceFeatures>
 {
     /// <summary>
     /// Finds multiple members with specified identifiers.
@@ -19,7 +19,7 @@ public interface IMemberService : IHasFeatures<MemberCollectionFeatures>
     /// <returns></returns>
     Task<IReadOnlyList<MemberInfo>> GetManyAsync(Identifier channelId, IReadOnlyCollection<Identifier> accountIds,
         CancellationToken cancellationToken = default) =>
-        throw HasFeaturesHelper.CreateUnsupportedException(this, MemberCollectionFeatures.GetMany);
+        throw HasFeaturesHelper.CreateUnsupportedException(this, MemberServiceFeatures.GetMany);
 
     /// <summary>
     /// List multiple members.
@@ -32,7 +32,7 @@ public interface IMemberService : IHasFeatures<MemberCollectionFeatures>
     /// <returns></returns>
     Task<IReadOnlyList<MemberInfo>> ListManyAsync(Identifier channelId, int? take = null, int? skip = null,
         CancellationToken cancellationToken = default) =>
-        throw HasFeaturesHelper.CreateUnsupportedException(this, MemberCollectionFeatures.ListMany);
+        throw HasFeaturesHelper.CreateUnsupportedException(this, MemberServiceFeatures.ListMany);
 
     /// <summary>
     /// Adds user with specified identifier.
@@ -42,7 +42,7 @@ public interface IMemberService : IHasFeatures<MemberCollectionFeatures>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task AddAsync(Identifier channelId, Identifier accountId, CancellationToken cancellationToken = default) =>
-        throw HasFeaturesHelper.CreateUnsupportedException(this, MemberCollectionFeatures.Add);
+        throw HasFeaturesHelper.CreateUnsupportedException(this, MemberServiceFeatures.Add);
 
     /// <summary>
     /// Removes user with specified identifier.
@@ -52,7 +52,7 @@ public interface IMemberService : IHasFeatures<MemberCollectionFeatures>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task RemoveAsync(Identifier channelId, Identifier accountId, CancellationToken cancellationToken = default)
-        => throw HasFeaturesHelper.CreateUnsupportedException(this, MemberCollectionFeatures.Remove);
+        => throw HasFeaturesHelper.CreateUnsupportedException(this, MemberServiceFeatures.Remove);
 
     /// <summary>
     /// Adds user with specified identifier to ban-list.
@@ -62,7 +62,7 @@ public interface IMemberService : IHasFeatures<MemberCollectionFeatures>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task BanAsync(Identifier channelId, Identifier accountId, CancellationToken cancellationToken = default) =>
-        throw HasFeaturesHelper.CreateUnsupportedException(this, MemberCollectionFeatures.Add);
+        throw HasFeaturesHelper.CreateUnsupportedException(this, MemberServiceFeatures.Add);
 
     /// <summary>
     /// Removes user with specified identifier from ban-list.
@@ -72,7 +72,7 @@ public interface IMemberService : IHasFeatures<MemberCollectionFeatures>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task UnbanAsync(Identifier channelId, Identifier accountId, CancellationToken cancellationToken = default) =>
-        throw HasFeaturesHelper.CreateUnsupportedException(this, MemberCollectionFeatures.Add);
+        throw HasFeaturesHelper.CreateUnsupportedException(this, MemberServiceFeatures.Add);
 
     /// <summary>
     /// Gets the total count of members in the specified channel.
@@ -82,5 +82,5 @@ public interface IMemberService : IHasFeatures<MemberCollectionFeatures>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     Task<long> GetTotalCountAsync(Identifier channelId, CancellationToken cancellationToken = default) =>
-        throw HasFeaturesHelper.CreateUnsupportedException(this, MemberCollectionFeatures.GetTotalCount);
+        throw HasFeaturesHelper.CreateUnsupportedException(this, MemberServiceFeatures.GetTotalCount);
 }

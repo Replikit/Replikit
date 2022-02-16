@@ -11,7 +11,7 @@ public class MemberController : Controller
     [Command("count members")]
     public async Task<OutMessage> CountMembers()
     {
-        if (!Adapter.MemberService.Supports(MemberCollectionFeatures.GetTotalCount))
+        if (!Adapter.MemberService.Supports(MemberServiceFeatures.GetTotalCount))
         {
             return "Current platform does not support member counting";
         }
