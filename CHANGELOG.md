@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.
 
+<a name="0.4.0"></a>
+## [0.4.0](https://www.github.com/Replikit/Replikit/releases/tag/v0.4.0) (2022-2-16)
+
+### Bug Fixes
+
+* Allow dependency injection in text parameter converters ([a1b023b](https://www.github.com/Replikit/Replikit/commit/a1b023b46f2d163a2888593de457d99c1cf35b25))
+
+### Features
+
+* Improve view manager api ([1717601](https://www.github.com/Replikit/Replikit/commit/171760190714379cc5b1d3a8e2ed9fe0dfd6c83a))
+* **Telegram:** Add basic MemberService ([4e73a1a](https://www.github.com/Replikit/Replikit/commit/4e73a1a2e4593a5e77d52f11a931891e36a8880f))
+* **Telegram:** Implement Pin and Unpin methods ([1ce9552](https://www.github.com/Replikit/Replikit/commit/1ce9552ac52a9df9c9c80fe175787562188e1453))
+
 <a name="0.3.2"></a>
 ## [0.3.2](https://www.github.com/Replikit/Replikit/releases/tag/v0.3.2) (2022-1-9)
 

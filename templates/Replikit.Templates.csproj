@@ -7,7 +7,7 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <ContentTargetFolders>content</ContentTargetFolders>
     <NoDefaultExcludes>true</NoDefaultExcludes>
-    <Version>0.3.2</Version>
+    <Version>0.4.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
