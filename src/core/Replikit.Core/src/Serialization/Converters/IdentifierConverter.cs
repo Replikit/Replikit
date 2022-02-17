@@ -11,7 +11,7 @@ public class IdentifierConverter : JsonConverter<Identifier>
         return reader.TokenType switch
         {
             JsonTokenType.Null => null,
-            JsonTokenType.Number => reader.GetInt64(),
+            JsonTokenType.Number => reader.TryGetInt32(out var value) ? value : reader.GetInt64(),
             JsonTokenType.String => reader.GetString()!,
             _ => throw new JsonException("Invalid identifier type. Expected string, number or null")
         };
