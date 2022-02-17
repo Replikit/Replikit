@@ -20,6 +20,7 @@ public abstract class Adapter : IAdapter
     private readonly ITextTokenizer? _textTokenizer;
     private readonly IMessageService? _messageService;
     private readonly IMemberService? _memberService;
+    private readonly IChannelService? _channelService;
 
     protected IAttachmentCache AttachmentCache { get; }
     protected IAdapterEventHandler EventHandler { get; }
@@ -77,6 +78,12 @@ public abstract class Adapter : IAdapter
         protected init => SetFeature(out _memberService,
             new CommonMemberService(this, value),
             AdapterFeatures.MemberService);
+    }
+
+    public IChannelService ChannelService
+    {
+        get => GetFeature(_channelService, AdapterFeatures.ChannelService);
+        protected init => SetFeature(out _channelService, value, AdapterFeatures.ChannelService);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

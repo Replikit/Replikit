@@ -43,4 +43,9 @@ public interface IAdapter : IHasFeatures<AdapterFeatures>
     /// </summary>
     /// <exception cref="UnsupportedFeatureException"></exception>
     IMemberService MemberService { get; }
+
+    /// <summary>
+    /// </summary>
+    /// <exception cref="UnsupportedFeatureException"></exception>
+    IChannelService ChannelService { get; }
 }

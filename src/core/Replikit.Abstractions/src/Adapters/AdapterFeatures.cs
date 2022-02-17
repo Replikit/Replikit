@@ -10,5 +10,6 @@ public enum AdapterFeatures
     TextTokenizer = 1 << 3,
     Repository = 1 << 4,
     MemberService = 1 << 5,
+    ChannelService = 1 << 6,
     All = ~0
 }
