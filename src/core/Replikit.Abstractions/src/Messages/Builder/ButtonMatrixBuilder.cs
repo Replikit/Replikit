@@ -43,7 +43,7 @@ public class ButtonMatrixBuilder<TBuilder, TButton> where TBuilder : ButtonMatri
 
     public TBuilder AddButtonRow()
     {
-        if (_rows.Count == 0 || _rows[^1].Count > 1)
+        if (_rows.Count == 0 || _rows[^1].Count > 0)
         {
             _rows.Add(new List<TButton>());
         }
