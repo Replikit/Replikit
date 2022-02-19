@@ -9,11 +9,14 @@ public class ButtonPressedEvent : AccountEvent
 {
     public string Data { get; }
     public Message? Message { get; }
+    public Identifier? RequestId { get; }
 
-    public ButtonPressedEvent(AdapterIdentifier adapterId, AccountInfo account, string data, Message? message) :
+    public ButtonPressedEvent(AdapterIdentifier adapterId, AccountInfo account, string data,
+        Message? message = null, Identifier? requestId = null) :
         base(adapterId, account)
     {
         Data = data;
         Message = message;
+        RequestId = requestId;
     }
 }

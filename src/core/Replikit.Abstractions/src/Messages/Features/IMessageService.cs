@@ -121,4 +121,15 @@ public interface IMessageService : IHasFeatures<MessageServiceFeatures>
     /// <returns></returns>
     Task UnpinAsync(Identifier channelId, MessageIdentifier messageId, CancellationToken cancellationToken = default)
         => throw HasFeaturesHelper.CreateUnsupportedException(this, MessageServiceFeatures.Unpin);
+
+    /// <summary>
+    /// Answers to pressing of an inline button.
+    /// </summary>
+    /// <param name="requestId"></param>
+    /// <param name="message"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public Task AnswerInlineButtonRequestAsync(Identifier requestId, string message,
+        CancellationToken cancellationToken = default)
+        => throw HasFeaturesHelper.CreateUnsupportedException(this, MessageServiceFeatures.AnswerInlineButtonRequest);
 }

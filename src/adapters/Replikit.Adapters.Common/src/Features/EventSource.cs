@@ -1,4 +1,5 @@
 ﻿using Replikit.Abstractions.Adapters;
+using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Events;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Messages.Models;
@@ -36,9 +37,10 @@ public abstract class EventSource : IEventSource
         _eventHandler.HandleAsync(messageEditedEvent, _adapter);
     }
 
-    protected void HandleButtonPressed(AccountInfo accountInfo, string data, Message? message = null)
+    protected void HandleButtonPressed(AccountInfo accountInfo, string data, Message? message = null,
+        Identifier? requestId = null)
     {
-        var buttonPressedEvent = new ButtonPressedEvent(_adapter.Id, accountInfo, data, message);
+        var buttonPressedEvent = new ButtonPressedEvent(_adapter.Id, accountInfo, data, message, requestId);
         _eventHandler.HandleAsync(buttonPressedEvent, _adapter);
     }
 

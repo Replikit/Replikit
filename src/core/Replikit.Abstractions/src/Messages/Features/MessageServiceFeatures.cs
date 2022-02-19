@@ -13,5 +13,6 @@ public enum MessageServiceFeatures
     Find = 1 << 6,
     Pin = 1 << 7,
     Unpin = 1 << 8,
+    AnswerInlineButtonRequest = 1 << 9,
     All = ~0
 }

@@ -34,7 +34,8 @@ internal class TelegramMessageService : IMessageService
         MessageServiceFeatures.Edit |
         MessageServiceFeatures.Delete |
         MessageServiceFeatures.Pin |
-        MessageServiceFeatures.Unpin;
+        MessageServiceFeatures.Unpin |
+        MessageServiceFeatures.AnswerInlineButtonRequest;
 
     private const int MaxAttachmentCount = 10;
 
@@ -242,5 +243,11 @@ internal class TelegramMessageService : IMessageService
         CancellationToken cancellationToken = default)
     {
         return _backend.UnpinChatMessageAsync((long) channelId, messageId.Identifiers[0], cancellationToken);
+    }
+
+    public Task AnswerInlineButtonRequestAsync(Identifier requestId, string message,
+        CancellationToken cancellationToken = default)
+    {
+        return _backend.AnswerCallbackQueryAsync(requestId, message, cancellationToken: cancellationToken);
     }
 }

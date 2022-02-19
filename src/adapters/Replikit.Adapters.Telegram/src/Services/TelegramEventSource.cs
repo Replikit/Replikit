@@ -113,7 +113,8 @@ internal class TelegramEventSource : EventSource
                 {
                     var accountInfo = await _repository.UpdateAccountInfo(update.CallbackQuery.From);
                     var message = _entityFactory.CreateMessage(new[] { update.CallbackQuery.Message });
-                    HandleButtonPressed(accountInfo, update.CallbackQuery.Data, message);
+
+                    HandleButtonPressed(accountInfo, update.CallbackQuery.Data, message, update.CallbackQuery.Id);
                     break;
                 }
             }
