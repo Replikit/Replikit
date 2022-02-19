@@ -6,7 +6,7 @@ using Replikit.Abstractions.Messages.Models.Options;
 
 namespace Replikit.Core.GlobalServices;
 
-public class GlobalMessageService : IGlobalMessageService
+internal class GlobalMessageService : IGlobalMessageService
 {
     private readonly IAdapterCollection _adapterCollection;
 
@@ -22,7 +22,7 @@ public class GlobalMessageService : IGlobalMessageService
 
     private IMessageService ResolveMessageService(GlobalIdentifier channelId)
     {
-        return _adapterCollection.ResolveRequired(channelId.AdapterId).MessageService;
+        return _adapterCollection.ResolveRequired(channelId).MessageService;
     }
 
     public Task<Message> SendAsync(GlobalIdentifier channelId, OutMessage message, SendMessageOptions? options = null,

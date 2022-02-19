@@ -21,7 +21,7 @@ internal class GlobalMemberService : IGlobalMemberService
 
     private IMemberService ResolveMemberService(GlobalIdentifier channelId)
     {
-        return _adapterCollection.ResolveRequired(channelId.AdapterId).MemberService;
+        return _adapterCollection.ResolveRequired(channelId).MemberService;
     }
 
     public Task<IReadOnlyList<MemberInfo>> GetManyAsync(GlobalIdentifier channelId,

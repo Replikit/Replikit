@@ -6,71 +6,26 @@ namespace Replikit.Core.GlobalServices;
 
 public interface IGlobalMemberService : IGlobalHasFeatures<MemberServiceFeatures>
 {
-    /// <summary>
-    /// Finds multiple members with specified identifiers.
-    /// Can return less members that ids specified, if some members could not be found.
-    /// </summary>
-    /// <param name="channelId"></param>
-    /// <param name="accountIds"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <inheritdoc cref="IMemberService.GetManyAsync" />
     Task<IReadOnlyList<MemberInfo>> GetManyAsync(GlobalIdentifier channelId, IReadOnlyCollection<Identifier> accountIds,
         CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// List multiple members.
-    /// Returns as many members as could list according to specified take and skip options.
-    /// </summary>
-    /// <param name="channelId"></param>
-    /// <param name="take"></param>
-    /// <param name="skip"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <inheritdoc cref="IMemberService.ListManyAsync" />
     Task<IReadOnlyList<MemberInfo>> ListManyAsync(GlobalIdentifier channelId, int? take = null, int? skip = null,
         CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Adds user with specified identifier.
-    /// </summary>
-    /// <param name="channelId"></param>
-    /// <param name="accountId"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <inheritdoc cref="IMemberService.AddAsync" />
     Task AddAsync(GlobalIdentifier channelId, Identifier accountId, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Removes user with specified identifier.
-    /// </summary>
-    /// <param name="channelId"></param>
-    /// <param name="accountId"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <inheritdoc cref="IMemberService.RemoveAsync" />
     Task RemoveAsync(GlobalIdentifier channelId, Identifier accountId, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Adds user with specified identifier to ban-list.
-    /// </summary>
-    /// <param name="channelId"></param>
-    /// <param name="accountId"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <inheritdoc cref="IMemberService.BanAsync" />
     Task BanAsync(GlobalIdentifier channelId, Identifier accountId, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Removes user with specified identifier from ban-list.
-    /// </summary>
-    /// <param name="channelId"></param>
-    /// <param name="accountId"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <inheritdoc cref="IMemberService.UnbanAsync" />
     Task UnbanAsync(GlobalIdentifier channelId, Identifier accountId, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Gets the total count of members in the specified channel.
-    /// </summary>
-    /// <param name="channelId"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
+    /// <inheritdoc cref="IMemberService.GetTotalCountAsync" />
     Task<long> GetTotalCountAsync(GlobalIdentifier channelId, CancellationToken cancellationToken = default);
 }
