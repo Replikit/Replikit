@@ -65,7 +65,16 @@ internal class TelegramEntityFactory : AdapterService
             _ => throw new ConversionException($"Unable to convert value {chat.Type} to ChannelType")
         };
 
-        return new ChannelInfo(CreateGlobalIdentifier(chat.Id), type, chat.Title);
+        var channelTitle = chat switch
+        {
+            { Title: { } title } => title,
+            { FirstName: { } firstName, LastName: { } lastName } => $"{firstName} {lastName}",
+            { FirstName: { } firstName } => firstName,
+            { Username: { } username } => username,
+            _ => null
+        };
+
+        return new ChannelInfo(CreateGlobalIdentifier(chat.Id), type, channelTitle);
     }
 
     public Attachment? ExtractAttachment(TelegramMessage message)
