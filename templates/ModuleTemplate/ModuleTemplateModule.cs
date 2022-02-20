@@ -6,19 +6,14 @@ namespace ModuleTemplate;
 
 public class ModuleTemplateModule : ReplikitModule
 {
-    public override void ConfigureModules(IReplikitModuleCollection modules)
+    protected override void ConfigureServices(IServiceCollection services)
     {
-        // Here you can add dependency modules
-        // modules.Add<ScenesModule>();
-    }
-
-    public override void ConfigureServices(IServiceCollection services)
-    {
-        // Here you can register services inside the DI container
+        // Here you can register services and add dependency modules
         // services.AddSingleton<MyDependency>();
+        // services.AddModule<ScenesModule>();
     }
 
-    public override void ConfigureAdapters(IAdapterLoaderOptions options)
+    protected override void ConfigureAdapters(IAdapterLoaderOptions options)
     {
         // Here you can register adapters
         // options.AddTelegram();
