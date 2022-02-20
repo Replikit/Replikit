@@ -3,4 +3,13 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Visible="false" Include="$(SolutionDir)assets\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 </Project>
