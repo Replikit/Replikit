@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.
 
+<a name="0.5.0"></a>
+## [0.5.0](https://www.github.com/Replikit/Replikit/releases/tag/v0.5.0) (2022-2-20)
+
+### Bug Fixes
+
+* Add missing common services ([77084b2](https://www.github.com/Replikit/Replikit/commit/77084b27fb96cc1f01cedae5bd2336c96e699ba2))
+* Fix AddButtonRow ([5c8203e](https://www.github.com/Replikit/Replikit/commit/5c8203e47ffdcb772d1162b05a0e329b87cb20c1))
+* Rename MemberCollectionFeatures to MemberServiceFeatures ([b91fe96](https://www.github.com/Replikit/Replikit/commit/b91fe96a2a8cfbd6b876fc2248ec566dcbca6901))
+* **Core:** Fix Command pattern for optional parameters ([48f5a20](https://www.github.com/Replikit/Replikit/commit/48f5a2054ed592f11003d422173436baa77ef9c9))
+* **Core:** Return int from IdentifierConverter where possible ([6d3aa2c](https://www.github.com/Replikit/Replikit/commit/6d3aa2ca971b6b4720342595daccd212c0348007))
+* **Telegram:** Add title for direct channels ([a8ba8a8](https://www.github.com/Replikit/Replikit/commit/a8ba8a8a108b8ee7a4ca33bad73a24cddedcdba7))
+
+### Features
+
+* Add ability to answer to inline button pressing ([010a05d](https://www.github.com/Replikit/Replikit/commit/010a05d2bf3ee133f1c66fad29c2064e0719cc1b))
+* Add channel service abstractions ([0501bd7](https://www.github.com/Replikit/Replikit/commit/0501bd7f74ac9d1104474deef4cfc678b8462753))
+* **Core:** Add global member service ([130c787](https://www.github.com/Replikit/Replikit/commit/130c787a068720f4fa00ab9beca6264d5d7e697f))
+* **Core:** Add more global services ([bdafa74](https://www.github.com/Replikit/Replikit/commit/bdafa74eee9d548b7ea2b9d9f3c620e397fc90ef))
+* **Telegram:** Implement channel service ([2baed21](https://www.github.com/Replikit/Replikit/commit/2baed21841c4ddf9ef89727f426449c1658cc1cf))
+
 <a name="0.4.0"></a>
 ## [0.4.0](https://www.github.com/Replikit/Replikit/releases/tag/v0.4.0) (2022-2-16)
 
