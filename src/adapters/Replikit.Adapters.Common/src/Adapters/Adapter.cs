@@ -47,7 +47,10 @@ public abstract class Adapter : IAdapter
     public IAdapterRepository Repository
     {
         get => GetFeature(_repository, AdapterFeatures.Repository);
-        protected init => SetFeature(out _repository, value, AdapterFeatures.Repository);
+
+        protected init => SetFeature(out _repository,
+            new CommonAdapterRepository(this, value),
+            AdapterFeatures.Repository);
     }
 
     public ITextFormatter TextFormatter
@@ -83,7 +86,10 @@ public abstract class Adapter : IAdapter
     public IChannelService ChannelService
     {
         get => GetFeature(_channelService, AdapterFeatures.ChannelService);
-        protected init => SetFeature(out _channelService, value, AdapterFeatures.ChannelService);
+
+        protected init => SetFeature(out _channelService,
+            new CommonChannelService(this, value),
+            AdapterFeatures.ChannelService);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
