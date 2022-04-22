@@ -1,10 +1,12 @@
 using System.Linq.Expressions;
 using Kantaiko.Controllers;
 using Kantaiko.Routing.Events;
+using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Repositories.Models;
 using Replikit.Core.EntityCollections;
+using Replikit.Core.Handlers.Extensions;
 using Replikit.Extensions.Scenes.Messages;
 using Replikit.Extensions.State;
 
@@ -13,6 +15,8 @@ namespace Replikit.Extensions.Scenes;
 public abstract class Scene : ControllerBase<SceneContext>
 {
     protected SceneRequest Request => Context.Request;
+
+    protected bool IsExternalActivation => Context.Request.EventContext is null;
 
     protected IEventContext<MessageReceivedEvent> EventContext =>
         Request.EventContext ??
@@ -25,6 +29,10 @@ public abstract class Scene : ControllerBase<SceneContext>
     protected AccountInfo Account => Event.Account;
 
     protected IMessageCollection MessageCollection => Context.MessageCollection;
+
+    private IAdapter? _adapter;
+
+    protected IAdapter Adapter => _adapter ??= EventContext.GetRequiredAdapter();
 
     protected static SceneResult TransitionTo(Expression<Action> stage) => new(stage);
     protected static SceneResult TransitionTo(Expression<Func<Task>> stage) => new(stage);
