@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.
 
+<a name="1.0.0-alpha.0"></a>
+## [1.0.0-alpha.0](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.0) (2022-4-22)
+
+### Features
+
+* Redesign core abstractions ([b7884ab](https://www.github.com/Replikit/Replikit/commit/b7884ab393a04a5a0eedb9dc4c97e444957a0424))
+* **Extensions:** Redesign extensions, unify state system ([f5d0ccd](https://www.github.com/Replikit/Replikit/commit/f5d0ccdd58568825e1fa91630933c8902e796baf))
+* **Scenes:** Add Adapter property to scene context ([c4aee89](https://www.github.com/Replikit/Replikit/commit/c4aee89c2ed13f34b5509a311b13532db08678ba))
+* **Telegram:** Update telegram adapter ([6dad2a2](https://www.github.com/Replikit/Replikit/commit/6dad2a2fcdbcc2d787766cb3f0475c8b28034bb9))
+* **Views:** Add Adapter property to view context ([1f72734](https://www.github.com/Replikit/Replikit/commit/1f7273411aabd8f8f351f6a05d01a5c5d80dbdf4))
+
+### Bug Fixes
+
+* **Core:** Improve event handler system ([fb1c0e5](https://www.github.com/Replikit/Replikit/commit/fb1c0e5ae2293e6c0625cdd6b4c9331fdc86a3da))
+
 <a name="0.5.0"></a>
 ## [0.5.0](https://www.github.com/Replikit/Replikit/releases/tag/v0.5.0) (2022-2-20)
 
