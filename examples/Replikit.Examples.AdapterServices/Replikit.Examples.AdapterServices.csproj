@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\adapters\Replikit.Adapters.Telegram\src\Replikit.Adapters.Telegram.Abstractions\Replikit.Adapters.Telegram.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\core\Replikit.Core\src\Replikit.Core.csproj" />
+    <ProjectReference Include="..\..\src\extensions\Replikit.Extensions.Views\src\Replikit.Extensions.Views.csproj" />
   </ItemGroup>
 
 </Project>
