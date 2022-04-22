@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.
 
+<a name="1.0.0-alpha.1"></a>
+## [1.0.0-alpha.1](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.1) (2022-4-22)
+
 <a name="1.0.0-alpha.0"></a>
 ## [1.0.0-alpha.0](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.0) (2022-4-22)
 
