@@ -1,12 +1,20 @@
 ﻿using Replikit.Abstractions.Messages.Builder;
 using Replikit.Abstractions.Messages.Models.Tokens;
+using Replikit.Extensions.State;
 using Replikit.Extensions.Views.Common.Models;
 using Replikit.Extensions.Views.Messages;
 
 namespace Replikit.Extensions.Views.Common;
 
-public abstract class PaginatedView<TItem, TState> : View<TState> where TState : PaginationState
+public abstract class PaginatedView<TItem> : View
 {
+    private readonly PaginationState _paginationState;
+
+    protected PaginatedView(IState<PaginationState> paginationState)
+    {
+        _paginationState = paginationState.Value;
+    }
+
     protected virtual string PreviousArrow => "←";
     protected virtual string NextArrow => "→";
 
@@ -51,7 +59,7 @@ public abstract class PaginatedView<TItem, TState> : View<TState> where TState :
         throw new InvalidOperationException(
             "You must implement either CreateQuery or GetItems & GetTotalCount or their async overloads");
 
-    protected virtual (int Skip, int Take) GetPaginationData() => (State.CurrentPage * PageSize, PageSize);
+    protected virtual (int Skip, int Take) GetPaginationData() => (_paginationState.CurrentPage * PageSize, PageSize);
 
     protected virtual IQueryable<TItem> ApplyPagination(IQueryable<TItem> queryable, int skip, int take)
     {
@@ -67,7 +75,7 @@ public abstract class PaginatedView<TItem, TState> : View<TState> where TState :
 
         var messageBuilder = new ViewMessageBuilder();
 
-        RenderTitle(messageBuilder, State.CurrentPage + 1, pageCount + 1);
+        RenderTitle(messageBuilder, _paginationState.CurrentPage + 1, pageCount + 1);
         messageBuilder.AddTextLine();
 
         var items = await GetItemsAsync(skip, take, cancellationToken);
@@ -88,7 +96,7 @@ public abstract class PaginatedView<TItem, TState> : View<TState> where TState :
         }
     }
 
-    [Action]
+    [Action(AutoUpdate = false)]
     public async Task MoveNext()
     {
         var totalCount = await GetTotalCountAsync();
@@ -103,21 +111,19 @@ public abstract class PaginatedView<TItem, TState> : View<TState> where TState :
         else
         {
             var pageCount = GetPageCount(totalCount.Value);
-            if (State.CurrentPage >= pageCount) return;
+            if (_paginationState.CurrentPage >= pageCount) return;
         }
 
-        State.CurrentPage++;
+        _paginationState.CurrentPage++;
         Update();
     }
 
-    [Action]
+    [Action(AutoUpdate = false)]
     public void MovePrevious()
     {
-        if (State.CurrentPage == 0) return;
+        if (_paginationState.CurrentPage == 0) return;
 
-        State.CurrentPage--;
+        _paginationState.CurrentPage--;
         Update();
     }
 }
-
-public abstract class PaginatedView<TItem> : PaginatedView<TItem, PaginationState> { }

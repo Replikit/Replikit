@@ -1,6 +1,8 @@
-﻿using Replikit.Abstractions.Messages.Models;
-using Replikit.Core.EntityCollections;
-using Replikit.Extensions.Common.Views;
+﻿using Kantaiko.Properties.Immutable;
+using Microsoft.Extensions.DependencyInjection;
+using Replikit.Abstractions.Messages.Models;
+using Replikit.Extensions.State;
+using Replikit.Extensions.State.Context;
 using Replikit.Extensions.Views.Exceptions;
 
 namespace Replikit.Extensions.Views.Internal;
@@ -11,42 +13,36 @@ internal class ViewManager : IViewManager
     private readonly ViewHandlerAccessor _handlerAccessor;
     private readonly ViewExternalActivationDeterminant _viewExternalActivationDeterminant;
 
-    public IViewStorage Storage { get; }
+    public IStateManager StateManager { get; }
 
     public ViewManager(IServiceProvider serviceProvider, ViewHandlerAccessor handlerAccessor,
-        IViewStorage viewStorage,
+        IStateManager stateManager,
         ViewExternalActivationDeterminant viewExternalActivationDeterminant)
     {
         _serviceProvider = serviceProvider;
         _handlerAccessor = handlerAccessor;
-        Storage = viewStorage;
+        StateManager = stateManager;
         _viewExternalActivationDeterminant = viewExternalActivationDeterminant;
     }
 
-    public async Task<GlobalMessageIdentifier> SendViewAsync<TView>(IMessageCollection messageCollection,
-        ViewRequest? request = null,
-        bool autoSave = true, CancellationToken cancellationToken = default)
-        where TView : View
+    public async Task<GlobalMessageIdentifier> SendViewAsync<TView>(ViewRequest request,
+        CancellationToken cancellationToken = default) where TView : View
     {
         var fullName = typeof(TView).FullName!;
 
-        request ??= new ViewRequest(fullName, "Void Init()",
-            Array.Empty<object>(),
-            messageCollection: messageCollection,
-            autoSave: autoSave);
-
         ValidateViewRequest(request, fullName, false);
 
-        var context = CreateContext(request, cancellationToken);
-        var result = await _handlerAccessor.Handler.Handle(context);
+        await using var scope = _serviceProvider.CreateAsyncScope();
 
-        // TODO find a better way to access view id
-        return ((ViewRequestResult) result.ReturnValue!).ViewId;
+        var context = CreateContext(request, scope.ServiceProvider, cancellationToken);
+        await _handlerAccessor.Handler.Handle(context);
+
+        return context.MessageId!.Value;
     }
 
     public async Task ActivateAsync(ViewRequest request, CancellationToken cancellationToken = default)
     {
-        var viewInstance = request.ViewInstance;
+        var viewInstance = request.ViewState?.Value.ViewInstance;
 
         if (viewInstance is null)
         {
@@ -55,13 +51,19 @@ internal class ViewManager : IViewManager
 
         ValidateViewRequest(request, viewInstance.Type, true);
 
-        var context = CreateContext(request, cancellationToken);
+        await using var scope = _serviceProvider.CreateAsyncScope();
+
+        var context = CreateContext(request, scope.ServiceProvider, cancellationToken);
         await _handlerAccessor.Handler.Handle(context);
     }
 
-    private ViewContext CreateContext(ViewRequest request, CancellationToken cancellationToken)
+    internal static ViewContext CreateContext(ViewRequest request, IServiceProvider serviceProvider,
+        CancellationToken cancellationToken)
     {
-        return new ViewContext(request, _serviceProvider, cancellationToken: cancellationToken);
+        var properties = ImmutablePropertyCollection.Empty
+            .Set(new StateContextProperties(ViewStateKeyFactory.Instance));
+
+        return new ViewContext(request, serviceProvider, properties, cancellationToken);
     }
 
     private void ValidateViewRequest(ViewRequest request, string viewType, bool isExternal)

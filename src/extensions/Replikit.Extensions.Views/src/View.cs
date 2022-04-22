@@ -1,6 +1,6 @@
 ﻿using Kantaiko.Controllers;
 using Replikit.Abstractions.Messages.Events;
-using Replikit.Extensions.Views.Internal;
+using Replikit.Extensions.State;
 using Replikit.Extensions.Views.Messages;
 
 namespace Replikit.Extensions.Views;
@@ -16,7 +16,7 @@ public abstract class View : ControllerBase<ViewContext>
     public void Init() => Update();
 
     protected ViewRequest Request => Context.Request;
-    protected ButtonPressedEvent? Event => Request?.Event;
+    protected ButtonPressedEvent? Event => Request.Event;
 
     public virtual Task<ViewResult> RenderAsync(CancellationToken cancellationToken) =>
         Task.FromResult(Render());
@@ -24,25 +24,20 @@ public abstract class View : ControllerBase<ViewContext>
     public virtual ViewResult Render() =>
         throw new NotImplementedException("You must implement Render or RenderAsync view method");
 
-    public virtual Task<ViewResult> RenderClosedAsync(CancellationToken cancellationToken) =>
-        Task.FromResult(RenderClosed());
-
-    public virtual ViewResult RenderClosed() => Render();
-
     internal bool UpdateRequested { get; private set; }
 
     protected static ViewMessageBuilder CreateBuilder() => new();
 }
 
-public abstract class View<TState> : View, IStatefulView where TState : notnull
+public abstract class View<TState> : View where TState : notnull, new()
 {
-    protected TState State { get; set; } = default!;
+    private readonly IState<TState> _state;
 
-    Type IStatefulView.StateType => typeof(TState);
-    object IStatefulView.StateValue => State;
-
-    void IStatefulView.SetState(object state)
+    protected View(IState<TState> state)
     {
-        State = (TState) state;
+        _state = state;
     }
+
+    protected TState State => _state.Value;
+    protected void ClearState() => _state.Clear();
 }

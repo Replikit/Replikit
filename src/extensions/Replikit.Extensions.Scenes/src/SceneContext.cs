@@ -1,8 +1,6 @@
 using Kantaiko.Properties.Immutable;
 using Kantaiko.Routing.Context;
-using Replikit.Abstractions.Common.Models;
 using Replikit.Core.EntityCollections;
-using Replikit.Core.Handlers.Extensions;
 
 namespace Replikit.Extensions.Scenes;
 
@@ -15,15 +13,12 @@ public class SceneContext : ContextBase
         base(serviceProvider, properties, cancellationToken)
     {
         Request = request;
-
-        ChannelId = request.EventContext?.Event.Channel.Id ?? request.ChannelId ??
-            throw new InvalidOperationException("SceneRequest must contain EventContext or ChannelId");
-
-        MessageCollection = request.EventContext?.GetMessageCollection() ?? request.MessageCollection ??
-            throw new InvalidOperationException("SceneRequest must contain EventContext or MessageCollection");
     }
 
     public SceneRequest Request { get; }
-    public GlobalIdentifier ChannelId { get; }
-    public IMessageCollection MessageCollection { get; }
+
+    private IMessageCollection? _messageCollection;
+
+    public IMessageCollection MessageCollection =>
+        _messageCollection ??= Core.EntityCollections.MessageCollection.Create(Request.ChannelId!, ServiceProvider);
 }

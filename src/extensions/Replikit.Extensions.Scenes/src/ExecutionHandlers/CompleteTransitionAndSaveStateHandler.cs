@@ -5,10 +5,11 @@ using Kantaiko.Controllers.Result;
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Messages.Models.Keyboard;
-using Replikit.Extensions.Common.Models;
-using Replikit.Extensions.Common.Scenes;
-using Replikit.Extensions.Common.Utils;
-using Replikit.Extensions.Scenes.Internal;
+using Replikit.Core.Utils;
+using Replikit.Extensions.Scenes.Models;
+using Replikit.Extensions.State;
+using Replikit.Extensions.State.Implementation;
+using Replikit.Extensions.Storage.Models;
 
 namespace Replikit.Extensions.Scenes.ExecutionHandlers;
 
@@ -18,15 +19,8 @@ internal class CompleteTransitionAndSaveStateHandler : ControllerExecutionHandle
         ControllerExecutionContext<SceneContext> context,
         NextAction next)
     {
-        var sceneStorageProvider = context.ServiceProvider.GetRequiredService<ISceneStorageProvider>();
-        var sceneManager = context.ServiceProvider.GetRequiredService<SceneManager>();
-
-        var controller = context.ControllerInstance!;
-
-        if (controller is not Scene scene)
-        {
-            throw new InvalidOperationException($"Controller of type \"{controller.GetType().Name}\" is not a Scene");
-        }
+        var sceneManager = context.ServiceProvider.GetRequiredService<ISceneManager>();
+        var stateManager = context.ServiceProvider.GetRequiredService<IStateManager>();
 
         if (context.Result is not SceneResult sceneResult)
         {
@@ -34,15 +28,12 @@ internal class CompleteTransitionAndSaveStateHandler : ControllerExecutionHandle
         }
 
         var sceneRequest = context.RequestContext.Request;
-        var sceneInstance = sceneRequest.SceneInstance;
-        var sceneStorage = sceneStorageProvider.Resolve();
-
-        var statefulScene = scene as IStatefulScene;
-        var channelId = context.RequestContext.ChannelId;
+        var sceneState = sceneRequest.SceneState;
+        var sceneInstance = sceneState?.Value.SceneInstance;
 
         var messageCollection = context.RequestContext.MessageCollection;
 
-        SceneStage CreateSceneStage(Expression stage)
+        SceneInstanceStage CreateSceneStage(Expression stage)
         {
             var (method, parameters) = MethodExpressionTransformer.Transform(stage);
 
@@ -51,7 +42,36 @@ internal class CompleteTransitionAndSaveStateHandler : ControllerExecutionHandle
                 throw new InvalidOperationException($"Invalid stage method {method}");
             }
 
-            return new SceneStage(method.DeclaringType.FullName!, method.ToString()!, parameters);
+            var dynamicParameters = parameters.Select(x => new DynamicValue(x)).ToArray();
+
+            return new SceneInstanceStage(method.DeclaringType.FullName!, method.ToString()!, dynamicParameters);
+        }
+
+        var channelId = sceneRequest.ChannelId;
+
+        async Task ClearAssociatedStates()
+        {
+            var partialKey = new PartialStateKey(
+                StateType.State,
+                channelId.AdapterId,
+                channelId
+            );
+
+            var associatedStates = await stateManager.FindStatesAsync(partialKey);
+
+            foreach (var state in associatedStates)
+            {
+                if (state.Key.Type != typeof(SceneState))
+                {
+                    state.Clear();
+                }
+            }
+        }
+
+        if (sceneInstance is not null && sceneInstance.CurrentStage.Type != sceneRequest.Stage.Type)
+        {
+            // Clear states when moving to another scene
+            await ClearAssociatedStates();
         }
 
         // If transition was requested, create new scene request and process it instead
@@ -64,25 +84,28 @@ internal class CompleteTransitionAndSaveStateHandler : ControllerExecutionHandle
 
             var transitionStage = CreateSceneStage(sceneResult.Transition);
 
-            var state = new DynamicValue(statefulScene?.StateValue);
+            var newSceneInstance = new SceneInstance(sceneInstance?.CurrentStage ?? transitionStage,
+                sceneInstance?.Transitions ?? Array.Empty<SceneInstanceTransition>());
 
-            var newSceneInstance = new SceneInstance(channelId, state, sceneInstance?.CurrentStage ?? transitionStage,
-                sceneInstance?.Transitions ?? Array.Empty<SceneTransition>());
+            sceneState ??= await stateManager.GetSceneStateAsync<SceneState>(
+                channelId, context.CancellationToken);
 
-            var transitionRequest = new SceneRequest(transitionStage, true,
-                sceneRequest.EventContext, sceneRequest.ChannelId, sceneRequest.MessageCollection, newSceneInstance);
+            sceneState.Value.SceneInstance = newSceneInstance;
 
-            await sceneManager.ProcessRequest(transitionRequest, context.CancellationToken);
+            var transitionRequest = new SceneRequest(channelId, transitionStage, true,
+                sceneRequest.EventContext, sceneState);
+
+            await sceneManager.EnterSceneAsync(transitionRequest, context.CancellationToken);
             return ControllerExecutionResult.Empty;
         }
 
         OutMessage? outMessage = null;
-        IReadOnlyList<SceneTransition> transitions;
+        IReadOnlyList<SceneInstanceTransition> transitions;
 
         if (sceneResult.OutMessage is not null)
         {
             outMessage = sceneResult.OutMessage;
-            transitions = Array.Empty<SceneTransition>();
+            transitions = Array.Empty<SceneInstanceTransition>();
         }
         else if (sceneResult.SceneMessageBuilder is not null)
         {
@@ -92,12 +115,12 @@ internal class CompleteTransitionAndSaveStateHandler : ControllerExecutionHandle
             transitions = sceneTransitions.Select(transition =>
             {
                 var stage = CreateSceneStage(transition.Stage);
-                return new SceneTransition(transition.Text, stage);
+                return new SceneInstanceTransition(transition.Text, stage);
             }).ToArray();
         }
         else
         {
-            transitions = Array.Empty<SceneTransition>();
+            transitions = Array.Empty<SceneInstanceTransition>();
         }
 
         if (outMessage is not null)
@@ -110,17 +133,25 @@ internal class CompleteTransitionAndSaveStateHandler : ControllerExecutionHandle
             await messageCollection.SendAsync(outMessage, cancellationToken: context.CancellationToken);
         }
 
+        var stateLoader = context.ServiceProvider.GetRequiredService<IStateLoader>();
+
         if (sceneResult.ShouldExit)
         {
-            await sceneStorage.DeleteAsync(channelId, context.CancellationToken);
+            sceneState?.Clear();
+
+            await ClearAssociatedStates();
         }
         else
         {
-            var state = new DynamicValue(statefulScene?.StateValue);
+            var newSceneInstance = new SceneInstance(sceneRequest.Stage, transitions);
 
-            var newSceneInstance = new SceneInstance(channelId, state, sceneRequest.Stage, transitions);
-            await sceneStorage.SetAsync(channelId, newSceneInstance, context.CancellationToken);
+            sceneState ??= await stateManager.GetSceneStateAsync<SceneState>(
+                channelId, context.CancellationToken);
+
+            sceneState.Value.SceneInstance = newSceneInstance;
         }
+
+        await stateLoader.SaveAsync(context.CancellationToken);
 
         return ControllerExecutionResult.Empty;
     }

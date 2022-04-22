@@ -32,7 +32,7 @@ internal class SceneHandlerAccessor : ISceneIntrospectionInfoAccessor
         pipelineBuilder.AddEndpointMatching();
         pipelineBuilder.AddSubHandlerExecution();
         pipelineBuilder.AddControllerInstantiation(ServiceHandlerFactory.Instance);
-        pipelineBuilder.AddHandler(new LoadSceneStateHandler());
+        pipelineBuilder.AddHandler(new LoadStateHandler());
         pipelineBuilder.AddHandler(new LoadSceneEndpointParametersHandler());
         pipelineBuilder.AddEndpointInvocation();
         pipelineBuilder.AddHandler(new CompleteTransitionAndSaveStateHandler());

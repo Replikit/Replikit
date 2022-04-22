@@ -5,12 +5,12 @@ using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Repositories.Models;
 using Replikit.Core.EntityCollections;
-using Replikit.Extensions.Scenes.Internal;
 using Replikit.Extensions.Scenes.Messages;
+using Replikit.Extensions.State;
 
 namespace Replikit.Extensions.Scenes;
 
-public class Scene : ControllerBase<SceneContext>
+public abstract class Scene : ControllerBase<SceneContext>
 {
     protected SceneRequest Request => Context.Request;
 
@@ -49,14 +49,15 @@ public class Scene : ControllerBase<SceneContext>
     public SceneResult ExitWithMessageStage(OutMessage message) => Exit(message);
 }
 
-public class Scene<TState> : Scene, IStatefulScene where TState : notnull
+public abstract class Scene<TState> : Scene where TState : notnull, new()
 {
-    protected TState State { get; set; } = default!;
-    Type IStatefulScene.StateType => typeof(TState);
-    object IStatefulScene.StateValue => State;
+    private readonly IState<TState> _state;
 
-    void IStatefulScene.SetState(object state)
+    protected Scene(IState<TState> state)
     {
-        State = (TState) state;
+        _state = state;
     }
+
+    protected TState State => _state.Value;
+    protected void ClearState() => _state.Clear();
 }

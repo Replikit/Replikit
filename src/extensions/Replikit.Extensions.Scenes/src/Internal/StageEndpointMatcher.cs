@@ -17,7 +17,7 @@ public class StageEndpointMatcher : IEndpointMatcher<SceneContext>
 
     public EndpointMatchResult Match(EndpointMatchContext<SceneContext> context)
     {
-        if (context.RequestContext.Request.Stage.SceneType != _type)
+        if (context.RequestContext.Request.Stage.Type != _type)
         {
             return EndpointMatchResult.NotMatched;
         }

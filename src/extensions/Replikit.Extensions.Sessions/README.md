@@ -1,3 +1,0 @@
-# Replikit.Extensions.Sessions
-
-WIP

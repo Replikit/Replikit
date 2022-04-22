@@ -1,33 +1,31 @@
 using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Messages.Events;
-using Replikit.Core.EntityCollections;
-using Replikit.Extensions.Common.Scenes;
+using Replikit.Extensions.Scenes.Models;
+using Replikit.Extensions.State;
 
 namespace Replikit.Extensions.Scenes;
 
 public class SceneRequest
 {
-    public SceneRequest(SceneStage stage, bool firstTime,
+    public SceneRequest(
+        GlobalIdentifier channelId,
+        SceneInstanceStage stage,
+        bool firstTime,
         IEventContext<MessageReceivedEvent>? eventContext = null,
-        GlobalIdentifier? channelId = null,
-        IMessageCollection? messageCollection = null,
-        SceneInstance? sceneInstance = null)
+        IState<SceneState>? sceneState = null)
     {
+        ChannelId = channelId;
         Stage = stage;
         FirstTime = firstTime;
-        ChannelId = channelId;
         EventContext = eventContext;
-        MessageCollection = messageCollection;
-        SceneInstance = sceneInstance;
+        SceneState = sceneState;
     }
 
-    public SceneStage Stage { get; }
+    public GlobalIdentifier ChannelId { get; }
+    public SceneInstanceStage Stage { get; }
     public bool FirstTime { get; }
 
     public IEventContext<MessageReceivedEvent>? EventContext { get; }
-    public GlobalIdentifier? ChannelId { get; }
-    public IMessageCollection? MessageCollection { get; }
-
-    public SceneInstance? SceneInstance { get; }
+    public IState<SceneState>? SceneState { get; }
 }

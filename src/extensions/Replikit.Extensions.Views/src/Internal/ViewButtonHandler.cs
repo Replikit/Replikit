@@ -5,7 +5,8 @@ using System.Text.Json;
 using Kantaiko.Routing;
 using Kantaiko.Routing.Events;
 using Microsoft.Extensions.Logging;
-using Replikit.Extensions.Common.Views;
+using Replikit.Extensions.State;
+using Replikit.Extensions.Views.Models;
 
 namespace Replikit.Extensions.Views.Internal;
 
@@ -13,14 +14,15 @@ internal class ViewButtonHandler : AdapterEventHandler<ButtonPressedEvent>
 {
     private readonly ViewHandlerAccessor _handlerAccessor;
     private readonly ILogger<ViewButtonHandler> _logger;
-    private readonly IViewStorage _viewStorage;
+    private readonly IStateManager _stateManager;
 
-    public ViewButtonHandler(ViewHandlerAccessor handlerAccessor, ILogger<ViewButtonHandler> logger,
-        IViewStorage viewStorage)
+    public ViewButtonHandler(ViewHandlerAccessor handlerAccessor,
+        ILogger<ViewButtonHandler> logger,
+        IStateManager stateManager)
     {
         _handlerAccessor = handlerAccessor;
         _logger = logger;
-        _viewStorage = viewStorage;
+        _stateManager = stateManager;
     }
 
     protected override async Task<Unit> HandleAsync(IEventContext<ButtonPressedEvent> context, NextAction next)
@@ -45,30 +47,33 @@ internal class ViewButtonHandler : AdapterEventHandler<ButtonPressedEvent>
             return await next();
         }
 
-        var viewEntry = await _viewStorage.GetAsync(context.Event.Message.Id, context.CancellationToken);
+        var viewState = await _stateManager.GetViewStateAsync<ViewState>(
+            context.Event.Message.Id, context.CancellationToken);
 
-        if (viewEntry is null)
+        var viewInstance = viewState.Value.ViewInstance;
+
+        if (viewInstance is null)
         {
             _logger.LogDebug("Button press has been skipped because view was not found");
             return await next();
         }
 
-        if (viewEntry.Actions is not { Count: > 0 })
+        if (viewInstance.Actions is not { Count: > 0 })
         {
             _logger.LogDebug("Button press has been skipped because view contains no actions");
             return await next();
         }
 
-        if (payload.ActionIndex < 0 || payload.ActionIndex >= viewEntry.Actions.Count)
+        if (payload.ActionIndex < 0 || payload.ActionIndex >= viewInstance.Actions.Count)
         {
             _logger.LogDebug("Button press has been skipped because of invalid index");
             return await next();
         }
 
-        var action = viewEntry.Actions[payload.ActionIndex];
+        var (method, parameters) = viewInstance.Actions[payload.ActionIndex];
 
-        var request = new ViewRequest(viewEntry.Type, action.Method, action.Parameters, viewEntry, Event);
-        var viewContext = new ViewContext(request, ServiceProvider, cancellationToken: CancellationToken);
+        var request = new ViewRequest(viewInstance.Type, method, parameters, viewState, Event);
+        var viewContext = ViewManager.CreateContext(request, ServiceProvider, CancellationToken);
 
         await _handlerAccessor.Handler.Handle(viewContext);
 

@@ -8,9 +8,9 @@ namespace Replikit.Extensions.Views.Messages;
 
 public class ViewMessageBuilder : MessageBuilder<ViewMessageBuilder>
 {
-    private readonly List<ViewAction> _actions = new();
+    private readonly List<ViewMessageAction> _actions = new();
 
-    public ViewMessageBuilder AddActionRow(params ViewAction[] actions)
+    public ViewMessageBuilder AddActionRow(params ViewMessageAction[] actions)
     {
         InlineButtonBuilder.AddButtonRow(actions.Select(CreateButton));
         _actions.AddRange(actions);
@@ -25,49 +25,49 @@ public class ViewMessageBuilder : MessageBuilder<ViewMessageBuilder>
         return this;
     }
 
-    public ViewMessageBuilder AddAction(ViewAction action)
+    public ViewMessageBuilder AddAction(ViewMessageAction messageAction)
     {
-        _actions.Add(action);
-        InlineButtonBuilder.AddButton(CreateButton(action));
+        _actions.Add(messageAction);
+        InlineButtonBuilder.AddButton(CreateButton(messageAction));
 
         return this;
     }
 
-    public ViewMessageBuilder AddAction(int row, ViewAction action)
+    public ViewMessageBuilder AddAction(int row, ViewMessageAction messageAction)
     {
-        _actions.Add(action);
-        InlineButtonBuilder.AddButton(row, CreateButton(action));
+        _actions.Add(messageAction);
+        InlineButtonBuilder.AddButton(row, CreateButton(messageAction));
 
         return this;
     }
 
     public ViewMessageBuilder AddAction(int row, string text, Expression<Action> action)
     {
-        return AddAction(row, new ViewAction(text, action));
+        return AddAction(row, new ViewMessageAction(text, action));
     }
 
     public ViewMessageBuilder AddAction(int row, string text, Expression<Func<Task>> action)
     {
-        return AddAction(row, new ViewAction(text, action));
+        return AddAction(row, new ViewMessageAction(text, action));
     }
 
     public ViewMessageBuilder AddAction(string text, Expression<Action> action)
     {
-        return AddAction(new ViewAction(text, action));
+        return AddAction(new ViewMessageAction(text, action));
     }
 
     public ViewMessageBuilder AddAction(string text, Expression<Func<Task>> action)
     {
-        return AddAction(new ViewAction(text, action));
+        return AddAction(new ViewMessageAction(text, action));
     }
 
-    private IInlineButton CreateButton(ViewAction action, int index = 0)
+    private IInlineButton CreateButton(ViewMessageAction messageAction, int index = 0)
     {
         var payload = JsonSerializer.Serialize(new ViewActionPayload(_actions.Count - 1 + index));
-        return new CallbackInlineButton(action.Text, payload);
+        return new CallbackInlineButton(messageAction.Text, payload);
     }
 
-    internal (OutMessage, IReadOnlyList<ViewAction>) BuildWithActions()
+    internal (OutMessage, IReadOnlyList<ViewMessageAction>) BuildWithActions()
     {
         return (Build(), _actions);
     }

@@ -33,7 +33,7 @@ internal class ViewHandlerAccessor : IViewIntrospectionInfoAccessor
         pipelineBuilder.AddEndpointMatching();
         pipelineBuilder.AddSubHandlerExecution();
         pipelineBuilder.AddControllerInstantiation(ServiceHandlerFactory.Instance);
-        pipelineBuilder.AddHandler(new LoadViewStateHandler());
+        pipelineBuilder.AddHandler(new LoadStateHandler());
         pipelineBuilder.AddHandler(new LoadViewEndpointParametersHandler());
         pipelineBuilder.AddEndpointInvocation();
         pipelineBuilder.AddHandler(ActivatorUtilities.CreateInstance<UpdateViewAndSaveStateHandler>(serviceProvider));

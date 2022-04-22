@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Replikit.Extensions.Common\src\Replikit.Extensions.Common.csproj" />
+    <ProjectReference Include="..\..\Replikit.Extensions.State\src\Replikit.Extensions.State.csproj" />
   </ItemGroup>
 
 </Project>

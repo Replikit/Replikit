@@ -9,7 +9,11 @@ internal class LoadSceneEndpointParametersHandler : ControllerExecutionHandler<S
     protected override Task<ControllerExecutionResult> HandleAsync(ControllerExecutionContext<SceneContext> context,
         NextAction next)
     {
-        context.ConstructedParameters = context.RequestContext.Request.Stage.Parameters;
+        var parameters = context.Endpoint!.Parameters;
+
+        context.ConstructedParameters = context.RequestContext.Request.Stage.Parameters
+            .Select((value, index) => value.GetValue(parameters[index].ParameterType))
+            .ToArray();
 
         return next();
     }

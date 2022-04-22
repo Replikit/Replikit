@@ -10,6 +10,7 @@ namespace Replikit.Extensions.Views;
 public class ActionAttribute : Attribute, IEndpointMatcherFactory<ViewContext>, IEndpointPropertyProvider
 {
     public bool AllowExternalActivation { get; init; }
+    public bool AutoUpdate { get; init; } = true;
 
     public IEndpointMatcher<ViewContext> CreateEndpointMatcher(EndpointFactoryContext context)
     {
@@ -18,6 +19,7 @@ public class ActionAttribute : Attribute, IEndpointMatcherFactory<ViewContext>, 
 
     public IImmutablePropertyCollection UpdateEndpointProperties(EndpointFactoryContext context)
     {
-        return context.Endpoint.Properties.Set(new ViewActionEndpointProperties(true, AllowExternalActivation));
+        return context.Endpoint.Properties.Set(
+            new ViewActionEndpointProperties(true, AllowExternalActivation, AutoUpdate));
     }
 }

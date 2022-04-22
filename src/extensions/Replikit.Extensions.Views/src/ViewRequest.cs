@@ -1,32 +1,32 @@
-﻿using Replikit.Abstractions.Messages.Events;
-using Replikit.Core.EntityCollections;
-using Replikit.Extensions.Common.Views;
+﻿using Replikit.Abstractions.Common.Models;
+using Replikit.Abstractions.Messages.Events;
+using Replikit.Extensions.State;
+using Replikit.Extensions.Storage.Models;
+using Replikit.Extensions.Views.Models;
 
 namespace Replikit.Extensions.Views;
 
 public class ViewRequest
 {
-    public ViewRequest(string type, string method, object[] parameters,
-        ViewInstance? viewInstance = null,
+    public ViewRequest(string type, string method,
+        IReadOnlyList<DynamicValue> parameters,
+        IState<ViewState>? viewState = null,
         ButtonPressedEvent? @event = null,
-        IMessageCollection? messageCollection = null,
-        bool autoSave = true)
+        GlobalIdentifier? channelId = null)
     {
         Type = type;
-        ViewInstance = viewInstance;
+        ViewState = viewState;
         Method = method;
         Parameters = parameters;
+        ChannelId = channelId;
         Event = @event;
-        MessageCollection = messageCollection;
-        AutoSave = autoSave;
     }
 
     public string Type { get; }
     public string Method { get; }
-    public object[] Parameters { get; }
+    public IReadOnlyList<DynamicValue> Parameters { get; }
 
-    public ViewInstance? ViewInstance { get; }
+    public IState<ViewState>? ViewState { get; }
     public ButtonPressedEvent? Event { get; }
-    public IMessageCollection? MessageCollection { get; }
-    public bool AutoSave { get; }
+    public GlobalIdentifier? ChannelId { get; }
 }

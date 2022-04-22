@@ -3,14 +3,19 @@ using System.Diagnostics;
 using Kantaiko.Controllers.Execution;
 using Kantaiko.Controllers.Execution.Handlers;
 using Kantaiko.Controllers.Result;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Replikit.Abstractions.Adapters;
+using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Messages.Models;
-using Replikit.Extensions.Common.Models;
-using Replikit.Extensions.Common.Utils;
-using Replikit.Extensions.Common.Views;
+using Replikit.Core.GlobalServices;
+using Replikit.Core.Utils;
+using Replikit.Extensions.State;
+using Replikit.Extensions.State.Implementation;
+using Replikit.Extensions.Storage.Models;
 using Replikit.Extensions.Views.Internal;
 using Replikit.Extensions.Views.Messages;
+using Replikit.Extensions.Views.Models;
 
 namespace Replikit.Extensions.Views.ExecutionHandlers;
 
@@ -18,17 +23,18 @@ internal class UpdateViewAndSaveStateHandler : ControllerExecutionHandler<ViewCo
 {
     private readonly ILogger<UpdateViewAndSaveStateHandler> _logger;
     private readonly IAdapterCollection _adapterCollection;
-    private readonly IViewStorage _viewStorage;
     private readonly ViewExternalActivationDeterminant _viewExternalActivationDeterminant;
+    private readonly IGlobalMessageService _messageService;
 
     public UpdateViewAndSaveStateHandler(ILogger<UpdateViewAndSaveStateHandler> logger,
-        IAdapterCollection adapterCollection, IViewStorage viewStorage,
-        ViewExternalActivationDeterminant viewExternalActivationDeterminant)
+        IAdapterCollection adapterCollection,
+        ViewExternalActivationDeterminant viewExternalActivationDeterminant,
+        IGlobalMessageService messageService)
     {
         _logger = logger;
         _adapterCollection = adapterCollection;
-        _viewStorage = viewStorage;
         _viewExternalActivationDeterminant = viewExternalActivationDeterminant;
+        _messageService = messageService;
     }
 
     protected override async Task<ControllerExecutionResult> HandleAsync(
@@ -43,19 +49,10 @@ internal class UpdateViewAndSaveStateHandler : ControllerExecutionHandler<ViewCo
         }
 
         var viewRequest = context.RequestContext.Request;
-        var viewInstance = viewRequest.ViewInstance;
+        var viewState = viewRequest.ViewState;
+        var viewInstance = viewState?.Value.ViewInstance;
 
         var controllerInfo = context.Endpoint!.Controller!;
-
-        var statefulView = view as IStatefulView;
-
-        async Task SaveChanges()
-        {
-            if (viewRequest.AutoSave)
-            {
-                await _viewStorage.SaveChangesAsync(context.CancellationToken);
-            }
-        }
 
         var shouldKeepView = true;
 
@@ -71,7 +68,7 @@ internal class UpdateViewAndSaveStateHandler : ControllerExecutionHandler<ViewCo
             _logger.LogDebug("View state deleted since view became inaccessible");
         }
 
-        ViewInstanceAction CreateViewEntryAction(ViewAction action)
+        ViewInstanceAction CreateViewInstanceAction(ViewMessageAction action)
         {
             var (method, parameters) = MethodExpressionTransformer.Transform(action.Action);
 
@@ -86,7 +83,9 @@ internal class UpdateViewAndSaveStateHandler : ControllerExecutionHandler<ViewCo
                     "or is not marked with [Action] attribute");
             }
 
-            return new ViewInstanceAction(method.ToString()!, parameters);
+            var dynamicParameters = parameters.Select(x => new DynamicValue(x)).ToArray();
+
+            return new ViewInstanceAction(method.ToString()!, dynamicParameters);
         }
 
         async Task<(OutMessage, IReadOnlyList<ViewInstanceAction>)> RenderView()
@@ -106,7 +105,7 @@ internal class UpdateViewAndSaveStateHandler : ControllerExecutionHandler<ViewCo
                 TryDeleteView();
             }
 
-            return (message, actions.Select(CreateViewEntryAction).ToArray());
+            return (message, actions.Select(CreateViewInstanceAction).ToArray());
         }
 
         var (viewMessage, viewActions) = await RenderView();
@@ -115,12 +114,12 @@ internal class UpdateViewAndSaveStateHandler : ControllerExecutionHandler<ViewCo
         {
             if (viewInstance is null)
             {
-                if (viewRequest.MessageCollection is null)
+                if (viewRequest.ChannelId is null)
                 {
-                    throw new InvalidOperationException("No message collection nor view instance provided");
+                    throw new InvalidOperationException("No channel id nor view instance provided");
                 }
 
-                var message = await viewRequest.MessageCollection.SendAsync(viewMessage,
+                var message = await _messageService.SendAsync(viewRequest.ChannelId.Value, viewMessage,
                     cancellationToken: context.CancellationToken);
 
                 _logger.LogDebug("View message created");
@@ -128,48 +127,61 @@ internal class UpdateViewAndSaveStateHandler : ControllerExecutionHandler<ViewCo
                 return message.Id;
             }
 
-            var messageId = viewInstance.MessageId;
-            if (!view.UpdateRequested) return messageId;
+            // ReSharper disable once AccessToModifiedClosure
+            var stateKey = viewState!.Key;
 
-            var channelId = messageId.ChannelId;
-
-            if (channelId is null)
+            if (view.UpdateRequested || ViewActionEndpointProperties.Of(context.Endpoint) is { AutoUpdate: true })
             {
-                throw new InvalidOperationException("View message id is null");
+                if (stateKey.MessageId is null)
+                {
+                    throw new InvalidOperationException("View message id is null");
+                }
+
+                var adapter = _adapterCollection.ResolveRequired(stateKey.AdapterId!);
+
+                await adapter.MessageService.EditAsync(stateKey.ChannelId!.Value, stateKey.MessageId!.Value,
+                    viewMessage, cancellationToken: context.CancellationToken);
+
+                _logger.LogDebug("View message updated");
             }
 
-            var adapter = _adapterCollection.ResolveRequired(channelId.AdapterId);
-
-            await adapter.MessageService.EditAsync(messageId.ChannelId, messageId, viewMessage,
-                cancellationToken: context.CancellationToken);
-
-            _logger.LogDebug("View message updated");
-
-            return messageId;
+            return new GlobalMessageIdentifier(
+                new GlobalIdentifier(stateKey.AdapterId!, stateKey.ChannelId!.Value),
+                stateKey.MessageId!.Value.Identifiers);
         }
 
         var messageId = await UpsertMessage();
 
+        context.RequestContext.MessageId = messageId;
+
+        var stateLoader = context.ServiceProvider.GetRequiredService<IStateLoader>();
+        await stateLoader.LoadAsync(context.CancellationToken);
+
         if (shouldKeepView)
         {
-            var entry = new ViewInstance(messageId,
-                viewRequest.Type,
-                new DynamicValue(statefulView?.StateValue),
-                viewActions);
+            var instance = new ViewInstance(viewRequest.Type, viewActions);
 
-            _viewStorage.Set(messageId, entry);
-            _logger.LogDebug("View state written");
+            if (viewState is null)
+            {
+                var stateManager = context.ServiceProvider.GetRequiredService<IStateManager>();
+
+                viewState = await stateManager.GetViewStateAsync<ViewState>(messageId, context.CancellationToken);
+            }
+
+            viewState.Value.ViewInstance = instance;
+
+            _logger.LogDebug("View state updated");
         }
         else if (viewInstance is not null)
         {
-            Debug.Assert(messageId == viewInstance.MessageId);
+            Debug.Assert(messageId == viewRequest.ViewState!.Key.MessageId);
 
-            _viewStorage.Delete(messageId);
-            _logger.LogDebug("View state deleted");
+            viewRequest.ViewState!.Clear();
+            _logger.LogDebug("View state cleared");
         }
 
-        await SaveChanges();
+        await stateLoader.SaveAsync(context.CancellationToken);
 
-        return ControllerExecutionResult.Success(new ViewRequestResult(messageId));
+        return ControllerExecutionResult.Empty;
     }
 }

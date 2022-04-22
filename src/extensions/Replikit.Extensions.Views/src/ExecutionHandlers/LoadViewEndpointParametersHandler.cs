@@ -9,7 +9,11 @@ internal class LoadViewEndpointParametersHandler : ControllerExecutionHandler<Vi
     protected override Task<ControllerExecutionResult> HandleAsync(ControllerExecutionContext<ViewContext> context,
         NextAction next)
     {
-        context.ConstructedParameters = context.RequestContext.Request.Parameters;
+        var parameters = context.Endpoint!.Parameters;
+
+        context.ConstructedParameters = context.RequestContext.Request.Parameters
+            .Select((value, index) => value.GetValue(parameters[index].ParameterType))
+            .ToArray();
 
         return next();
     }

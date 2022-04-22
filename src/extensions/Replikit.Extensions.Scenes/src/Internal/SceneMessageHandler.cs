@@ -2,35 +2,38 @@ using Kantaiko.Routing;
 using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Core.Handlers;
-using Replikit.Extensions.Common.Scenes;
+using Replikit.Extensions.Scenes.Models;
+using Replikit.Extensions.State;
 
 namespace Replikit.Extensions.Scenes.Internal;
 
 internal class SceneMessageHandler : MessageEventHandler<MessageReceivedEvent>
 {
-    private readonly ISceneStorageProvider _sceneStorageProvider;
     private readonly SceneHandlerAccessor _sceneHandlerAccessor;
+    private readonly IStateManager _stateManager;
 
-    public SceneMessageHandler(ISceneStorageProvider sceneStorageProvider, SceneHandlerAccessor sceneHandlerAccessor)
+    public SceneMessageHandler(SceneHandlerAccessor sceneHandlerAccessor, IStateManager stateManager)
     {
-        _sceneStorageProvider = sceneStorageProvider;
         _sceneHandlerAccessor = sceneHandlerAccessor;
+        _stateManager = stateManager;
     }
 
     protected override async Task<Unit> HandleAsync(IEventContext<MessageReceivedEvent> context, NextAction next)
     {
-        var sceneStorage = _sceneStorageProvider.Resolve();
+        var sceneState = await _stateManager.GetSceneStateAsync<SceneState>(Channel.Id, CancellationToken);
 
-        var sceneInstance = await sceneStorage.GetAsync(Channel.Id, CancellationToken);
-        if (sceneInstance is null) return await next();
+        if (!sceneState.HasValue || sceneState.Value.SceneInstance is not { } sceneInstance)
+        {
+            return await next();
+        }
 
         var transition = sceneInstance.Transitions.FirstOrDefault(x => x.Text == Message.Text);
 
         var sceneRequest = transition is not null
-            ? new SceneRequest(transition.Stage, true, Context, sceneInstance: sceneInstance)
-            : new SceneRequest(sceneInstance.CurrentStage, false, Context, sceneInstance: sceneInstance);
+            ? new SceneRequest(Channel.Id, transition.Stage, true, Context, sceneState)
+            : new SceneRequest(Channel.Id, sceneInstance.CurrentStage, false, Context, sceneState);
 
-        var sceneContext = new SceneContext(sceneRequest, ServiceProvider, cancellationToken: CancellationToken);
+        var sceneContext = SceneManager.CreateContext(sceneRequest, ServiceProvider, CancellationToken);
         await _sceneHandlerAccessor.Handler.Handle(sceneContext);
 
         return default;
