@@ -3,7 +3,7 @@ using Replikit.Abstractions.Common.Models;
 
 namespace Replikit.Abstractions.Messages.Models;
 
-public record MessageIdentifier
+public readonly record struct MessageIdentifier
 {
     public MessageIdentifier(Identifier identifier)
     {
@@ -22,14 +22,12 @@ public record MessageIdentifier
 
     public IImmutableList<Identifier> Identifiers { get; }
 
-    public virtual bool Equals(MessageIdentifier? other)
+    public bool Equals(MessageIdentifier other)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
         return Identifiers.SequenceEqual(other.Identifiers);
     }
 
-    public override int GetHashCode() => HashCode.Combine(0, Identifiers);
+    public override int GetHashCode() => Identifiers.Aggregate(0, HashCode.Combine);
 
     public static implicit operator MessageIdentifier(Identifier identifier) => new(identifier);
 }

@@ -1,5 +1,5 @@
-﻿using Replikit.Abstractions.Attachments.Features;
-using Replikit.Abstractions.Attachments.Models;
+﻿using Replikit.Abstractions.Attachments.Models;
+using Replikit.Abstractions.Attachments.Services;
 
 namespace Replikit.Adapters.Common.Adapters.Internal;
 
@@ -10,7 +10,7 @@ internal class DefaultAttachmentCache : IAttachmentCache
         return Task.CompletedTask;
     }
 
-    public Task<IReadOnlyList<Attachment>> ResolveAsync(IReadOnlyList<Attachment> attachments,
+    public Task<IReadOnlyList<OutAttachment>> ResolveAsync(IReadOnlyList<OutAttachment> attachments,
         CancellationToken cancellationToken)
     {
         return Task.FromResult(attachments);

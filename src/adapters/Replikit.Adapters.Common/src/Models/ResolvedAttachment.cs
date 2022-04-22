@@ -2,4 +2,4 @@
 
 namespace Replikit.Adapters.Common.Models;
 
-public record ResolvedAttachment<TSource>(Attachment Original, TSource Source);
+public record ResolvedAttachment<TSource>(OutAttachment Original, TSource Source);

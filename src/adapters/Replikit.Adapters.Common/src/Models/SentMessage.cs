@@ -3,11 +3,20 @@ using Replikit.Abstractions.Messages.Models;
 
 namespace Replikit.Adapters.Common.Models;
 
-public sealed record SentMessage(
-    MessageIdentifier Identifier,
-    IReadOnlyList<SentAttachment> ResolvedAttachments,
-    IReadOnlyList<object> Originals,
-    string? Text = null
-) : Message(new GlobalMessageIdentifier(null!, Identifier.Identifiers),
-    ResolvedAttachments.Select(x => x.Attachment).ToArray(),
-    Originals, Text: Text);
+public sealed record SentMessage : Message
+{
+    public SentMessage(MessageIdentifier identifier,
+        IReadOnlyList<SentAttachment> resolvedAttachments,
+        IReadOnlyList<object> originals,
+        string? text = null
+    ) : base(
+        new GlobalMessageIdentifier(default, identifier),
+        resolvedAttachments.Select(x => x.Attachment).ToArray(),
+        originals, Text: text
+    )
+    {
+        ResolvedAttachments = resolvedAttachments;
+    }
+
+    public IReadOnlyList<SentAttachment> ResolvedAttachments { get; init; }
+}

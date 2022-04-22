@@ -9,7 +9,7 @@ namespace Replikit.Abstractions.Messages.Models;
 public sealed record OutMessage
 {
     public IReadOnlyList<TextToken> Tokens { get; init; }
-    public IReadOnlyList<Attachment> Attachments { get; init; }
+    public IReadOnlyList<OutAttachment> Attachments { get; init; }
     public IReadOnlyList<GlobalMessageIdentifier> ForwardedMessages { get; init; }
 
     public ButtonMatrix<IInlineButton>? InlineButtonMatrix { get; init; }
@@ -17,14 +17,14 @@ public sealed record OutMessage
     public MessageKeyboard? MessageKeyboard { get; init; }
 
     public OutMessage(IReadOnlyList<TextToken>? tokens = null,
-        IReadOnlyList<Attachment>? attachments = null,
+        IReadOnlyList<OutAttachment>? attachments = null,
         IReadOnlyList<GlobalMessageIdentifier>? forwardedMessages = null,
         MessageIdentifier? reply = null,
         ButtonMatrix<IInlineButton>? inlineButtonMatrix = null,
         MessageKeyboard? messageKeyboard = null)
     {
         Tokens = tokens ?? Array.Empty<TextToken>();
-        Attachments = attachments ?? Array.Empty<Attachment>();
+        Attachments = attachments ?? Array.Empty<OutAttachment>();
         ForwardedMessages = forwardedMessages ?? Array.Empty<GlobalMessageIdentifier>();
         Reply = reply;
 
@@ -49,14 +49,14 @@ public sealed record OutMessage
         return FromToken(new TextToken(text.ToString() ?? string.Empty, TextTokenModifiers.Code));
     }
 
-    public static OutMessage FromAttachment(Attachment attachment)
+    public static OutMessage FromAttachment(OutAttachment attachment)
     {
-        return new MessageBuilder().WithAttachment(attachment);
+        return new OutMessage(attachments: new[] { attachment });
     }
 
-    public static OutMessage FromAttachments(IEnumerable<Attachment> attachments)
+    public static OutMessage FromAttachments(IEnumerable<OutAttachment> attachments)
     {
-        return new MessageBuilder().WithAttachments(attachments);
+        return new OutMessage(attachments: attachments.ToArray());
     }
 
     public static implicit operator OutMessage(string text)

@@ -1,8 +1,8 @@
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Messages.Features;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Messages.Models.Options;
+using Replikit.Abstractions.Messages.Services;
 
 namespace Replikit.Core.GlobalServices;
 

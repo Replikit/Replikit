@@ -1,7 +1,7 @@
-﻿using Replikit.Abstractions.Attachments.Features;
-using Replikit.Abstractions.Attachments.Models;
-using Replikit.Abstractions.Messages.Features;
+﻿using Replikit.Abstractions.Attachments.Models;
+using Replikit.Abstractions.Attachments.Services;
 using Replikit.Abstractions.Messages.Models;
+using Replikit.Abstractions.Messages.Services;
 using Replikit.Adapters.Common.Models;
 
 namespace Replikit.Adapters.Common.Utils;
@@ -17,10 +17,10 @@ public abstract class MessageResolver<TAttachmentSource>
         _attachmentCache = attachmentCache;
     }
 
-    public abstract Task<TAttachmentSource> ResolveSourceAsync(Attachment attachment,
+    public abstract Task<TAttachmentSource> ResolveSourceAsync(OutAttachment attachment,
         CancellationToken cancellationToken);
 
-    public async Task<ResolvedAttachment<TAttachmentSource>> ResolveAttachmentAsync(Attachment attachment,
+    public async Task<ResolvedAttachment<TAttachmentSource>> ResolveAttachmentAsync(OutAttachment attachment,
         CancellationToken cancellationToken = default)
     {
         return new ResolvedAttachment<TAttachmentSource>(attachment,

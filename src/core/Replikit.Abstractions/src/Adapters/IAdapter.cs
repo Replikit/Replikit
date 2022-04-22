@@ -1,51 +1,52 @@
-﻿using Replikit.Abstractions.Common.Exceptions;
-using Replikit.Abstractions.Common.Features;
+﻿using Replikit.Abstractions.Adapters.Exceptions;
+using Replikit.Abstractions.Adapters.Services;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Events;
-using Replikit.Abstractions.Management.Features;
-using Replikit.Abstractions.Messages.Features;
-using Replikit.Abstractions.Repositories.Features;
+using Replikit.Abstractions.Management.Services;
+using Replikit.Abstractions.Messages.Services;
+using Replikit.Abstractions.Repositories.Services;
 
 namespace Replikit.Abstractions.Adapters;
 
-public interface IAdapter : IHasFeatures<AdapterFeatures>
+public interface IAdapter : IAdapterServiceProvider
 {
     AdapterIdentifier Id { get; }
 
-    string DisplayName { get; }
+    /// <exception cref="AdapterServiceNotImplementedException"></exception>
+    AdapterInfo Info { get; }
 
     /// <summary>
     /// </summary>
-    /// <exception cref="UnsupportedFeatureException"></exception>
+    /// <exception cref="AdapterServiceNotImplementedException"></exception>
     IEventSource EventSource { get; }
 
     /// <summary>
     /// </summary>
-    /// <exception cref="UnsupportedFeatureException"></exception>
+    /// <exception cref="AdapterServiceNotImplementedException"></exception>
     IAdapterRepository Repository { get; }
 
     /// <summary>
     /// </summary>
-    /// <exception cref="UnsupportedFeatureException"></exception>
+    /// <exception cref="AdapterServiceNotImplementedException"></exception>
     ITextFormatter TextFormatter { get; }
 
     /// <summary>
     /// </summary>
-    /// <exception cref="UnsupportedFeatureException"></exception>
+    /// <exception cref="AdapterServiceNotImplementedException"></exception>
     ITextTokenizer TextTokenizer { get; }
 
     /// <summary>
     /// </summary>
-    /// <exception cref="UnsupportedFeatureException"></exception>
+    /// <exception cref="AdapterServiceNotImplementedException"></exception>
     IMessageService MessageService { get; }
 
     /// <summary>
     /// </summary>
-    /// <exception cref="UnsupportedFeatureException"></exception>
+    /// <exception cref="AdapterServiceNotImplementedException"></exception>
     IMemberService MemberService { get; }
 
     /// <summary>
     /// </summary>
-    /// <exception cref="UnsupportedFeatureException"></exception>
+    /// <exception cref="AdapterServiceNotImplementedException"></exception>
     IChannelService ChannelService { get; }
 }

@@ -1,5 +1,5 @@
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Management.Features;
+using Replikit.Abstractions.Management.Services;
 using Replikit.Abstractions.Repositories.Models;
 
 namespace Replikit.Abstractions.Management.Models;

@@ -28,7 +28,7 @@ internal class InitializeAndStartAdaptersHandler : LifecycleEventHandler<Applica
 
     protected override async Task<Unit> HandleAsync(IEventContext<ApplicationStartingEvent> context)
     {
-        var adapterContext = new AdapterContext(_adapterEventHandler);
+        var adapterContext = new AdapterFactoryContext(_adapterEventHandler);
         await _adapterLoader.LoadAdapters(adapterContext, context.CancellationToken);
 
         var eventContext = new EventContext<AdaptersInitializedEvent>(new AdaptersInitializedEvent(),

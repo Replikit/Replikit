@@ -1,31 +1,39 @@
-﻿using System.Diagnostics;
+﻿namespace Replikit.Abstractions.Common.Models;
 
-namespace Replikit.Abstractions.Common.Models;
-
-[DebuggerDisplay("[Value = {Value} AdapterId = {AdapterId}]")]
-public record GlobalIdentifier : Identifier
+public readonly record struct GlobalIdentifier(
+    AdapterIdentifier AdapterId,
+    Identifier Identifier
+) : IEquatable<Identifier>
 {
-    public AdapterIdentifier AdapterId { get; }
+    public static implicit operator Identifier(GlobalIdentifier identifier) => identifier.Identifier;
 
-    public GlobalIdentifier(Identifier id, AdapterIdentifier adapterId) : base(id) => AdapterId = adapterId;
+    public static implicit operator long(GlobalIdentifier identifier) => identifier.Identifier;
+    public static implicit operator int(GlobalIdentifier identifier) => identifier.Identifier;
+    public static implicit operator string(GlobalIdentifier identifier) => identifier.Identifier;
+    public static implicit operator Guid(GlobalIdentifier identifier) => identifier.Identifier;
 
-    public static bool operator ==(GlobalIdentifier? globalIdentifier, Identifier? identifier)
+    public bool Equals(Identifier other)
     {
-        return Equals(identifier?.Value, globalIdentifier?.Value);
+        return Identifier.Equals(other);
     }
 
-    public static bool operator !=(GlobalIdentifier? globalIdentifier, Identifier? identifier)
+    public static bool operator ==(Identifier first, GlobalIdentifier second)
     {
-        return !Equals(identifier?.Value, globalIdentifier?.Value);
+        return second.Equals(first);
     }
 
-    public static bool operator ==(Identifier? identifier, GlobalIdentifier? globalIdentifier)
+    public static bool operator !=(Identifier first, GlobalIdentifier second)
     {
-        return Equals(identifier?.Value, globalIdentifier?.Value);
+        return !second.Equals(first);
     }
 
-    public static bool operator !=(Identifier? identifier, GlobalIdentifier? globalIdentifier)
+    public static bool operator ==(GlobalIdentifier first, Identifier second)
     {
-        return !Equals(identifier?.Value, globalIdentifier?.Value);
+        return first.Equals(second);
+    }
+
+    public static bool operator !=(GlobalIdentifier first, Identifier second)
+    {
+        return !first.Equals(second);
     }
 }

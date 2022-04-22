@@ -21,7 +21,7 @@ internal class AdapterLoader
         _options = options.Value;
     }
 
-    public async Task LoadAdapters(AdapterContext context,
+    public async Task LoadAdapters(AdapterFactoryContext factoryContext,
         CancellationToken cancellationToken = default)
     {
         foreach (var descriptor in _options.AdapterDescriptors)
@@ -37,12 +37,12 @@ internal class AdapterLoader
                 continue;
             }
 
-            var adapter = await adapterFactory.CreateAsync(descriptor.Options, context, cancellationToken);
+            var adapter = await adapterFactory.CreateAsync(descriptor.Options, factoryContext, cancellationToken);
             _adapterCollection.Add(adapter);
 
             _logger.LogInformation("Loaded adapter {AdapterType} [Id = {BotId}]",
-                Colors.FgColor(adapter.DisplayName, Color.Cyan),
-                Colors.FgColor(adapter.Id.ToString()!, Color.LightCyan));
+                Colors.FgColor(adapter.Info.DisplayName, Color.Cyan),
+                Colors.FgColor(adapter.Id.ToString(), Color.LightCyan));
         }
 
         if (_options.AdapterDescriptors.Count == 0)

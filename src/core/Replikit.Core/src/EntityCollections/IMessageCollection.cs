@@ -1,21 +1,16 @@
 using Replikit.Abstractions.Common.Features;
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Messages.Features;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Messages.Models.Options;
+using Replikit.Abstractions.Messages.Services;
 
 namespace Replikit.Core.EntityCollections;
 
 public interface IMessageCollection : IHasFeatures<MessageServiceFeatures>
 {
-    /// <summary>
-    /// Sends message to collection.
-    /// Note, that depending on the adapter and specified message, it might be split into multiple real messages.
-    /// </summary>
-    /// <param name="message"></param>
-    /// <param name="options"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    GlobalIdentifier ChannelId { get; }
+
+    /// <inheritdoc cref="IMessageService.SendAsync"/>
     Task<Message> SendAsync(OutMessage message, SendMessageOptions? options = null,
         CancellationToken cancellationToken = default);
 

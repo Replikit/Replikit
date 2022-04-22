@@ -2,8 +2,8 @@ using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Attachments.Models;
 using Replikit.Abstractions.Common.Exceptions;
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Repositories.Features;
 using Replikit.Abstractions.Repositories.Models;
+using Replikit.Abstractions.Repositories.Services;
 
 namespace Replikit.Core.GlobalServices;
 
@@ -41,7 +41,7 @@ internal class GlobalAdapterRepository : IGlobalAdapterRepository
     public Task<Attachment> ResolveAttachmentUrlAsync(Attachment attachment,
         CancellationToken cancellationToken = default)
     {
-        if (attachment.Id is null)
+        if (attachment.Id == default)
         {
             throw new ReplikitException("Attachment must have identifier");
         }

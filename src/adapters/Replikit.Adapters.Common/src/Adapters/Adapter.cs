@@ -1,112 +1,97 @@
-﻿using System.Runtime.CompilerServices;
-using Replikit.Abstractions.Adapters;
-using Replikit.Abstractions.Attachments.Features;
-using Replikit.Abstractions.Common.Exceptions;
+﻿using Replikit.Abstractions.Adapters;
+using Replikit.Abstractions.Adapters.Services;
+using Replikit.Abstractions.Attachments.Services;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Events;
-using Replikit.Abstractions.Management.Features;
-using Replikit.Abstractions.Messages.Features;
-using Replikit.Abstractions.Repositories.Features;
+using Replikit.Abstractions.Management.Services;
+using Replikit.Abstractions.Messages.Services;
+using Replikit.Abstractions.Repositories.Services;
 using Replikit.Adapters.Common.Adapters.Internal;
-using Replikit.Adapters.Common.Features.Internal;
+using Replikit.Adapters.Common.Services.Internal;
 
 namespace Replikit.Adapters.Common.Adapters;
 
 public abstract class Adapter : IAdapter
 {
-    private readonly IEventSource? _eventSource;
-    private readonly IAdapterRepository? _repository;
-    private readonly ITextFormatter? _textFormatter;
-    private readonly ITextTokenizer? _textTokenizer;
-    private readonly IMessageService? _messageService;
-    private readonly IMemberService? _memberService;
-    private readonly IChannelService? _channelService;
+    private readonly AdapterServiceProvider _serviceProvider = new();
 
-    protected IAttachmentCache AttachmentCache { get; }
-    protected IAdapterEventHandler EventHandler { get; }
+    public AdapterIdentifier Id { get; }
 
-    protected Adapter(AdapterIdentifier adapterId, AdapterContext context)
+    protected Adapter(AdapterIdentifier id, AdapterFactoryContext context)
     {
-        Id = adapterId;
+        Id = id;
 
         AttachmentCache = context.AttachmentCache ?? DefaultAttachmentCache.Instance;
         EventHandler = context.EventHandler ?? DefaultEventHandler.Instance;
     }
 
-    public AdapterIdentifier Id { get; }
-    public abstract string DisplayName { get; }
+    public object? GetService(Type serviceType)
+    {
+        return _serviceProvider.GetService(serviceType);
+    }
 
-    public AdapterFeatures Features { get; private set; }
+    protected void SetService<TService>(TService instance)
+    {
+        _serviceProvider.SetService(instance);
+    }
+
+    public AdapterInfo Info
+    {
+        get => this.GetRequiredService<AdapterInfo>();
+        internal set => SetService(value);
+    }
 
     public IEventSource EventSource
     {
-        get => GetFeature(_eventSource, AdapterFeatures.EventSource);
-        protected init => SetFeature(out _eventSource, value, AdapterFeatures.EventSource);
+        get => this.GetRequiredService<IEventSource>();
+        protected init => SetService(value);
     }
 
     public IAdapterRepository Repository
     {
-        get => GetFeature(_repository, AdapterFeatures.Repository);
-
-        protected init => SetFeature(out _repository,
-            new CommonAdapterRepository(this, value),
-            AdapterFeatures.Repository);
+        get => this.GetRequiredService<IAdapterRepository>();
+        protected init => SetService(value);
     }
 
     public ITextFormatter TextFormatter
     {
-        get => GetFeature(_textFormatter, AdapterFeatures.TextFormatter);
-        protected init => SetFeature(out _textFormatter, value, AdapterFeatures.TextFormatter);
+        get => this.GetRequiredService<ITextFormatter>();
+        protected init => SetService(value);
     }
 
     public ITextTokenizer TextTokenizer
     {
-        get => GetFeature(_textTokenizer, AdapterFeatures.TextTokenizer);
-        protected init => SetFeature(out _textTokenizer, value, AdapterFeatures.TextTokenizer);
+        get => this.GetRequiredService<ITextTokenizer>();
+        protected init => SetService(value);
     }
 
     public IMessageService MessageService
     {
-        get => GetFeature(_messageService, AdapterFeatures.MessageService);
-
-        protected init => SetFeature(out _messageService,
-            new CommonMessageService(this, AttachmentCache, value),
-            AdapterFeatures.MessageService);
+        get => this.GetRequiredService<IMessageService>();
+        protected init => SetService<IMessageService>(new CommonMessageService(Id, AttachmentCache, value));
     }
 
     public IMemberService MemberService
     {
-        get => GetFeature(_memberService, AdapterFeatures.MemberService);
-
-        protected init => SetFeature(out _memberService,
-            new CommonMemberService(this, value),
-            AdapterFeatures.MemberService);
+        get => this.GetRequiredService<IMemberService>();
+        protected init => SetService<IMemberService>(new CommonMemberService(Id, value));
     }
 
     public IChannelService ChannelService
     {
-        get => GetFeature(_channelService, AdapterFeatures.ChannelService);
-
-        protected init => SetFeature(out _channelService,
-            new CommonChannelService(this, value),
-            AdapterFeatures.ChannelService);
+        get => this.GetRequiredService<IChannelService>();
+        protected init => SetService<IChannelService>(new CommonChannelService(Id, value));
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private T GetFeature<T>(T? instance, AdapterFeatures feature)
+    protected IAdapterEventHandler EventHandler
     {
-        if (instance is null)
-        {
-            throw new UnsupportedFeatureException(Id, feature);
-        }
-
-        return instance;
+        get => this.GetRequiredService<IAdapterEventHandler>();
+        private init => SetService(value);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void SetFeature<T>(out T field, T instance, AdapterFeatures feature)
+    protected IAttachmentCache AttachmentCache
     {
-        field = instance;
-        Features |= feature;
+        get => this.GetRequiredService<IAttachmentCache>();
+        private init => SetService(value);
     }
 }

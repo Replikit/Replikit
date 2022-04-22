@@ -16,7 +16,7 @@ internal static class ServiceCollectionExtensions
             var context = sp.GetRequiredService<IContext>();
 
             return context is IEventContext<IChannelEvent> channelEventContext
-                ? channelEventContext.GetMessageCollection()
+                ? channelEventContext.GetRequiredMessageCollection()
                 : throw new ReplikitException("Cannot access message collection outside a channel event scope");
         });
     }

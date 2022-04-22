@@ -1,4 +1,5 @@
 ﻿using Replikit.Abstractions.Adapters;
+using Replikit.Abstractions.Repositories.Models;
 
 namespace Replikit.Adapters.Common.Adapters;
 
@@ -6,21 +7,34 @@ public abstract class AdapterFactory<TOptions> : IAdapterFactory
 {
     Type IAdapterFactory.OptionsType => typeof(TOptions);
 
-    protected Task<IAdapter> CreateAsync(TOptions options, AdapterContext context,
+    protected abstract string DisplayName { get; }
+
+    protected virtual async Task<AccountInfo> GetBotAccountInfo(IAdapter adapter,
         CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested();
-        return Task.FromResult(Create(options, context));
+        return await adapter.Repository.GetAccountInfoAsync(adapter.Id.BotId, cancellationToken)
+               ?? throw new InvalidOperationException("Failed to fetch bot account info");
     }
 
-    protected virtual IAdapter Create(TOptions options, AdapterContext context)
+    protected virtual async Task<AdapterInfo> CreateAdapterInfoAsync(IAdapter adapter,
+        CancellationToken cancellationToken = default)
     {
-        throw new InvalidOperationException("Adapter factory must implement Create or CreateAsync method");
+        var accountInfo = await GetBotAccountInfo(adapter, cancellationToken);
+
+        return new AdapterInfo(adapter.Id, accountInfo, DisplayName);
     }
 
-    Task<IAdapter> IAdapterFactory.CreateAsync(object options, AdapterContext context,
+    protected abstract Task<Adapter> CreateAsync(TOptions options, AdapterFactoryContext context,
+        CancellationToken cancellationToken = default);
+
+    public async Task<IAdapter> CreateAsync(object options, AdapterFactoryContext context,
         CancellationToken cancellationToken)
     {
-        return CreateAsync((TOptions) options, context, cancellationToken);
+        var adapter = await CreateAsync((TOptions) options, context, cancellationToken);
+        var adapterInfo = await CreateAdapterInfoAsync(adapter, cancellationToken);
+
+        adapter.Info = adapterInfo;
+
+        return adapter;
     }
 }

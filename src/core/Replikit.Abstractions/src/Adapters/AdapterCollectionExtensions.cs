@@ -7,11 +7,15 @@ public static class AdapterCollectionExtensions
 {
     public static IAdapter ResolveRequired(this IAdapterCollection adapterCollection, string name)
     {
+        ArgumentNullException.ThrowIfNull(adapterCollection);
+
         return adapterCollection.Resolve(name) ?? throw new AdapterNotFoundException(name);
     }
 
     public static IAdapter ResolveRequired(this IAdapterCollection adapterCollection, AdapterIdentifier identifier)
     {
+        ArgumentNullException.ThrowIfNull(adapterCollection);
+
         return adapterCollection.Resolve(identifier) ?? throw new AdapterNotFoundException(identifier);
     }
 

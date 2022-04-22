@@ -1,7 +1,7 @@
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Management.Features;
 using Replikit.Abstractions.Management.Models;
+using Replikit.Abstractions.Management.Services;
 
 namespace Replikit.Core.GlobalServices;
 

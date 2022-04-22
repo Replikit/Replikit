@@ -7,11 +7,11 @@ namespace Replikit.Abstractions.Messages.Events;
 
 public class ButtonPressedEvent : AccountEvent
 {
-    public string Data { get; }
+    public string? Data { get; }
     public Message? Message { get; }
     public Identifier? RequestId { get; }
 
-    public ButtonPressedEvent(AdapterIdentifier adapterId, AccountInfo account, string data,
+    public ButtonPressedEvent(AdapterIdentifier adapterId, AccountInfo account, string? data = null,
         Message? message = null, Identifier? requestId = null) :
         base(adapterId, account)
     {

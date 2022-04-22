@@ -4,5 +4,6 @@ public interface IAdapterFactory
 {
     Type OptionsType { get; }
 
-    Task<IAdapter> CreateAsync(object options, AdapterContext context, CancellationToken cancellationToken = default);
+    Task<IAdapter> CreateAsync(object options, AdapterFactoryContext context,
+        CancellationToken cancellationToken = default);
 }

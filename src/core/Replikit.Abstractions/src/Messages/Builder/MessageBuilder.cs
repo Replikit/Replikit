@@ -10,7 +10,7 @@ public class MessageBuilder : MessageBuilder<MessageBuilder> { }
 public class MessageBuilder<TBuilder> where TBuilder : MessageBuilder<TBuilder>
 {
     private List<TextToken>? _textTokens;
-    private List<Attachment>? _attachments;
+    private List<OutAttachment>? _attachments;
     private List<GlobalMessageIdentifier>? _forwardedMessages;
     private MessageIdentifier? _reply;
 
@@ -45,17 +45,17 @@ public class MessageBuilder<TBuilder> where TBuilder : MessageBuilder<TBuilder>
         return (TBuilder) this;
     }
 
-    public TBuilder WithAttachment(Attachment attachment)
+    public TBuilder WithAttachment(OutAttachment attachment)
     {
-        _attachments ??= new List<Attachment>();
+        _attachments ??= new List<OutAttachment>();
         _attachments.Add(attachment);
 
         return (TBuilder) this;
     }
 
-    public TBuilder WithAttachments(IEnumerable<Attachment> attachments)
+    public TBuilder WithAttachments(IEnumerable<OutAttachment> attachments)
     {
-        _attachments ??= new List<Attachment>();
+        _attachments ??= new List<OutAttachment>();
         _attachments.AddRange(attachments);
 
         return (TBuilder) this;

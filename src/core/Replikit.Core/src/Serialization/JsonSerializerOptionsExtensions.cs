@@ -10,6 +10,6 @@ public static class JsonSerializerOptionsExtensions
         ArgumentNullException.ThrowIfNull(options);
 
         options.Converters.Add(new IdentifierConverter());
-        options.Converters.Add(new GlobalIdentifierConverter());
+        options.Converters.Add(new MessageIdentifierConverter());
     }
 }
