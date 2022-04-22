@@ -1,4 +1,5 @@
-﻿using Kantaiko.Controllers.Result;
+﻿using System.Runtime.ExceptionServices;
+using Kantaiko.Controllers.Result;
 using Kantaiko.Routing;
 using Kantaiko.Routing.Events;
 using Microsoft.Extensions.Logging;
@@ -46,13 +47,21 @@ internal class ControllersHandler : MessageEventHandler<MessageReceivedEvent>
         return default;
     }
 
-    private static OutMessage? CreateResponse(ControllerExecutionResult result) => result switch
+    private static OutMessage? CreateResponse(ControllerExecutionResult result)
     {
-        { ReturnValue: OutMessage outMessage } => outMessage,
-        { ExitReason: ErrorExitReason errorExitReason } => CreateErrorResponse(errorExitReason),
-        { ExitReason: ExceptionExitReason exceptionExitReason } => throw exceptionExitReason.Exception,
-        _ => null
-    };
+        switch (result)
+        {
+            case { ReturnValue: OutMessage outMessage }:
+                return outMessage;
+            case { ExitReason: ErrorExitReason errorExitReason }:
+                return CreateErrorResponse(errorExitReason);
+            case { ExitReason: ExceptionExitReason exceptionExitReason }:
+                ExceptionDispatchInfo.Capture(exceptionExitReason.Exception).Throw();
+                return null;
+            default:
+                return null;
+        }
+    }
 
     private static OutMessage CreateErrorResponse(ErrorExitReason errorExitReason)
     {

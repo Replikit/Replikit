@@ -39,12 +39,12 @@ internal class AdapterEventHandler : IAdapterEventHandler
         var eventType = @event.GetType();
         _logger.LogDebug("Handling event of type {EventType}", eventType.Name);
 
-        using var scope = _serviceProvider.CreateScope();
+        await using var scope = _serviceProvider.CreateAsyncScope();
 
         var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken,
             _applicationLifetime.ApplicationStopping);
 
-        var properties = ImmutablePropertyCollection.Empty.Set(new AdapterEventProperties(adapter));
+        var properties = ImmutablePropertyCollection.Empty.Set(new AdapterContextProperties(adapter));
 
         var context = (IEventContext<Event>) Activator.CreateInstance(
             typeof(EventContext<>).MakeGenericType(eventType),
@@ -56,7 +56,7 @@ internal class AdapterEventHandler : IAdapterEventHandler
         {
             await _adapterEventRouter.Handler.Handle(context);
 
-            using var lifecycleEventScope = scope.ServiceProvider.CreateScope();
+            await using var lifecycleEventScope = scope.ServiceProvider.CreateAsyncScope();
 
             var eventContext = new EventContext<EventHandledEvent>(new EventHandledEvent(context),
                 lifecycleEventScope.ServiceProvider, cancellationToken: cancellationTokenSource.Token);

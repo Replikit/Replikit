@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Events;
+using Replikit.Core.Handlers.Extensions;
 using Replikit.Core.Handlers.Lifecycle;
 
 namespace Replikit.Core.Handlers;
@@ -12,15 +13,13 @@ public abstract class AdapterEventHandler<TEvent> : ChainedEventHandler<TEvent> 
 {
     private IAdapter? _adapter;
 
-    protected IAdapter Adapter => _adapter ??=
-        AdapterEventProperties.Of(Context)?.Adapter ??
-        throw new InvalidOperationException("Failed to access adapter instance");
+    protected IAdapter Adapter => _adapter ??= Context.GetRequiredAdapter();
 
     protected override async Task BeforeHandleAsync(IEventContext<TEvent> context)
     {
         var lifecycle = context.ServiceProvider.GetRequiredService<IHandlerLifecycle>();
 
-        using var scope = ServiceProvider.CreateScope();
+        await using var scope = ServiceProvider.CreateAsyncScope();
 
         var eventContext = new EventContext<EventHandlerCreatedEvent>(
             new EventHandlerCreatedEvent((IEventContext<IEvent>) context),

@@ -6,7 +6,6 @@ using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Repositories.Models;
 using Replikit.Core.EntityCollections;
-using Replikit.Core.Handlers;
 using Replikit.Core.Handlers.Extensions;
 
 namespace Replikit.Core.Controllers;
@@ -18,13 +17,11 @@ public abstract class Controller : ControllerBase<IEventContext<MessageReceivedE
     protected ChannelInfo Channel => Event.Channel;
 
     private IMessageCollection? _messageCollection;
-    protected IMessageCollection MessageCollection => _messageCollection ??= Context.GetMessageCollection();
+    protected IMessageCollection MessageCollection => _messageCollection ??= Context.GetRequiredMessageCollection();
 
     private IAdapter? _adapter;
 
-    protected IAdapter Adapter => _adapter ??=
-        AdapterEventProperties.Of(Context)?.Adapter
-        ?? throw new InvalidOperationException("Failed to access adapter instance");
+    protected IAdapter Adapter => _adapter ??= Context.GetRequiredAdapter();
 
     protected Message Message => Event.Message;
 

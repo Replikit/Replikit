@@ -16,7 +16,7 @@ public class DispatchControllerInstantiatedEventHandler :
     {
         var lifecycle = context.ServiceProvider.GetRequiredService<IControllerLifecycle>();
 
-        using var scope = context.ServiceProvider.CreateScope();
+        await using var scope = context.ServiceProvider.CreateAsyncScope();
 
         var eventContext = new EventContext<ControllerInstantiatedEvent>(
             new ControllerInstantiatedEvent(context.RequestContext),
