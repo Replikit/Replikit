@@ -13,10 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Replikit.Extensions", "Repl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Adapters.Common", "src\adapters\Replikit.Adapters.Common\src\Replikit.Adapters.Common.csproj", "{B734EC02-56EB-4B74-A4E7-F958B193D96D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Adapters.Telegram", "src\adapters\Replikit.Adapters.Telegram\src\Replikit.Adapters.Telegram.csproj", "{BE29861A-779D-4AE7-8F39-17AC0E318EE1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Extensions.Common", "src\extensions\Replikit.Extensions.Common\src\Replikit.Extensions.Common.csproj", "{16D89997-4512-4559-ADF5-A61428377F00}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Extensions.Scenes", "src\extensions\Replikit.Extensions.Scenes\src\Replikit.Extensions.Scenes.csproj", "{AE8D484C-546D-4C05-AC6E-93FD476BB5D4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Extensions.Views", "src\extensions\Replikit.Extensions.Views\src\Replikit.Extensions.Views.csproj", "{49558D14-3C1C-4428-81B4-7E16DC437DE6}"
@@ -31,13 +27,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Examples.Messages"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Examples.AdapterServices", "examples\Replikit.Examples.AdapterServices\Replikit.Examples.AdapterServices.csproj", "{52A27E93-3F6C-4B14-AC54-43E68846BEB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Extensions.Sessions", "src\extensions\Replikit.Extensions.Sessions\src\Replikit.Extensions.Sessions.csproj", "{264F6054-97BF-4883-AE9D-E94528999D75}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Examples.Views", "examples\Replikit.Examples.Views\Replikit.Examples.Views.csproj", "{5A05E2BA-45AC-46ED-B1C8-93785362B933}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Examples.Sessions", "examples\Replikit.Examples.Sessions\Replikit.Examples.Sessions.csproj", "{89CA8E43-699D-4C5F-A69B-CD5521B05096}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Examples.State", "examples\Replikit.Examples.State\Replikit.Examples.State.csproj", "{89CA8E43-699D-4C5F-A69B-CD5521B05096}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Templates", "templates\Replikit.Templates.csproj", "{794F5746-1D90-4223-B886-9DABDE26E192}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Extensions.State", "src\extensions\Replikit.Extensions.State\src\Replikit.Extensions.State.csproj", "{FC63313D-928B-4612-9987-A0B22076B868}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Extensions.Storage", "src\extensions\Replikit.Extensions.Storage\src\Replikit.Extensions.Storage.csproj", "{4AF4AB29-0112-492C-9A3B-9F24501ECC4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Adapters.Telegram", "src\adapters\Replikit.Adapters.Telegram\src\Replikit.Adapters.Telegram\Replikit.Adapters.Telegram.csproj", "{F37B6AB2-987A-420E-B1ED-D7204C7D478E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Adapters.Telegram.Abstractions", "src\adapters\Replikit.Adapters.Telegram\src\Replikit.Adapters.Telegram.Abstractions\Replikit.Adapters.Telegram.Abstractions.csproj", "{FF43AEB0-B5CE-4477-88D6-3D713AEFECF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,14 +62,6 @@ Global
 		{B734EC02-56EB-4B74-A4E7-F958B193D96D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B734EC02-56EB-4B74-A4E7-F958B193D96D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B734EC02-56EB-4B74-A4E7-F958B193D96D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BE29861A-779D-4AE7-8F39-17AC0E318EE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE29861A-779D-4AE7-8F39-17AC0E318EE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE29861A-779D-4AE7-8F39-17AC0E318EE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE29861A-779D-4AE7-8F39-17AC0E318EE1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{16D89997-4512-4559-ADF5-A61428377F00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{16D89997-4512-4559-ADF5-A61428377F00}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{16D89997-4512-4559-ADF5-A61428377F00}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{16D89997-4512-4559-ADF5-A61428377F00}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AE8D484C-546D-4C05-AC6E-93FD476BB5D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AE8D484C-546D-4C05-AC6E-93FD476BB5D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE8D484C-546D-4C05-AC6E-93FD476BB5D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -92,10 +86,6 @@ Global
 		{52A27E93-3F6C-4B14-AC54-43E68846BEB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52A27E93-3F6C-4B14-AC54-43E68846BEB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52A27E93-3F6C-4B14-AC54-43E68846BEB9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{264F6054-97BF-4883-AE9D-E94528999D75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{264F6054-97BF-4883-AE9D-E94528999D75}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{264F6054-97BF-4883-AE9D-E94528999D75}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{264F6054-97BF-4883-AE9D-E94528999D75}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5A05E2BA-45AC-46ED-B1C8-93785362B933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5A05E2BA-45AC-46ED-B1C8-93785362B933}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A05E2BA-45AC-46ED-B1C8-93785362B933}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -108,19 +98,36 @@ Global
 		{794F5746-1D90-4223-B886-9DABDE26E192}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{794F5746-1D90-4223-B886-9DABDE26E192}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{794F5746-1D90-4223-B886-9DABDE26E192}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC63313D-928B-4612-9987-A0B22076B868}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC63313D-928B-4612-9987-A0B22076B868}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC63313D-928B-4612-9987-A0B22076B868}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC63313D-928B-4612-9987-A0B22076B868}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AF4AB29-0112-492C-9A3B-9F24501ECC4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AF4AB29-0112-492C-9A3B-9F24501ECC4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AF4AB29-0112-492C-9A3B-9F24501ECC4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AF4AB29-0112-492C-9A3B-9F24501ECC4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F37B6AB2-987A-420E-B1ED-D7204C7D478E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F37B6AB2-987A-420E-B1ED-D7204C7D478E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F37B6AB2-987A-420E-B1ED-D7204C7D478E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F37B6AB2-987A-420E-B1ED-D7204C7D478E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF43AEB0-B5CE-4477-88D6-3D713AEFECF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF43AEB0-B5CE-4477-88D6-3D713AEFECF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF43AEB0-B5CE-4477-88D6-3D713AEFECF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF43AEB0-B5CE-4477-88D6-3D713AEFECF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B734EC02-56EB-4B74-A4E7-F958B193D96D} = {AE73BD86-274A-47B9-B6C5-2EF3A82F2463}
-		{BE29861A-779D-4AE7-8F39-17AC0E318EE1} = {AE73BD86-274A-47B9-B6C5-2EF3A82F2463}
-		{16D89997-4512-4559-ADF5-A61428377F00} = {A4C8D70F-D0DD-4A28-B2AC-FEBD84B44CB0}
 		{AE8D484C-546D-4C05-AC6E-93FD476BB5D4} = {A4C8D70F-D0DD-4A28-B2AC-FEBD84B44CB0}
 		{49558D14-3C1C-4428-81B4-7E16DC437DE6} = {A4C8D70F-D0DD-4A28-B2AC-FEBD84B44CB0}
 		{4E480E80-E99B-4C07-8BB8-9ACE9938BB6A} = {EE38BB64-AE26-48CE-B1EC-087C6B537669}
 		{43E2D23D-99F9-4EAD-B7F9-F4A880CE3A3F} = {EE38BB64-AE26-48CE-B1EC-087C6B537669}
 		{77D388B9-161A-48C8-9C2E-085D6E8E3C9B} = {EE38BB64-AE26-48CE-B1EC-087C6B537669}
 		{52A27E93-3F6C-4B14-AC54-43E68846BEB9} = {EE38BB64-AE26-48CE-B1EC-087C6B537669}
-		{264F6054-97BF-4883-AE9D-E94528999D75} = {A4C8D70F-D0DD-4A28-B2AC-FEBD84B44CB0}
 		{5A05E2BA-45AC-46ED-B1C8-93785362B933} = {EE38BB64-AE26-48CE-B1EC-087C6B537669}
 		{89CA8E43-699D-4C5F-A69B-CD5521B05096} = {EE38BB64-AE26-48CE-B1EC-087C6B537669}
+		{FC63313D-928B-4612-9987-A0B22076B868} = {A4C8D70F-D0DD-4A28-B2AC-FEBD84B44CB0}
+		{4AF4AB29-0112-492C-9A3B-9F24501ECC4D} = {A4C8D70F-D0DD-4A28-B2AC-FEBD84B44CB0}
+		{F37B6AB2-987A-420E-B1ED-D7204C7D478E} = {AE73BD86-274A-47B9-B6C5-2EF3A82F2463}
+		{FF43AEB0-B5CE-4477-88D6-3D713AEFECF7} = {AE73BD86-274A-47B9-B6C5-2EF3A82F2463}
 	EndGlobalSection
 EndGlobal

@@ -8,10 +8,10 @@ namespace Replikit.Examples.Messages.Controllers;
 
 public class TestController : Controller
 {
-    [Command("test")]
+    [Command("test attachments")]
     public OutMessage Test()
     {
-        var message = JsonSerializer.Serialize(Message, new JsonSerializerOptions
+        var message = JsonSerializer.Serialize(Message.Reply?.Attachments, new JsonSerializerOptions
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             WriteIndented = true

@@ -1,16 +1,16 @@
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Core.Controllers;
 using Replikit.Core.Controllers.Patterns;
-using Replikit.Examples.Sessions.Sessions;
-using Replikit.Extensions.Sessions;
+using Replikit.Examples.State.States;
+using Replikit.Extensions.State;
 
-namespace Replikit.Examples.Sessions.Controllers;
+namespace Replikit.Examples.State.Controllers;
 
 public class SessionController : Controller
 {
-    private readonly IAccountSession<TestSession> _session;
+    private readonly IAccountState<TestState> _session;
 
-    public SessionController(IAccountSession<TestSession> session)
+    public SessionController(IAccountState<TestState> session)
     {
         _session = session;
     }

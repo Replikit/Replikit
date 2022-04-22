@@ -9,12 +9,24 @@ namespace Replikit.Examples.Messages.Controllers;
 public class AttachmentController : Controller
 {
     [Command("photo with text")]
-    public OutMessage GetPhotoWithText() => new MessageBuilder()
-        .AddText("Hi")
-        .WithAttachment(PhotoAttachment.FromUrl("https://picsum.photos/512"));
+    public OutMessage GetPhotoWithText()
+    {
+        return CreateBuilder()
+            .AddText("Hi")
+            .WithAttachment(OutAttachment.FromUrl(AttachmentType.Photo, "https://picsum.photos/512"));
+    }
+
+    [Command("sticker")]
+    public OutMessage GetSticker(string uploadId)
+    {
+        return OutAttachment.FromUploadId(AttachmentType.Sticker, uploadId);
+    }
 
     [Command("photo")]
-    public OutMessage GetPhoto() => PhotoAttachment.FromUrl("https://picsum.photos/512");
+    public OutMessage GetPhoto()
+    {
+        return OutAttachment.FromUrl(AttachmentType.Photo, "https://picsum.photos/512");
+    }
 
     [Command("upload photo")]
     public async Task<OutMessage> UploadPhoto()
@@ -22,6 +34,6 @@ public class AttachmentController : Controller
         using var client = new HttpClient();
         var content = await client.GetStreamAsync("https://picsum.photos/512");
 
-        return PhotoAttachment.FromContent(content, "test.png");
+        return OutAttachment.FromContent(AttachmentType.Photo, content);
     }
 }

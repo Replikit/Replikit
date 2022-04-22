@@ -1,5 +1,6 @@
 using Replikit.Abstractions.Messages.Builder;
 using Replikit.Extensions.Scenes;
+using Replikit.Extensions.State;
 
 namespace Replikit.Examples.Scenes.Scenes;
 
@@ -11,6 +12,8 @@ public class FormScene : Scene<FormScene.FormState>
         public int Age { get; set; }
         public string Gender { get; set; } = string.Empty;
     }
+
+    public FormScene(IState<FormState> state) : base(state) { }
 
     [Stage]
     public SceneResult NameStage()

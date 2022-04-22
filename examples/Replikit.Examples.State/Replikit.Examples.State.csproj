@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\core\Replikit.Core\src\Replikit.Core.csproj" />
-    <ProjectReference Include="..\..\src\extensions\Replikit.Extensions.Sessions\src\Replikit.Extensions.Sessions.csproj" />
+    <ProjectReference Include="..\..\src\extensions\Replikit.Extensions.State\src\Replikit.Extensions.State.csproj" />
   </ItemGroup>
 
 </Project>

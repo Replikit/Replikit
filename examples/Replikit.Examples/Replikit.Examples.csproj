@@ -7,17 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\adapters\Replikit.Adapters.Telegram\src\Replikit.Adapters.Telegram.csproj" />
+    <ProjectReference Include="..\..\src\adapters\Replikit.Adapters.Telegram\src\Replikit.Adapters.Telegram\Replikit.Adapters.Telegram.csproj" />
     <ProjectReference Include="..\..\src\core\Replikit.Core\src\Replikit.Core.csproj" />
     <ProjectReference Include="..\Replikit.Examples.AdapterServices\Replikit.Examples.AdapterServices.csproj" />
     <ProjectReference Include="..\Replikit.Examples.Messages\Replikit.Examples.Messages.csproj" />
     <ProjectReference Include="..\Replikit.Examples.Scenes\Replikit.Examples.Scenes.csproj" />
-    <ProjectReference Include="..\Replikit.Examples.Sessions\Replikit.Examples.Sessions.csproj" />
+    <ProjectReference Include="..\Replikit.Examples.State\Replikit.Examples.State.csproj" />
     <ProjectReference Include="..\Replikit.Examples.Views\Replikit.Examples.Views.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0-preview.1.22076.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.0-preview.1" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 using Replikit.Abstractions.Messages.Builder;
 using Replikit.Extensions.Scenes;
+using Replikit.Extensions.State;
 
 namespace Replikit.Examples.Scenes.Scenes;
 
@@ -9,6 +10,8 @@ public class CounterScene : Scene<CounterScene.CounterState>
     {
         public int Count { get; set; }
     }
+
+    public CounterScene(IState<CounterState> state) : base(state) { }
 
     [Stage]
     public SceneResult MainStage()
