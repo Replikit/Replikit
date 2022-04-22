@@ -1,12 +1,14 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.Caching.Memory;
 using Replikit.Abstractions.Attachments.Models;
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Repositories.Features;
 using Replikit.Abstractions.Repositories.Models;
+using Replikit.Abstractions.Repositories.Services;
 using Replikit.Adapters.Common.Extensions;
-using Replikit.Adapters.Common.Features;
+using Replikit.Adapters.Common.Services;
 using Replikit.Adapters.Telegram.Internal;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 
 namespace Replikit.Adapters.Telegram.Services;
@@ -28,9 +30,10 @@ internal class TelegramAdapterRepository : AdapterRepository
         AdapterRepositoryFeatures.GetChannelInfo |
         AdapterRepositoryFeatures.ResolveAttachmentUrl;
 
-    public TelegramAdapterRepository(string token, ITelegramBotClient backend, TelegramEntityFactory entityFactory)
+    public TelegramAdapterRepository(TelegramAdapterOptions options, ITelegramBotClient backend,
+        TelegramEntityFactory entityFactory)
     {
-        _token = token;
+        _token = options.Token;
         _backend = backend;
         _entityFactory = entityFactory;
     }
@@ -38,16 +41,32 @@ internal class TelegramAdapterRepository : AdapterRepository
     protected override async Task<ChannelInfo?> FetchChannelInfo(Identifier identifier,
         CancellationToken cancellationToken)
     {
-        var chat = await _backend.GetChatAsync((long) identifier, cancellationToken);
-        return chat is null ? null : _entityFactory.CreateChannelInfo(chat);
+        try
+        {
+            var chat = await _backend.GetChatAsync((long) identifier, cancellationToken);
+
+            return _entityFactory.CreateChannelInfo(chat);
+        }
+        catch (ApiRequestException e) when (e.Message.Contains("chat not found"))
+        {
+            return null;
+        }
     }
 
     protected override async Task<AccountInfo?> FetchAccountInfo(Identifier identifier,
         CancellationToken cancellationToken)
     {
-        var avatar = await GetUserAvatarAsync(identifier, cancellationToken);
-        var user = await _backend.GetChatAsync((long) identifier, cancellationToken);
-        return user is null ? null : _entityFactory.CreateAccountInfo(user, avatar);
+        try
+        {
+            var avatar = await GetUserAvatarAsync(identifier, cancellationToken);
+            var user = await _backend.GetChatAsync((long) identifier, cancellationToken);
+
+            return _entityFactory.CreateAccountInfo(user, avatar);
+        }
+        catch (ApiRequestException e) when (e.Message.Contains("chat not found"))
+        {
+            return null;
+        }
     }
 
     private string CreateFileUrl(string path)
@@ -55,16 +74,25 @@ internal class TelegramAdapterRepository : AdapterRepository
         return $"https://api.telegram.org/file/bot{_token}/{path}";
     }
 
-    private async Task<string?> FetchFileUrl(Identifier identifier, CancellationToken cancellationToken)
+    private async Task<string?> FetchFileUrl(GlobalIdentifier identifier, CancellationToken cancellationToken)
     {
-        var file = await _backend.GetFileAsync(identifier, cancellationToken);
-        return file is not null ? CreateFileUrl(file.FilePath) : null;
+        try
+        {
+            var file = await _backend.GetFileAsync(identifier, cancellationToken);
+
+            Debug.Assert(file.FilePath is not null);
+            return CreateFileUrl(file.FilePath);
+        }
+        catch (ApiRequestException e) when (e.Message.Contains("file is temporarily unavailable"))
+        {
+            return null;
+        }
     }
 
     private async Task<PhotoAttachment?> FetchUserAvatar(Identifier identifier, CancellationToken cancellationToken)
     {
         var photoSizes = await _backend.GetUserProfilePhotosAsync(identifier, cancellationToken: cancellationToken);
-        return photoSizes?.TotalCount > 0 ? _entityFactory.CreatePhotoAttachment(photoSizes.Photos[0]) : null;
+        return photoSizes.TotalCount > 0 ? _entityFactory.CreatePhotoAttachment(photoSizes.Photos[0]) : null;
     }
 
     public ChannelInfo UpdateChannelInfo(Chat chat)
@@ -92,7 +120,7 @@ internal class TelegramAdapterRepository : AdapterRepository
     public override async Task<Attachment> ResolveAttachmentUrlAsync(Attachment attachment,
         CancellationToken cancellationToken = default)
     {
-        if (attachment.Url is not null || attachment.Id is null) return attachment;
+        if (attachment.Url is not null) return attachment;
 
         var url = await _attachmentUrlCache.GetOrCreateAsync(attachment.Id, FetchFileUrl,
             _attachmentUrlCacheLifetime, cancellationToken);

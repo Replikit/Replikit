@@ -44,7 +44,7 @@ internal class TelegramMessageBuilder
         }
         else
         {
-            _messageBuilder.SetText(telegramMessage.Text);
+            _messageBuilder.SetText(telegramMessage.Text!);
         }
 
         ResetReply();
@@ -81,7 +81,7 @@ internal class TelegramMessageBuilder
                 return row.Select(button => new KeyboardButton(button.Text));
             });
 
-            return new ReplyKeyboardMarkup(rows, true);
+            return new ReplyKeyboardMarkup(rows) { ResizeKeyboard = true };
         }
 
         return null;

@@ -86,7 +86,7 @@ internal class MessageTokenizer
             case MessageEntityType.TextMention:
             {
                 var textMentionToken = new MentionTextToken(GetTokenText(),
-                    AccountId: _currentEntity.User.Id,
+                    AccountId: _currentEntity.User!.Id,
                     Modifiers: _modifiers);
 
                 _tokens.Add(textMentionToken);

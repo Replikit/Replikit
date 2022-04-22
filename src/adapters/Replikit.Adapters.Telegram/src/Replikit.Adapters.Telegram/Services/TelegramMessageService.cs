@@ -1,8 +1,8 @@
 ﻿using Replikit.Abstractions.Attachments.Models;
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Messages.Features;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Messages.Models.Options;
+using Replikit.Abstractions.Messages.Services;
 using Replikit.Adapters.Common.Models;
 using Replikit.Adapters.Telegram.Exceptions;
 using Replikit.Adapters.Telegram.Internal;
@@ -75,10 +75,10 @@ internal class TelegramMessageService : IMessageService
 
         foreach (var (original, source) in attachments)
         {
-            IAlbumInputMedia? inputMedia = original switch
+            IAlbumInputMedia? inputMedia = original.Type switch
             {
-                PhotoAttachment => new InputMediaPhoto(source) { Caption = original.Caption },
-                VideoAttachment => new InputMediaVideo(source) { Caption = original.Caption },
+                AttachmentType.Photo => new InputMediaPhoto(source) { Caption = original.Caption },
+                AttachmentType.Video => new InputMediaVideo(source) { Caption = original.Caption },
                 _ => null
             };
 
@@ -101,20 +101,24 @@ internal class TelegramMessageService : IMessageService
 
         foreach (var (attachment, source) in attachments)
         {
-            var result = attachment switch
+            var result = attachment.Type switch
             {
-                DocumentAttachment => await _backend.SendDocumentAsync(chatId, source,
+                AttachmentType.Document => await _backend.SendDocumentAsync(chatId, source,
                     caption: attachment.Caption,
                     replyToMessageId: messageBuilder.ReplyToMessageId,
                     replyMarkup: messageBuilder.ReplyMarkup,
                     cancellationToken: cancellationToken),
-                AudioAttachment => await _backend.SendAudioAsync(chatId, source,
+                AttachmentType.Audio => await _backend.SendAudioAsync(chatId, source,
                     attachment.Caption,
                     replyToMessageId: messageBuilder.ReplyToMessageId,
                     replyMarkup: messageBuilder.ReplyMarkup,
                     cancellationToken: cancellationToken),
-                VoiceAttachment => await _backend.SendVoiceAsync(chatId, source,
+                AttachmentType.Voice => await _backend.SendVoiceAsync(chatId, source,
                     attachment.Caption,
+                    replyToMessageId: messageBuilder.ReplyToMessageId,
+                    replyMarkup: messageBuilder.ReplyMarkup,
+                    cancellationToken: cancellationToken),
+                AttachmentType.Sticker => await _backend.SendStickerAsync(chatId, source,
                     replyToMessageId: messageBuilder.ReplyToMessageId,
                     replyMarkup: messageBuilder.ReplyMarkup,
                     cancellationToken: cancellationToken),
@@ -129,7 +133,7 @@ internal class TelegramMessageService : IMessageService
 
         foreach (var forwardedMessage in message.ForwardedMessages)
         {
-            foreach (var messageIdentifier in forwardedMessage.Identifiers)
+            foreach (var messageIdentifier in forwardedMessage.Identifier.Identifiers)
             {
                 var result = await _backend.ForwardMessageAsync(chatId, (long) forwardedMessage.ChannelId,
                     messageIdentifier,
@@ -211,12 +215,12 @@ internal class TelegramMessageService : IMessageService
     {
         var (original, source) = attachment;
 
-        InputMediaBase? inputMedia = original switch
+        InputMediaBase? inputMedia = original.Type switch
         {
-            PhotoAttachment => new InputMediaPhoto(source) { Caption = original.Caption },
-            VideoAttachment => new InputMediaVideo(source) { Caption = original.Caption },
-            AudioAttachment => new InputMediaAudio(source) { Caption = original.Caption },
-            DocumentAttachment => new InputMediaDocument(source) { Caption = original.Caption },
+            AttachmentType.Photo => new InputMediaPhoto(source) { Caption = original.Caption },
+            AttachmentType.Video => new InputMediaVideo(source) { Caption = original.Caption },
+            AttachmentType.Audio => new InputMediaAudio(source) { Caption = original.Caption },
+            AttachmentType.Document => new InputMediaDocument(source) { Caption = original.Caption },
             _ => null
         };
 

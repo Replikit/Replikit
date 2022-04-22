@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Version>0.5.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Replikit.Adapters.Common\src\Replikit.Adapters.Common.csproj" />
+    <ProjectReference Include="..\Replikit.Adapters.Telegram.Abstractions\Replikit.Adapters.Telegram.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,5 +1,5 @@
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Management.Features;
+using Replikit.Abstractions.Management.Services;
 using Telegram.Bot;
 
 namespace Replikit.Adapters.Telegram.Services;
@@ -19,11 +19,11 @@ internal class TelegramMemberService : IMemberService
 
     public async Task<long> GetTotalCountAsync(Identifier channelId, CancellationToken cancellationToken = default)
     {
-        return await _backend.GetChatMembersCountAsync((long) channelId, cancellationToken);
+        return await _backend.GetChatMemberCountAsync((long) channelId, cancellationToken);
     }
 
     public Task RemoveAsync(Identifier channelId, Identifier accountId, CancellationToken cancellationToken = default)
     {
-        return _backend.KickChatMemberAsync((long) channelId, accountId, cancellationToken: cancellationToken);
+        return _backend.BanChatMemberAsync((long) channelId, accountId, cancellationToken: cancellationToken);
     }
 }

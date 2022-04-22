@@ -1,6 +1,6 @@
 using Replikit.Abstractions.Attachments.Models;
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Management.Features;
+using Replikit.Abstractions.Management.Services;
 using Replikit.Adapters.Common.Utils;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -27,7 +27,7 @@ public class TelegramChannelService : IChannelService
         return _backend.SetChatTitleAsync((long) channelId, title, cancellationToken);
     }
 
-    public async Task ChangePhotoAsync(Identifier channelId, PhotoAttachment photo,
+    public async Task ChangePhotoAsync(Identifier channelId, OutAttachment photo,
         CancellationToken cancellationToken = default)
     {
         var attachment = await _messageResolver.ResolveAttachmentAsync(photo, cancellationToken);

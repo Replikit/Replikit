@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Events;
-using Replikit.Adapters.Common.Features;
+using Replikit.Adapters.Common.Services;
 using Replikit.Adapters.Telegram.Internal;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -39,7 +39,7 @@ internal class TelegramEventSource : EventSource
                 var updates = await _backend.GetUpdatesAsync(_nextUpdateId, 100, 60, Array.Empty<UpdateType>(),
                     _cancellationTokenSource.Token);
 
-                if (updates?.Length > 0)
+                if (updates.Length > 0)
                 {
                     HandleUpdates(updates);
                     _nextUpdateId = updates[^1].Id + 1;
@@ -56,9 +56,14 @@ internal class TelegramEventSource : EventSource
     private async void HandleMediaGroup(IReadOnlyList<Message> messages, bool edited)
     {
         var primary = messages[0];
+
+        Debug.Assert(primary.From is not null);
+
         var channelInfo = _repository.UpdateChannelInfo(primary.Chat);
         var accountInfo = await _repository.UpdateAccountInfo(primary.From);
+
         var message = _entityFactory.CreateMessage(messages);
+
         if (edited) HandleMessageEdited(message, channelInfo, accountInfo);
         else HandleMessageReceived(message, channelInfo, accountInfo);
     }
@@ -66,6 +71,7 @@ internal class TelegramEventSource : EventSource
     private void HandleMessages(IReadOnlyList<Message> messages, bool edited)
     {
         var mediaGroups = messages.GroupBy(x => x.MediaGroupId);
+
         foreach (var mediaGroup in mediaGroups)
         {
             if (mediaGroup.Key is null)
@@ -93,6 +99,8 @@ internal class TelegramEventSource : EventSource
             {
                 case UpdateType.Message:
                 {
+                    Debug.Assert(update.Message is not null);
+
                     if (update.Message.Date >= _startDate)
                     {
                         receivedMessages.Add(update.Message);
@@ -102,6 +110,8 @@ internal class TelegramEventSource : EventSource
                 }
                 case UpdateType.EditedMessage:
                 {
+                    Debug.Assert(update.EditedMessage is not null);
+
                     if (update.EditedMessage.EditDate >= _startDate)
                     {
                         editedMessages.Add(update.EditedMessage);
@@ -111,8 +121,13 @@ internal class TelegramEventSource : EventSource
                 }
                 case UpdateType.CallbackQuery:
                 {
+                    Debug.Assert(update.CallbackQuery is not null);
+
                     var accountInfo = await _repository.UpdateAccountInfo(update.CallbackQuery.From);
-                    var message = _entityFactory.CreateMessage(new[] { update.CallbackQuery.Message });
+
+                    var message = update.CallbackQuery.Message is not null
+                        ? _entityFactory.CreateMessage(new[] { update.CallbackQuery.Message })
+                        : null;
 
                     HandleButtonPressed(accountInfo, update.CallbackQuery.Data, message, update.CallbackQuery.Id);
                     break;
