@@ -72,7 +72,7 @@ internal class ViewButtonHandler : AdapterEventHandler<ButtonPressedEvent>
 
         var (method, parameters) = viewInstance.Actions[payload.ActionIndex];
 
-        var request = new ViewRequest(viewInstance.Type, method, parameters, viewState, Event);
+        var request = new ViewRequest(viewInstance.Type, method, parameters, viewState, Context);
         var viewContext = ViewManager.CreateContext(request, ServiceProvider, CancellationToken);
 
         await _handlerAccessor.Handler.Handle(viewContext);

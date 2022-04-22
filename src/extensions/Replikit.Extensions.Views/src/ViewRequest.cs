@@ -1,4 +1,5 @@
-﻿using Replikit.Abstractions.Common.Models;
+﻿using Kantaiko.Routing.Events;
+using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Extensions.State;
 using Replikit.Extensions.Storage.Models;
@@ -11,7 +12,7 @@ public class ViewRequest
     public ViewRequest(string type, string method,
         IReadOnlyList<DynamicValue> parameters,
         IState<ViewState>? viewState = null,
-        ButtonPressedEvent? @event = null,
+        IEventContext<ButtonPressedEvent>? eventContext = null,
         GlobalIdentifier? channelId = null)
     {
         Type = type;
@@ -19,7 +20,7 @@ public class ViewRequest
         Method = method;
         Parameters = parameters;
         ChannelId = channelId;
-        Event = @event;
+        EventContext = eventContext;
     }
 
     public string Type { get; }
@@ -27,6 +28,6 @@ public class ViewRequest
     public IReadOnlyList<DynamicValue> Parameters { get; }
 
     public IState<ViewState>? ViewState { get; }
-    public ButtonPressedEvent? Event { get; }
+    public IEventContext<ButtonPressedEvent>? EventContext { get; }
     public GlobalIdentifier? ChannelId { get; }
 }

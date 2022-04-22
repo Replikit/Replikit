@@ -1,5 +1,8 @@
 ﻿using Kantaiko.Controllers;
+using Kantaiko.Routing.Events;
+using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Messages.Events;
+using Replikit.Core.Handlers.Extensions;
 using Replikit.Extensions.State;
 using Replikit.Extensions.Views.Messages;
 
@@ -15,8 +18,19 @@ public abstract class View : ControllerBase<ViewContext>
     [Action]
     public void Init() => Update();
 
+    protected bool IsExternalActivation => Context.Request.EventContext is null;
+
     protected ViewRequest Request => Context.Request;
-    protected ButtonPressedEvent? Event => Request.Event;
+
+    protected IEventContext<ButtonPressedEvent> EventContext =>
+        Request.EventContext ??
+        throw new InvalidOperationException("Failed to access event context since view was activated externally");
+
+    protected ButtonPressedEvent Event => EventContext.Event;
+
+    private IAdapter? _adapter;
+
+    protected IAdapter Adapter => _adapter ??= EventContext.GetRequiredAdapter();
 
     public virtual Task<ViewResult> RenderAsync(CancellationToken cancellationToken) =>
         Task.FromResult(Render());

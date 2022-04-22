@@ -1,5 +1,6 @@
 ﻿using Kantaiko.Properties.Immutable;
 using Microsoft.Extensions.DependencyInjection;
+using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Extensions.State;
 using Replikit.Extensions.State.Context;
