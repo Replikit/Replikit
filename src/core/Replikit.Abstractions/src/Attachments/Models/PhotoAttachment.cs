@@ -1,5 +1,4 @@
 ﻿using Replikit.Abstractions.Attachments.Exceptions;
-using Replikit.Abstractions.Common.Models;
 
 namespace Replikit.Abstractions.Attachments.Models;
 

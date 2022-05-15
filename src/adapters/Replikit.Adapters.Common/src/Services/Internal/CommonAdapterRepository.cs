@@ -1,4 +1,3 @@
-using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Attachments.Models;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Repositories.Models;
