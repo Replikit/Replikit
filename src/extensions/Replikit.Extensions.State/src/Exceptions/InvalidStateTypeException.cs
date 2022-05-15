@@ -2,7 +2,7 @@
 using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Common.Exceptions;
 using Replikit.Abstractions.Events;
-using Replikit.Extensions.State.Implementation;
+using Replikit.Core.Abstractions.State;
 
 namespace Replikit.Extensions.State.Exceptions;
 

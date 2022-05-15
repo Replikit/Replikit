@@ -1,3 +1,5 @@
+using Replikit.Core.Abstractions.State;
+
 namespace Replikit.Extensions.State.Implementation;
 
 internal interface IInternalState : IState

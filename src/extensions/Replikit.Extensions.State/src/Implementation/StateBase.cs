@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Replikit.Core.Abstractions.State;
 
 namespace Replikit.Extensions.State.Implementation;
 
@@ -31,7 +32,7 @@ internal abstract class StateBase : IInternalState
         _status = StateStatus.Empty;
     }
 
-    public StateKey Key { get; private set; }
+    public StateKey Key { get; private set; } = null!;
 
     public object Value
     {

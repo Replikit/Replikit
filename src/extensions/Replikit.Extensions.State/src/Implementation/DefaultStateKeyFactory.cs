@@ -1,17 +1,18 @@
 using Kantaiko.Routing.Context;
 using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Repositories.Events;
+using Replikit.Core.Abstractions.State;
 using Replikit.Extensions.State.Exceptions;
 
 namespace Replikit.Extensions.State.Implementation;
 
 internal class DefaultStateKeyFactory : IStateKeyFactory
 {
-    public StateKey? CreateStateKey(StateType stateType, IContext context)
+    public StateKey CreateStateKey(StateType stateType, IContext context)
     {
         return stateType switch
         {
-            StateType.GlobalState => new StateKey(),
+            StateType.GlobalState => new StateKey(StateType.GlobalState),
             StateType.ChannelState => CreateChannelStateKey(context),
             StateType.AccountState => CreateAccountStateKey(context),
             StateType.State => throw new InvalidStateTypeException(StateType.State, context),

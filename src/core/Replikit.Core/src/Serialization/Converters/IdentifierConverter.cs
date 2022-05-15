@@ -20,7 +20,7 @@ public class IdentifierConverter : JsonConverter<Identifier>
 
     public override void Write(Utf8JsonWriter writer, Identifier value, JsonSerializerOptions options)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (value.Value is not null)
         {
             JsonSerializer.Serialize(writer, value.Value, options);

@@ -1,6 +1,6 @@
 using Replikit.Abstractions.Common.Models;
+using Replikit.Core.Abstractions.State;
 using Replikit.Extensions.State;
-using Replikit.Extensions.State.Implementation;
 
 namespace Replikit.Extensions.Scenes;
 

@@ -1,3 +1,5 @@
+using Replikit.Core.Abstractions.State;
+
 namespace Replikit.Extensions.State.Implementation;
 
 internal class AccountState<TValue> : State<TValue>, IAccountState<TValue> where TValue : notnull, new()

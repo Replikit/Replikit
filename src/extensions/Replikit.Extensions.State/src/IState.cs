@@ -1,4 +1,4 @@
-using Replikit.Extensions.State.Implementation;
+using Replikit.Core.Abstractions.State;
 
 namespace Replikit.Extensions.State;
 

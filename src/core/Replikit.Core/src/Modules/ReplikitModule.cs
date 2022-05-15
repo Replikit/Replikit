@@ -11,6 +11,8 @@ public abstract class ReplikitModule : Module, IModule
 
     void IModule.ConfigureServices(IServiceCollection services)
     {
+        services.AddModule<ReplikitCoreModule>();
+
         ConfigureServices(services);
         services.Configure<AdapterLoaderOptions>(ConfigureAdapters);
     }

@@ -1,9 +1,10 @@
 using System.Linq.Expressions;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Messages.Models;
+using Replikit.Core.Abstractions.State;
+using Replikit.Core.Common;
 using Replikit.Core.Utils;
 using Replikit.Extensions.State;
-using Replikit.Extensions.Storage.Models;
 using Replikit.Extensions.Views.Models;
 
 namespace Replikit.Extensions.Views;
@@ -33,6 +34,9 @@ public static class ViewManagerExtensions
     private static Task<GlobalMessageIdentifier> SendViewInternal<TView>(IViewManager viewManager,
         GlobalIdentifier channelId, Expression action, CancellationToken cancellationToken) where TView : View
     {
+        ArgumentNullException.ThrowIfNull(viewManager);
+        ArgumentNullException.ThrowIfNull(action);
+
         var (method, parameters) = MethodExpressionTransformer.Transform(action);
 
         var dynamicParameters = parameters.Select(x => new DynamicValue(x)).ToArray();
@@ -72,13 +76,46 @@ public static class ViewManagerExtensions
     private static Task ActivateInternalAsync(IViewManager viewManager,
         IState<ViewState> viewState, Expression action, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(viewManager);
+        ArgumentNullException.ThrowIfNull(viewState);
+        ArgumentNullException.ThrowIfNull(action);
+
         var (method, parameters) = MethodExpressionTransformer.Transform(action);
 
         var dynamicParameters = parameters.Select(x => new DynamicValue(x)).ToArray();
 
-        var viewRequest = new ViewRequest(viewState.Value.ViewInstance!.Type,
+        if (viewState.Value.ViewInstance is null)
+        {
+            throw new InvalidOperationException("Cannot activate uninitialized view state");
+        }
+
+        var viewRequest = new ViewRequest(viewState.Value.ViewInstance.Type,
             method.ToString()!, dynamicParameters, viewState);
 
         return viewManager.ActivateAsync(viewRequest, cancellationToken);
+    }
+
+    public static async Task<IReadOnlyList<IState<ViewState>>> FindAsync(
+        this IViewManager viewManager, QueryBuilder<StateItem<ViewState>>? queryBuilder = null,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(viewManager);
+
+        return await viewManager.StateManager.FindStatesAsync(queryBuilder, cancellationToken);
+    }
+
+    public static async Task<IReadOnlyList<IState<ViewState>>> FindByStateAsync<TState>(
+        this IViewManager viewManager, QueryBuilder<StateItem<TState>>? queryBuilder = null,
+        CancellationToken cancellationToken = default)
+        where TState : class, new()
+    {
+        ArgumentNullException.ThrowIfNull(viewManager);
+
+        var states = await viewManager.StateManager.FindStatesAsync(queryBuilder, cancellationToken);
+
+        var stateKeys = states.Select(x => x.Key with { Type = typeof(ViewState) }).ToArray();
+
+        return await viewManager.StateManager.FindStatesAsync<ViewState>(
+            q => q.Where(x => stateKeys.Contains(x.Key)), cancellationToken);
     }
 }

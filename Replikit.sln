@@ -35,11 +35,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Templates", "templ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Extensions.State", "src\extensions\Replikit.Extensions.State\src\Replikit.Extensions.State.csproj", "{FC63313D-928B-4612-9987-A0B22076B868}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Extensions.Storage", "src\extensions\Replikit.Extensions.Storage\src\Replikit.Extensions.Storage.csproj", "{4AF4AB29-0112-492C-9A3B-9F24501ECC4D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Adapters.Telegram", "src\adapters\Replikit.Adapters.Telegram\src\Replikit.Adapters.Telegram\Replikit.Adapters.Telegram.csproj", "{F37B6AB2-987A-420E-B1ED-D7204C7D478E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Adapters.Telegram.Abstractions", "src\adapters\Replikit.Adapters.Telegram\src\Replikit.Adapters.Telegram.Abstractions\Replikit.Adapters.Telegram.Abstractions.csproj", "{FF43AEB0-B5CE-4477-88D6-3D713AEFECF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Examples.EntityFrameworkCore", "examples\Replikit.Examples.EntityFrameworkCore\Replikit.Examples.EntityFrameworkCore.csproj", "{D00A3CFE-CEA2-4625-B402-6C1993D9413A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Examples.MongoDB", "examples\Replikit.Examples.MongoDB\Replikit.Examples.MongoDB.csproj", "{E2A2B089-A89F-4C48-86DB-FCC0CC85B94E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Replikit.Integrations", "Replikit.Integrations", "{EA9EA24D-7DA4-4AF0-B020-1890B8132250}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Integrations.EntityFrameworkCore", "src\integrations\Replikit.Integrations.EntityFrameworkCore\src\Replikit.Integrations.EntityFrameworkCore.csproj", "{8CFFE6A1-53D8-4C56-8EF8-10D8092384B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Integrations.MongoDB", "src\integrations\Replikit.Integrations.MongoDB\src\Replikit.Integrations.MongoDB.csproj", "{5D995DF8-941E-49B7-BA90-18542A271A2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -102,10 +110,6 @@ Global
 		{FC63313D-928B-4612-9987-A0B22076B868}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC63313D-928B-4612-9987-A0B22076B868}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC63313D-928B-4612-9987-A0B22076B868}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4AF4AB29-0112-492C-9A3B-9F24501ECC4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4AF4AB29-0112-492C-9A3B-9F24501ECC4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4AF4AB29-0112-492C-9A3B-9F24501ECC4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4AF4AB29-0112-492C-9A3B-9F24501ECC4D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F37B6AB2-987A-420E-B1ED-D7204C7D478E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F37B6AB2-987A-420E-B1ED-D7204C7D478E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F37B6AB2-987A-420E-B1ED-D7204C7D478E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -114,6 +118,22 @@ Global
 		{FF43AEB0-B5CE-4477-88D6-3D713AEFECF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF43AEB0-B5CE-4477-88D6-3D713AEFECF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF43AEB0-B5CE-4477-88D6-3D713AEFECF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D00A3CFE-CEA2-4625-B402-6C1993D9413A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D00A3CFE-CEA2-4625-B402-6C1993D9413A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D00A3CFE-CEA2-4625-B402-6C1993D9413A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D00A3CFE-CEA2-4625-B402-6C1993D9413A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2A2B089-A89F-4C48-86DB-FCC0CC85B94E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2A2B089-A89F-4C48-86DB-FCC0CC85B94E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2A2B089-A89F-4C48-86DB-FCC0CC85B94E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2A2B089-A89F-4C48-86DB-FCC0CC85B94E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CFFE6A1-53D8-4C56-8EF8-10D8092384B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CFFE6A1-53D8-4C56-8EF8-10D8092384B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CFFE6A1-53D8-4C56-8EF8-10D8092384B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CFFE6A1-53D8-4C56-8EF8-10D8092384B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D995DF8-941E-49B7-BA90-18542A271A2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D995DF8-941E-49B7-BA90-18542A271A2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D995DF8-941E-49B7-BA90-18542A271A2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D995DF8-941E-49B7-BA90-18542A271A2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B734EC02-56EB-4B74-A4E7-F958B193D96D} = {AE73BD86-274A-47B9-B6C5-2EF3A82F2463}
@@ -126,8 +146,11 @@ Global
 		{5A05E2BA-45AC-46ED-B1C8-93785362B933} = {EE38BB64-AE26-48CE-B1EC-087C6B537669}
 		{89CA8E43-699D-4C5F-A69B-CD5521B05096} = {EE38BB64-AE26-48CE-B1EC-087C6B537669}
 		{FC63313D-928B-4612-9987-A0B22076B868} = {A4C8D70F-D0DD-4A28-B2AC-FEBD84B44CB0}
-		{4AF4AB29-0112-492C-9A3B-9F24501ECC4D} = {A4C8D70F-D0DD-4A28-B2AC-FEBD84B44CB0}
 		{F37B6AB2-987A-420E-B1ED-D7204C7D478E} = {AE73BD86-274A-47B9-B6C5-2EF3A82F2463}
 		{FF43AEB0-B5CE-4477-88D6-3D713AEFECF7} = {AE73BD86-274A-47B9-B6C5-2EF3A82F2463}
+		{D00A3CFE-CEA2-4625-B402-6C1993D9413A} = {EE38BB64-AE26-48CE-B1EC-087C6B537669}
+		{E2A2B089-A89F-4C48-86DB-FCC0CC85B94E} = {EE38BB64-AE26-48CE-B1EC-087C6B537669}
+		{8CFFE6A1-53D8-4C56-8EF8-10D8092384B3} = {EA9EA24D-7DA4-4AF0-B020-1890B8132250}
+		{5D995DF8-941E-49B7-BA90-18542A271A2D} = {EA9EA24D-7DA4-4AF0-B020-1890B8132250}
 	EndGlobalSection
 EndGlobal

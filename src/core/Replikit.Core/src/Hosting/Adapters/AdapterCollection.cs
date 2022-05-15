@@ -1,6 +1,5 @@
 ﻿using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Adapters.Services;
-using Replikit.Abstractions.Common.Features;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Events;
 

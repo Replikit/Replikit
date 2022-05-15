@@ -1,4 +1,4 @@
-using Replikit.Extensions.Storage.Models;
+using Replikit.Core.Common;
 
 namespace Replikit.Extensions.Views.Models;
 

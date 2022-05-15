@@ -1,7 +1,7 @@
 using Kantaiko.Routing.Context;
+using Replikit.Core.Abstractions.State;
+using Replikit.Core.Common;
 using Replikit.Extensions.State.Context;
-using Replikit.Extensions.Storage;
-using Replikit.Extensions.Storage.Models;
 
 namespace Replikit.Extensions.State.Implementation;
 
@@ -10,16 +10,74 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
     private List<IInternalState>? _trackedStates;
     private readonly Dictionary<StateKey, IInternalState> _loadedStates = new();
 
-    private readonly IStorage<StateKey, DynamicValue> _storage;
+    private readonly IStateStore _store;
     private readonly IContextAccessor _contextAccessor;
 
-    public StateManager(IStorage<StateKey, DynamicValue> storage, IContextAccessor contextAccessor)
+    public StateManager(IStateStore store, IContextAccessor contextAccessor)
     {
-        _storage = storage;
+        _store = store;
         _contextAccessor = contextAccessor;
     }
 
     public IEnumerable<IState> LoadedStates => _loadedStates.Values;
+
+    public async Task<IReadOnlyList<IState<TValue>>> FindStatesAsync<TValue>(
+        QueryBuilder<StateItem<TValue>>? queryBuilder = null,
+        CancellationToken cancellationToken = default) where TValue : class, new()
+    {
+        var query = _store.CreateQuery()
+            .Where(x => x.Key.TypeName == typeof(TValue).AssemblyQualifiedName!)
+            .Select(x => new StateItem<TValue>(x.Key, (TValue?) x.Value));
+
+        if (queryBuilder is not null)
+        {
+            query = queryBuilder.Invoke(query);
+        }
+
+        var stateValues = await _store.QueryExecutor.ToReadOnlyListAsync(query, cancellationToken: cancellationToken);
+        var states = new IState<TValue>[stateValues.Count];
+
+        for (var index = 0; index < stateValues.Count; index++)
+        {
+            var stateItem = stateValues[index];
+
+            if (_loadedStates.TryGetValue(stateItem.Key, out var existingState))
+            {
+                states[index] = (IState<TValue>) existingState;
+                continue;
+            }
+
+            states[index] = CreateLoadedState<TValue>(stateItem.Key, new DynamicValue(stateItem.Value));
+        }
+
+        return states;
+    }
+
+    public async Task<IReadOnlyList<IState>> FindAllStatesAsync(QueryBuilder<StateItem> queryBuilder,
+        CancellationToken cancellationToken = default)
+    {
+        var query = _store.CreateQuery();
+
+        query = queryBuilder.Invoke(query);
+
+        var stateValues = await _store.QueryExecutor.ToReadOnlyListAsync(query, cancellationToken);
+        var states = new IState[stateValues.Count];
+
+        for (var index = 0; index < stateValues.Count; index++)
+        {
+            var stateItem = stateValues[index];
+
+            if (_loadedStates.TryGetValue(stateItem.Key, out var existingState))
+            {
+                states[index] = existingState;
+                continue;
+            }
+
+            states[index] = CreateLoadedState(stateItem.Key, stateItem.DynamicValue);
+        }
+
+        return states;
+    }
 
     public async Task<IState<TValue>> GetStateAsync<TValue>(StateKey key, CancellationToken cancellationToken = default)
         where TValue : notnull, new()
@@ -31,11 +89,34 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
             return (IState<TValue>) existingValue;
         }
 
-        var item = await _storage.CreateQuery()
-            .Where(x => x.Key == key)
-            .Select(x => x.Value)
-            .FirstOrDefaultAsync(cancellationToken);
+        var query = _store.CreateQuery()
+            .Where(x => x.Key == key);
 
+        var item = await _store.QueryExecutor.FirstOrDefaultAsync(query, cancellationToken);
+
+        return CreateLoadedState<TValue>(key, item?.DynamicValue);
+    }
+
+    private IState CreateLoadedState(StateKey key, DynamicValue? item)
+    {
+        State state;
+
+        if (item?.GetValue(key.Type!) is not { } value)
+        {
+            state = new State(key);
+        }
+        else
+        {
+            state = new State(key, value);
+        }
+
+        _loadedStates[key] = state;
+
+        return state;
+    }
+
+    private IState<TValue> CreateLoadedState<TValue>(StateKey key, DynamicValue? item) where TValue : notnull, new()
+    {
         State<TValue> state;
 
         if (item is null || item.GetValue<TValue>() is not { } value)
@@ -50,64 +131,6 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
         _loadedStates[key] = state;
 
         return state;
-    }
-
-    public async Task<IReadOnlyList<IState>> FindStatesAsync(PartialStateKey partialKey,
-        CancellationToken cancellationToken = default)
-    {
-        var query = _storage.CreateQuery();
-
-        if (partialKey.StateType is not null)
-        {
-            query = query.Where(x => x.Key.StateType == partialKey.StateType);
-        }
-
-        if (partialKey.AdapterId is not null)
-        {
-            query = query.Where(x => x.Key.AdapterId == partialKey.AdapterId);
-        }
-
-        if (partialKey.AccountId is not null)
-        {
-            query = query.Where(x => x.Key.AccountId == partialKey.AccountId);
-        }
-
-        if (partialKey.ChannelId is not null)
-        {
-            query = query.Where(x => x.Key.ChannelId == partialKey.ChannelId);
-        }
-
-        if (partialKey.MessageId is not null)
-        {
-            query = query.Where(x => x.Key.MessageId == partialKey.MessageId);
-        }
-
-        if (partialKey.Type is not null)
-        {
-            query = query.Where(x => x.Key.Type == partialKey.Type);
-        }
-
-        var items = await query.ToArrayAsync(cancellationToken);
-        var result = new IState[items.Length];
-
-        for (var index = 0; index < items.Length; index++)
-        {
-            var (key, item) = items[index];
-
-            if (_loadedStates.TryGetValue(key, out var existingState))
-            {
-                result[index] = existingState;
-            }
-
-            var state = item.GetValue(key.Type!) is not { } value
-                ? new State(key)
-                : new State(key, value);
-
-            _loadedStates[key] = state;
-            result[index] = state;
-        }
-
-        return result;
     }
 
     public void Track(IInternalState state)
@@ -157,41 +180,49 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
             return;
         }
 
-        var states = await _storage.CreateQuery()
-            .Where(x => newStateKeys.Any(k => k == x.Key))
-            .ToArrayAsync(cancellationToken);
+        var query = _store.CreateQuery()
+            .Where(x => newStateKeys.Contains(x.Key));
 
-        foreach (var (key, state) in states)
+        var states = await _store.QueryExecutor.ToReadOnlyListAsync(query, cancellationToken);
+
+        foreach (var stateItem in states)
         {
-            var value = state.GetValue(key.Type!);
+            var value = stateItem.DynamicValue?.GetValue(stateItem.Key.Type!);
 
             if (value is null)
             {
                 throw new InvalidOperationException("Unexpected null state value");
             }
 
-            _loadedStates[key].SetValue(value);
+            _loadedStates[stateItem.Key].SetValue(value);
         }
     }
 
     public virtual async Task SaveAsync(CancellationToken cancellationToken = default)
     {
-        KeyValuePair<StateKey, DynamicValue?> MapValue(KeyValuePair<StateKey, IInternalState> state)
+        StateItem MapValue(KeyValuePair<StateKey, IInternalState> state)
         {
             var (key, value) = state;
 
-            var newValue = value.Status is StateStatus.HasModifiedValue ? new DynamicValue(value.RawValue) : null;
+            var newValue = value.Status is StateStatus.HasModifiedValue
+                ? new DynamicValue(value.RawValue)
+                : null;
 
-            return new KeyValuePair<StateKey, DynamicValue?>(key, newValue);
+            return new StateItem(key, newValue);
         }
 
         var changedStates = _loadedStates
             .Where(x => x.Value.Status is StateStatus.HasClearedValue or StateStatus.HasModifiedValue)
             .ToArray();
 
+        if (changedStates.Length == 0)
+        {
+            return;
+        }
+
         var values = changedStates.Select(MapValue);
 
-        await _storage.SetManyAsync(values, cancellationToken);
+        await _store.SetManyAsync(values, cancellationToken);
 
         foreach (var state in changedStates)
         {

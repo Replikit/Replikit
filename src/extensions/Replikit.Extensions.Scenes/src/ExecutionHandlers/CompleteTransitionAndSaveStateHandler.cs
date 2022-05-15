@@ -5,11 +5,12 @@ using Kantaiko.Controllers.Result;
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Messages.Models.Keyboard;
+using Replikit.Core.Abstractions.State;
+using Replikit.Core.Common;
 using Replikit.Core.Utils;
 using Replikit.Extensions.Scenes.Models;
 using Replikit.Extensions.State;
 using Replikit.Extensions.State.Implementation;
-using Replikit.Extensions.Storage.Models;
 
 namespace Replikit.Extensions.Scenes.ExecutionHandlers;
 
@@ -51,13 +52,8 @@ internal class CompleteTransitionAndSaveStateHandler : ControllerExecutionHandle
 
         async Task ClearAssociatedStates()
         {
-            var partialKey = new PartialStateKey(
-                StateType.State,
-                channelId.AdapterId,
-                channelId
-            );
-
-            var associatedStates = await stateManager.FindStatesAsync(partialKey);
+            var associatedStates = await stateManager.FindAllStatesAsync(
+                q => q.Where(x => x.Key.StateType == StateType.State));
 
             foreach (var state in associatedStates)
             {

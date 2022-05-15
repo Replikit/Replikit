@@ -1,4 +1,5 @@
 using Kantaiko.Routing.Context;
+using Replikit.Core.Abstractions.State;
 using Replikit.Extensions.State.Exceptions;
 using Replikit.Extensions.State.Implementation;
 
@@ -12,7 +13,7 @@ internal class ViewStateKeyFactory : IStateKeyFactory
 
         if (stateType is StateType.GlobalState)
         {
-            return new StateKey();
+            return new StateKey(StateType.GlobalState);
         }
 
         if (viewContext.MessageId is null)

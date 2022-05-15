@@ -1,10 +1,10 @@
 ﻿using Kantaiko.Hosting.Modularity;
 using Kantaiko.Hosting.Modularity.Introspection;
 using Microsoft.Extensions.DependencyInjection;
+using Replikit.Core.Abstractions.State;
+using Replikit.Core.Common;
 using Replikit.Core.Modules;
 using Replikit.Extensions.State.Implementation;
-using Replikit.Extensions.Storage;
-using Replikit.Extensions.Storage.Models;
 
 namespace Replikit.Extensions.State;
 
@@ -13,9 +13,7 @@ public class StateModule : ReplikitModule
 {
     protected override void ConfigureServices(IServiceCollection services)
     {
-        services.AddModule<StorageModule>();
-
-        services.AddStorage<StateKey, DynamicValue>("States");
+        services.AddSingleton<IEntityUsageIndicator<StateItem>, EntityUsageIndicator<StateItem>>();
 
         services.AddScoped(typeof(IState<>), typeof(State<>));
         services.AddScoped(typeof(IGlobalState<>), typeof(GlobalState<>));
