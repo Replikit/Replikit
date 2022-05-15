@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Replikit.Abstractions.Messages.Builder;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Messages.Models.Tokens;
@@ -8,7 +9,7 @@ namespace Replikit.Examples.Messages.Controllers;
 
 public class HelloController : Controller
 {
-    [Pattern("hi")]
+    [Regex("^hi$", RegexOptions.IgnoreCase)]
     public OutMessage Greet() => $"Hello, {Account.Username}";
 
     [Command("greet bold")]

@@ -13,7 +13,7 @@ public class CounterView : View
         _state = state;
     }
 
-    [Action]
+    [Action(AllowExternalActivation = true)]
     public void Increment(int step) => _state.Value.Increment(step);
 
     [Action]
