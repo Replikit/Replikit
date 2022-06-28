@@ -49,6 +49,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Integrations.Entit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Integrations.MongoDB", "src\integrations\Replikit.Integrations.MongoDB\src\Replikit.Integrations.MongoDB.csproj", "{5D995DF8-941E-49B7-BA90-18542A271A2D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Extensions.Users", "src\extensions\Replikit.Extensions.Users\src\Replikit.Extensions.Users.csproj", "{0E06F8E3-8BA8-464D-BCCA-A6388170D85C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replikit.Examples.Users", "examples\Replikit.Examples.Users\Replikit.Examples.Users.csproj", "{E1DC6BDE-6492-413A-935F-E3DEB5943D1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -134,6 +138,14 @@ Global
 		{5D995DF8-941E-49B7-BA90-18542A271A2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D995DF8-941E-49B7-BA90-18542A271A2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D995DF8-941E-49B7-BA90-18542A271A2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E06F8E3-8BA8-464D-BCCA-A6388170D85C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E06F8E3-8BA8-464D-BCCA-A6388170D85C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E06F8E3-8BA8-464D-BCCA-A6388170D85C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E06F8E3-8BA8-464D-BCCA-A6388170D85C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1DC6BDE-6492-413A-935F-E3DEB5943D1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1DC6BDE-6492-413A-935F-E3DEB5943D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1DC6BDE-6492-413A-935F-E3DEB5943D1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1DC6BDE-6492-413A-935F-E3DEB5943D1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B734EC02-56EB-4B74-A4E7-F958B193D96D} = {AE73BD86-274A-47B9-B6C5-2EF3A82F2463}
@@ -152,5 +164,7 @@ Global
 		{E2A2B089-A89F-4C48-86DB-FCC0CC85B94E} = {EE38BB64-AE26-48CE-B1EC-087C6B537669}
 		{8CFFE6A1-53D8-4C56-8EF8-10D8092384B3} = {EA9EA24D-7DA4-4AF0-B020-1890B8132250}
 		{5D995DF8-941E-49B7-BA90-18542A271A2D} = {EA9EA24D-7DA4-4AF0-B020-1890B8132250}
+		{0E06F8E3-8BA8-464D-BCCA-A6388170D85C} = {A4C8D70F-D0DD-4A28-B2AC-FEBD84B44CB0}
+		{E1DC6BDE-6492-413A-935F-E3DEB5943D1C} = {EE38BB64-AE26-48CE-B1EC-087C6B537669}
 	EndGlobalSection
 EndGlobal

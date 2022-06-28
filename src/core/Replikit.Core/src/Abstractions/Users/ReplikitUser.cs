@@ -1,35 +1,37 @@
 using System.Collections.Immutable;
 using Replikit.Abstractions.Common.Models;
 
+// ReSharper disable VirtualMemberCallInConstructor
+
 namespace Replikit.Core.Abstractions.Users;
 
 public class ReplikitUser : ReplikitUser<Guid>
 {
     public ReplikitUser()
     {
-        // ReSharper disable once VirtualMemberCallInConstructor
         Id = Guid.NewGuid();
     }
 
     public ReplikitUser(string username) : this()
     {
-        // ReSharper disable once VirtualMemberCallInConstructor
         Username = username;
     }
 }
 
 public class ReplikitUser<TId>
 {
-    public ReplikitUser() { }
+    public ReplikitUser()
+    {
+        AccountIds = ImmutableList<GlobalIdentifier>.Empty;
+    }
 
     public ReplikitUser(string username) : this()
     {
-        // ReSharper disable once VirtualMemberCallInConstructor
         Username = username;
     }
 
     public virtual TId Id { get; protected init; } = default!;
-    public virtual string Username { get; set; } = default!;
+    public virtual string? Username { get; set; }
 
     public virtual IReadOnlyList<GlobalIdentifier> AccountIds { get; protected set; } = null!;
 
@@ -37,12 +39,12 @@ public class ReplikitUser<TId>
     {
         if (!AccountIds.Contains(accountId))
         {
-            AccountIds = AccountIds.ToImmutableArray().Add(accountId);
+            AccountIds = AccountIds.ToImmutableList().Add(accountId);
         }
     }
 
     public virtual void RemoveAccount(GlobalIdentifier accountId)
     {
-        AccountIds = AccountIds.ToImmutableArray().Remove(accountId);
+        AccountIds = AccountIds.ToImmutableList().Remove(accountId);
     }
 }

@@ -25,16 +25,25 @@ public class LogLoadedModulesHandler : LifecycleEventHandler<ApplicationStarting
     {
         foreach (var moduleInfo in _hostInfo.Modules)
         {
-            if (moduleInfo.DisplayName == "ReplikitCore") continue;
-            if (moduleInfo.Flags.HasFlag(ModuleFlags.Library)) continue;
+            if (moduleInfo.DisplayName == "ReplikitCore")
+            {
+                continue;
+            }
+
+            if (moduleInfo.Flags.HasFlag(ModuleFlags.Library) || moduleInfo.Flags.HasFlag(ModuleFlags.Hidden))
+            {
+                continue;
+            }
 
             var isImplicit = moduleInfo.Dependents.Count > 0;
             var implicitBrand = isImplicit ? " [implicit]" : "";
 
-            _logger.LogInformation("Loaded module {Name} {Version}{ImplicitBrand}",
+            _logger.LogInformation(
+                "Loaded module {Name} {Version}{ImplicitBrand}",
                 Colors.FgColor(moduleInfo.DisplayName, Color.Cyan),
                 Colors.FgColor(moduleInfo.Version.ToString(), Color.LightCyan),
-                implicitBrand);
+                implicitBrand
+            );
         }
 
         return Unit.Task;

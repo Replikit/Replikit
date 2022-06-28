@@ -13,7 +13,7 @@ public class StateModule : ReplikitModule
 {
     protected override void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<IEntityUsageIndicator<StateItem>, EntityUsageIndicator<StateItem>>();
+        services.AddEntityUsageIndicator<StateItem>();
 
         services.AddScoped(typeof(IState<>), typeof(State<>));
         services.AddScoped(typeof(IGlobalState<>), typeof(GlobalState<>));
