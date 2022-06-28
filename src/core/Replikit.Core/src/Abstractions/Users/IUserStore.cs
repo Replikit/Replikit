@@ -8,9 +8,11 @@ public interface IUserStore<TUser, TUserId> where TUser : ReplikitUser<TUserId>
 {
     Task<TUser?> FindByIdAsync(TUserId id, CancellationToken cancellationToken = default);
 
+    Task<TUser?> FindByUsernameAsync(string username, CancellationToken cancellationToken = default);
+
     Task<TUser?> FindByAccountIdAsync(GlobalIdentifier accountId, CancellationToken cancellationToken = default);
 
-    Task<TUser> CreateAsync(TUser user, CancellationToken cancellationToken = default);
+    Task<TUser> AddAsync(TUser user, CancellationToken cancellationToken = default);
     Task<TUser> UpdateAsync(TUser user, CancellationToken cancellationToken = default);
 
     Task DeleteAsync(TUserId userId, CancellationToken cancellationToken = default);

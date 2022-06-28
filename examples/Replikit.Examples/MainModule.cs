@@ -8,6 +8,7 @@ using Replikit.Examples.AdapterServices;
 using Replikit.Examples.Messages;
 using Replikit.Examples.Scenes;
 using Replikit.Examples.State;
+using Replikit.Examples.Users;
 using Replikit.Examples.Views;
 
 namespace Replikit.Examples;
@@ -29,6 +30,7 @@ public class MainModule : ReplikitModule
         services.AddModule<ScenesExampleModule>();
         services.AddModule<ViewsExampleModule>();
         services.AddModule<StateExampleModule>();
+        services.AddModule<UsersExampleModule>();
     }
 
     protected override void ConfigureAdapters(IAdapterLoaderOptions options)

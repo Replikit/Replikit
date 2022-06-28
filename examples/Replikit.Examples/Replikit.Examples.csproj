@@ -13,6 +13,7 @@
     <ProjectReference Include="..\Replikit.Examples.Messages\Replikit.Examples.Messages.csproj" />
     <ProjectReference Include="..\Replikit.Examples.Scenes\Replikit.Examples.Scenes.csproj" />
     <ProjectReference Include="..\Replikit.Examples.State\Replikit.Examples.State.csproj" />
+    <ProjectReference Include="..\Replikit.Examples.Users\Replikit.Examples.Users.csproj" />
     <ProjectReference Include="..\Replikit.Examples.Views\Replikit.Examples.Views.csproj" />
   </ItemGroup>
 

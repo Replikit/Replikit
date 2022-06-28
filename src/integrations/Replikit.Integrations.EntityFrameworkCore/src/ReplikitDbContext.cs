@@ -55,7 +55,7 @@ public class ReplikitDbContext<TUser, TUserId> : DbContext, IStateDbContext, IUs
 
         // Exclude entities from the model when corresponding modules are not installed
 
-        if (_serviceProvider.GetService<IEntityUsageIndicator<TUser>>() is null)
+        if (_serviceProvider.GetService<IEntityUsageIndicator<ReplikitUser>>() is null)
         {
             modelBuilder.Ignore<TUser>();
         }

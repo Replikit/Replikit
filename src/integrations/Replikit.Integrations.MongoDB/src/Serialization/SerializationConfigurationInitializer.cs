@@ -13,7 +13,9 @@ internal static class SerializationConfigurationInitializer
         if (_initialized) return;
 
         BsonSerializer.RegisterSerializer(new IdentifierSerializer());
+        BsonSerializer.RegisterSerializer(new GlobalIdentifierSerializer());
         BsonSerializer.RegisterSerializer(new MessageIdentifierSerializer());
+        BsonSerializer.RegisterSerializer(new GlobalMessageIdentifierSerializer());
         BsonSerializer.RegisterSerializer(DynamicValueSerializer.Instance);
 
         BsonClassMap.RegisterClassMap<StateKey>(map =>

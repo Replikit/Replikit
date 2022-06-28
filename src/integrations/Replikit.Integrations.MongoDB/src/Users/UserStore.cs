@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Core.Abstractions.Users;
@@ -18,7 +19,15 @@ internal class UserStore<TUser, TUserId> : IUserStore<TUser, TUserId> where TUse
     {
         ArgumentNullException.ThrowIfNull(id);
 
-        return await _dbContext.Users.Find(x => id.Equals(x.Id))
+        return await _dbContext.Users.Find(new BsonDocument("_id", BsonValue.Create(id)))
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+    }
+
+    public async Task<TUser?> FindByUsernameAsync(string username, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(username);
+
+        return await _dbContext.Users.Find(x => x.Username == username)
             .FirstOrDefaultAsync(cancellationToken: cancellationToken);
     }
 
@@ -29,7 +38,7 @@ internal class UserStore<TUser, TUserId> : IUserStore<TUser, TUserId> where TUse
             .FirstOrDefaultAsync(cancellationToken: cancellationToken);
     }
 
-    public async Task<TUser> CreateAsync(TUser user, CancellationToken cancellationToken = default)
+    public async Task<TUser> AddAsync(TUser user, CancellationToken cancellationToken = default)
     {
         await _dbContext.Users.InsertOneAsync(user, cancellationToken: cancellationToken);
 
@@ -45,7 +54,11 @@ internal class UserStore<TUser, TUserId> : IUserStore<TUser, TUserId> where TUse
             throw new InvalidOperationException("Cannot update user without valid identifier");
         }
 
-        await _dbContext.Users.ReplaceOneAsync(x => user.Id!.Equals(x.Id), user, cancellationToken: cancellationToken);
+        await _dbContext.Users.ReplaceOneAsync(
+            new BsonDocument("_id", BsonValue.Create(user.Id)),
+            user,
+            cancellationToken: cancellationToken
+        );
 
         return user;
     }

@@ -21,6 +21,13 @@ internal class UserStore<TUser, TUserId> : IUserStore<TUser, TUserId> where TUse
         return await _dbContext.Users.FindAsync(new object[] { id }, cancellationToken: cancellationToken);
     }
 
+    public async Task<TUser?> FindByUsernameAsync(string username, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(username);
+
+        return await _dbContext.Users.Where(x => x.Username == username).FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<TUser?> FindByAccountIdAsync(GlobalIdentifier accountId,
         CancellationToken cancellationToken = default)
     {
@@ -28,7 +35,7 @@ internal class UserStore<TUser, TUserId> : IUserStore<TUser, TUserId> where TUse
             .FirstOrDefaultAsync(cancellationToken: cancellationToken);
     }
 
-    public async Task<TUser> CreateAsync(TUser user, CancellationToken cancellationToken = default)
+    public async Task<TUser> AddAsync(TUser user, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(user);
 
