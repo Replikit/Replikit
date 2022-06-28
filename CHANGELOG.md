@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.
 
+<a name="1.0.0-alpha.2"></a>
+## [1.0.0-alpha.2](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.2) (2022-6-28)
+
+### Features
+
+* Redesign storage system ([af1d2da](https://www.github.com/Replikit/Replikit/commit/af1d2dad740638fa1ddd113ea32246413435a348))
+* **EntityFrameworkCore:** Add EFCore integration ([35fd688](https://www.github.com/Replikit/Replikit/commit/35fd688b1b643fc5bb11c03a37d0a655ba59e366))
+* **MongoDB:** Add MongoDB integration ([7a2e83a](https://www.github.com/Replikit/Replikit/commit/7a2e83ad6cc9329cb4e5e2a6e914c51c16f799d7))
+* **Users:** Add users module ([4a3632a](https://www.github.com/Replikit/Replikit/commit/4a3632adfc5dcd47e164d57ae37eacbf80a76bc6))
+
+### Bug Fixes
+
+* Remove conflicting types ([3aa61d9](https://www.github.com/Replikit/Replikit/commit/3aa61d9a2eb15ecf326ba6a3e08bc2f02d3211bc))
+
 <a name="1.0.0-alpha.1"></a>
 ## [1.0.0-alpha.1](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.1) (2022-4-22)
 
