@@ -4,21 +4,19 @@ using Replikit.Abstractions.Events;
 using Replikit.Adapters.Common.Services;
 using Replikit.Adapters.Telegram.Internal;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 namespace Replikit.Adapters.Telegram.Services;
 
-internal class TelegramEventSource : EventSource
+internal class TelegramEventSource : PollingEventSource<Update>
 {
     private readonly ITelegramBotClient _backend;
     private readonly TelegramAdapterRepository _repository;
     private readonly TelegramEntityFactory _entityFactory;
     private DateTime _startDate;
     private int _nextUpdateId = -1;
-
-    private CancellationTokenSource? _cancellationTokenSource;
-    private Task? _pollingTask;
 
     public TelegramEventSource(IAdapter adapter, IAdapterEventHandler eventHandler, ITelegramBotClient backend,
         TelegramAdapterRepository repository, TelegramEntityFactory entityFactory) : base(adapter, eventHandler)
@@ -28,67 +26,29 @@ internal class TelegramEventSource : EventSource
         _entityFactory = entityFactory;
     }
 
-    private async Task PollingWorker()
+    protected override async Task<IEnumerable<Update>?> FetchUpdatesAsync(CancellationToken cancellationToken)
     {
-        Debug.Assert(_cancellationTokenSource is not null);
+        var updates = await _backend.GetUpdatesAsync(
+            _nextUpdateId,
+            limit: 100,
+            timeout: 60,
+            Array.Empty<UpdateType>(),
+            cancellationToken
+        );
 
-        try
-        {
-            while (!_cancellationTokenSource.IsCancellationRequested)
-            {
-                var updates = await _backend.GetUpdatesAsync(_nextUpdateId, 100, 60, Array.Empty<UpdateType>(),
-                    _cancellationTokenSource.Token);
+        if (updates.Length == 0) return null;
 
-                if (updates.Length > 0)
-                {
-                    HandleUpdates(updates);
-                    _nextUpdateId = updates[^1].Id + 1;
-                }
-            }
-        }
-        catch (OperationCanceledException) { }
-        catch (Exception exception)
-        {
-            Console.WriteLine(exception);
-        }
+        _nextUpdateId = updates[^1].Id + 1;
+
+        return updates;
     }
 
-    private async void HandleMediaGroup(IReadOnlyList<Message> messages, bool edited)
+    protected override bool ShouldRetryAfterException(Exception exception)
     {
-        var primary = messages[0];
-
-        Debug.Assert(primary.From is not null);
-
-        var channelInfo = _repository.UpdateChannelInfo(primary.Chat);
-        var accountInfo = await _repository.UpdateAccountInfo(primary.From);
-
-        var message = _entityFactory.CreateMessage(messages);
-
-        if (edited) HandleMessageEdited(message, channelInfo, accountInfo);
-        else HandleMessageReceived(message, channelInfo, accountInfo);
+        return exception is RequestException { Message: "Request timed out" };
     }
 
-    private void HandleMessages(IReadOnlyList<Message> messages, bool edited)
-    {
-        var mediaGroups = messages.GroupBy(x => x.MediaGroupId);
-
-        foreach (var mediaGroup in mediaGroups)
-        {
-            if (mediaGroup.Key is null)
-            {
-                foreach (var message in mediaGroup)
-                {
-                    HandleMediaGroup(new[] { message }, edited);
-                }
-
-                continue;
-            }
-
-            HandleMediaGroup(mediaGroup.ToArray(), edited);
-        }
-    }
-
-    private async void HandleUpdates(Update[] updates)
+    protected override async Task HandleUpdatesAsync(IEnumerable<Update> updates, CancellationToken cancellationToken)
     {
         var receivedMessages = new List<Message>();
         var editedMessages = new List<Message>();
@@ -123,7 +83,7 @@ internal class TelegramEventSource : EventSource
                 {
                     Debug.Assert(update.CallbackQuery is not null);
 
-                    var accountInfo = await _repository.UpdateAccountInfo(update.CallbackQuery.From);
+                    var accountInfo = await _repository.UpdateAccountInfo(update.CallbackQuery.From, cancellationToken);
 
                     var message = update.CallbackQuery.Message is not null
                         ? _entityFactory.CreateMessage(new[] { update.CallbackQuery.Message })
@@ -139,31 +99,45 @@ internal class TelegramEventSource : EventSource
         HandleMessages(editedMessages, true);
     }
 
-    public override Task StartAsync(CancellationToken cancellationToken)
+    private async void HandleMediaGroup(IReadOnlyList<Message> messages, bool edited)
     {
-        if (_cancellationTokenSource is not null)
-        {
-            return Task.CompletedTask;
-        }
+        var primary = messages[0];
 
-        _startDate = DateTime.UtcNow;
+        Debug.Assert(primary.From is not null);
 
-        _cancellationTokenSource = new CancellationTokenSource();
-        _pollingTask = PollingWorker();
+        var channelInfo = _repository.UpdateChannelInfo(primary.Chat);
+        var accountInfo = await _repository.UpdateAccountInfo(primary.From);
 
-        return Task.CompletedTask;
+        var message = _entityFactory.CreateMessage(messages);
+
+        if (edited) HandleMessageEdited(message, channelInfo, accountInfo);
+        else HandleMessageReceived(message, channelInfo, accountInfo);
     }
 
-    public override Task StopAsync(CancellationToken cancellationToken)
+    private void HandleMessages(IEnumerable<Message> messages, bool edited)
     {
-        if (_cancellationTokenSource is null)
+        var mediaGroups = messages.GroupBy(x => x.MediaGroupId);
+
+        foreach (var mediaGroup in mediaGroups)
         {
-            return Task.CompletedTask;
+            if (mediaGroup.Key is null)
+            {
+                foreach (var message in mediaGroup)
+                {
+                    HandleMediaGroup(new[] { message }, edited);
+                }
+
+                continue;
+            }
+
+            HandleMediaGroup(mediaGroup.ToArray(), edited);
         }
+    }
 
-        Debug.Assert(_pollingTask is not null);
+    public override async Task StartAsync(CancellationToken cancellationToken)
+    {
+        await base.StartAsync(cancellationToken);
 
-        _cancellationTokenSource.Cancel();
-        return _pollingTask;
+        _startDate = DateTime.UtcNow;
     }
 }

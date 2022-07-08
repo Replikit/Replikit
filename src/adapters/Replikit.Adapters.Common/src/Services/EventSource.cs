@@ -11,7 +11,7 @@ public abstract class EventSource : IEventSource
 {
     private readonly IAdapter _adapter;
 
-    private IAdapterEventHandler _eventHandler;
+    private readonly IAdapterEventHandler _eventHandler;
 
     protected EventSource(IAdapter adapter, IAdapterEventHandler eventHandler)
     {
@@ -42,13 +42,6 @@ public abstract class EventSource : IEventSource
     {
         var buttonPressedEvent = new ButtonPressedEvent(_adapter.Id, accountInfo, data, message, requestId);
         _eventHandler.HandleAsync(buttonPressedEvent, _adapter);
-    }
-
-    public void SetHandler(IAdapterEventHandler eventHandler)
-    {
-        ArgumentNullException.ThrowIfNull(eventHandler);
-
-        _eventHandler = eventHandler;
     }
 
     public abstract Task StartAsync(CancellationToken cancellationToken);
