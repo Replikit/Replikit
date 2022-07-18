@@ -1,24 +1,24 @@
-using Kantaiko.Properties;
 using Kantaiko.Routing.Context;
-using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Events;
+using Replikit.Core.Handlers.Context;
 
 namespace Replikit.Core.Services;
 
-public abstract class ContextService : ContextService<IEvent>
+public abstract class ContextService : ContextService<IAdapterEvent>
 {
-    protected ContextService(IContextAccessor<IEventContext<IEvent>> contextAccessor) : base(contextAccessor) { }
+    protected ContextService(ContextAccessor<IAdapterEventContext<IAdapterEvent>> contextAccessor) : base(
+        contextAccessor) { }
 }
 
-public abstract class ContextService<TEvent> where TEvent : IEvent
+public abstract class ContextService<TEvent> where TEvent : IAdapterEvent
 {
-    protected IEventContext<TEvent> Context { get; }
+    protected IAdapterEventContext<TEvent> Context { get; }
 
     protected TEvent Event => Context.Event;
+    protected IServiceProvider ServiceProvider => Context.ServiceProvider;
     protected CancellationToken CancellationToken => Context.CancellationToken;
-    protected IReadOnlyPropertyCollection Properties => Context.Properties;
 
-    protected ContextService(IContextAccessor<IEventContext<TEvent>> contextAccessor)
+    protected ContextService(ContextAccessor<IAdapterEventContext<TEvent>> contextAccessor)
     {
         Context = contextAccessor.Context ??
                   throw new InvalidOperationException("Context service was constructed outside of an event context");

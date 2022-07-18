@@ -18,7 +18,12 @@ internal class TelegramTextFormatter : TextFormatter
         AddVisitor<TextToken>(token => HttpUtility.HtmlEncode(token.Text));
         AddVisitor<LinkTextToken>(token => $"<a href=\"{token.Url}\">{HttpUtility.HtmlEncode(token.Text)}</a>");
 
-        AddVisitor<MentionTextToken>(token =>
-            $"<a href=\"tg://user?id=${token.AccountId}\">${HttpUtility.HtmlEncode(token.Text)}</a>");
+        AddVisitor<MentionTextToken>(token => token switch
+        {
+            { AccountId: not null } =>
+                $"<a href=\"tg://user?id={token.AccountId}\">{HttpUtility.HtmlEncode(token.Text)}</a>",
+            { Username: not null } => "@" + HttpUtility.HtmlEncode(token.Username),
+            _ => throw new InvalidOperationException("MentionTextToken must have either AccountId or Username")
+        });
     }
 }

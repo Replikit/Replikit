@@ -4,11 +4,12 @@ using Kantaiko.Controllers.Matching;
 using Kantaiko.Properties.Immutable;
 using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Messages.Events;
+using Replikit.Core.Controllers.Context;
 
 namespace Replikit.Core.Controllers.Patterns;
 
 [AttributeUsage(AttributeTargets.Method)]
-public class CommandAttribute : Attribute, IEndpointMatcherFactory<IEventContext<MessageReceivedEvent>>,
+public class CommandAttribute : Attribute, IEndpointMatcherFactory<IMessageControllerContext>,
     IEndpointPropertyProvider
 {
     private readonly string _name;
@@ -20,7 +21,7 @@ public class CommandAttribute : Attribute, IEndpointMatcherFactory<IEventContext
         _aliases = new[] { name }.Concat(aliases).ToArray();
     }
 
-    public IEndpointMatcher<IEventContext<MessageReceivedEvent>> CreateEndpointMatcher(EndpointFactoryContext context)
+    public IEndpointMatcher<IMessageControllerContext> CreateEndpointMatcher(EndpointFactoryContext context)
     {
         return CommandMatcherFactory.CreateEndpointMatcher(context, _aliases);
     }

@@ -4,7 +4,9 @@ using Replikit.Extensions.Views.Messages;
 using System.Text.Json;
 using Kantaiko.Routing;
 using Kantaiko.Routing.Events;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Replikit.Core.Handlers.Context;
 using Replikit.Extensions.State;
 using Replikit.Extensions.Views.Models;
 
@@ -25,7 +27,7 @@ internal class ViewButtonHandler : AdapterEventHandler<ButtonPressedEvent>
         _stateManager = stateManager;
     }
 
-    protected override async Task<Unit> HandleAsync(IEventContext<ButtonPressedEvent> context, NextAction next)
+    protected override async Task<Unit> HandleAsync(IAdapterEventContext<ButtonPressedEvent> context, NextAction next)
     {
         if (context.Event.Message is null)
         {
@@ -38,6 +40,7 @@ internal class ViewButtonHandler : AdapterEventHandler<ButtonPressedEvent>
         try
         {
             if (string.IsNullOrEmpty(context.Event.Data)) throw new JsonException();
+
             payload = JsonSerializer.Deserialize<ViewActionPayload>(context.Event.Data);
             if (payload is null) throw new JsonException();
         }
@@ -72,10 +75,12 @@ internal class ViewButtonHandler : AdapterEventHandler<ButtonPressedEvent>
 
         var (method, parameters) = viewInstance.Actions[payload.ActionIndex];
 
-        var request = new ViewRequest(viewInstance.Type, method, parameters, viewState, Context);
-        var viewContext = ViewManager.CreateContext(request, ServiceProvider, CancellationToken);
+        await using var scope = ServiceProvider.CreateAsyncScope();
 
-        await _handlerAccessor.Handler.Handle(viewContext);
+        var request = new ViewRequest(viewInstance.Type, method, parameters, viewState, Context);
+        var viewContext = new ViewContext(request, scope.ServiceProvider, CancellationToken);
+
+        await _handlerAccessor.Handler.HandleAsync(viewContext, scope.ServiceProvider, CancellationToken);
 
         return default;
     }

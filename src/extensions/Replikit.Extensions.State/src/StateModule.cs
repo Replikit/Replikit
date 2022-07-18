@@ -3,7 +3,7 @@ using Kantaiko.Hosting.Modularity.Introspection;
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Core.Abstractions.State;
 using Replikit.Core.Common;
-using Replikit.Core.Modules;
+using Replikit.Core.Modularity;
 using Replikit.Extensions.State.Implementation;
 
 namespace Replikit.Extensions.State;

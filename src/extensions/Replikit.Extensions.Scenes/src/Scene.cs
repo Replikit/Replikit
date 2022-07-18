@@ -1,12 +1,11 @@
 using System.Linq.Expressions;
 using Kantaiko.Controllers;
-using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Repositories.Models;
 using Replikit.Core.EntityCollections;
-using Replikit.Core.Handlers.Extensions;
+using Replikit.Core.Handlers.Context;
 using Replikit.Extensions.Scenes.Messages;
 using Replikit.Extensions.State;
 
@@ -18,7 +17,7 @@ public abstract class Scene : ControllerBase<SceneContext>
 
     protected bool IsExternalActivation => Context.Request.EventContext is null;
 
-    protected IEventContext<MessageReceivedEvent> EventContext =>
+    protected IChannelEventContext<MessageReceivedEvent> EventContext =>
         Request.EventContext ??
         throw new InvalidOperationException("Failed to access event context since scene was activated externally");
 
@@ -32,7 +31,7 @@ public abstract class Scene : ControllerBase<SceneContext>
 
     private IAdapter? _adapter;
 
-    protected IAdapter Adapter => _adapter ??= EventContext.GetRequiredAdapter();
+    protected IAdapter Adapter => _adapter ??= EventContext.Adapter;
 
     protected static SceneResult TransitionTo(Expression<Action> stage) => new(stage);
     protected static SceneResult TransitionTo(Expression<Func<Task>> stage) => new(stage);

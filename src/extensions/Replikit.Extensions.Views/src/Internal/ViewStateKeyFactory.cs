@@ -1,4 +1,3 @@
-using Kantaiko.Routing.Context;
 using Replikit.Core.Abstractions.State;
 using Replikit.Extensions.State.Exceptions;
 using Replikit.Extensions.State.Implementation;
@@ -7,7 +6,7 @@ namespace Replikit.Extensions.Views.Internal;
 
 internal class ViewStateKeyFactory : IStateKeyFactory
 {
-    public StateKey? CreateStateKey(StateType stateType, IContext context)
+    public StateKey? CreateStateKey(StateType stateType, object context)
     {
         var viewContext = (ViewContext) context;
 

@@ -1,17 +1,13 @@
 using Kantaiko.Routing.Context;
-using Microsoft.Extensions.DependencyInjection;
+using Replikit.Abstractions.Events;
+using Replikit.Core.Handlers.Context;
 
 namespace Replikit.Core.Services;
 
-public class CancellationTokenProvider : ICancellationTokenProvider
+public class CancellationTokenProvider : ContextService, ICancellationTokenProvider
 {
-    private readonly IServiceProvider _serviceProvider;
+    public CancellationTokenProvider(ContextAccessor<IAdapterEventContext<IAdapterEvent>> contextAccessor) :
+        base(contextAccessor) { }
 
-    public CancellationTokenProvider(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
-
-    public CancellationToken CancellationToken =>
-        _serviceProvider.GetService<IContext>()?.CancellationToken ?? CancellationToken.None;
+    CancellationToken ICancellationTokenProvider.CancellationToken => CancellationToken;
 }

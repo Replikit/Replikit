@@ -1,9 +1,8 @@
 using Kantaiko.Hosting.Modularity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Adapters.Loader;
 using Replikit.Adapters.Telegram;
-using Replikit.Core.Modules;
+using Replikit.Core.Modularity;
 using Replikit.Examples.AdapterServices;
 using Replikit.Examples.Messages;
 using Replikit.Examples.Scenes;
@@ -15,13 +14,6 @@ namespace Replikit.Examples;
 
 public class MainModule : ReplikitModule
 {
-    private readonly IConfiguration _configuration;
-
-    public MainModule(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
     protected override void ConfigureServices(IServiceCollection services)
     {
         services.AddModule<MessagesExampleModule>();

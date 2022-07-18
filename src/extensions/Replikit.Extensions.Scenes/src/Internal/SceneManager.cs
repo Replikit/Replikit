@@ -1,6 +1,4 @@
-using Kantaiko.Properties.Immutable;
 using Microsoft.Extensions.DependencyInjection;
-using Replikit.Extensions.State.Context;
 
 namespace Replikit.Extensions.Scenes.Internal;
 
@@ -19,17 +17,8 @@ internal class SceneManager : ISceneManager
     {
         await using var scope = _serviceProvider.CreateAsyncScope();
 
-        var sceneContext = CreateContext(sceneRequest, scope.ServiceProvider, cancellationToken);
+        var sceneContext = new SceneContext(sceneRequest, scope.ServiceProvider, cancellationToken);
 
-        await _handlerAccessor.Handler.Handle(sceneContext);
-    }
-
-    public static SceneContext CreateContext(SceneRequest request, IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
-    {
-        var properties = ImmutablePropertyCollection.Empty
-            .Set(new StateContextProperties(SceneStateKeyFactory.Instance));
-
-        return new SceneContext(request, serviceProvider, properties, cancellationToken);
+        await _handlerAccessor.Handler.HandleAsync(sceneContext, scope.ServiceProvider, cancellationToken);
     }
 }

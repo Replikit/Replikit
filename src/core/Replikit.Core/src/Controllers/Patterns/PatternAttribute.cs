@@ -3,11 +3,12 @@ using Kantaiko.Controllers.Introspection.Factory.Context;
 using Kantaiko.Controllers.Matching;
 using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Messages.Events;
+using Replikit.Core.Controllers.Context;
 
 namespace Replikit.Core.Controllers.Patterns;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public class PatternAttribute : Attribute, IEndpointMatcherFactory<IEventContext<MessageReceivedEvent>>
+public class PatternAttribute : Attribute, IEndpointMatcherFactory<IMessageControllerContext>
 {
     private readonly string _pattern;
 
@@ -16,7 +17,7 @@ public class PatternAttribute : Attribute, IEndpointMatcherFactory<IEventContext
         _pattern = pattern;
     }
 
-    public IEndpointMatcher<IEventContext<MessageReceivedEvent>> CreateEndpointMatcher(EndpointFactoryContext context)
+    public IEndpointMatcher<IMessageControllerContext> CreateEndpointMatcher(EndpointFactoryContext context)
     {
         return new PatternMatcher(_pattern);
     }

@@ -15,6 +15,7 @@ public static class AdapterLoaderOptionsExtensions
     public static void AddTelegram(this IAdapterLoaderOptions loaderOptions, TelegramAdapterOptions options)
     {
         ArgumentNullException.ThrowIfNull(loaderOptions);
+        ArgumentNullException.ThrowIfNull(options);
 
         loaderOptions.EnsureTelegramAdapterFactoryConfigured();
         loaderOptions.AdapterDescriptors.Add(new AdapterDescriptor(TelegramAdapterFactory.Type, options));
@@ -22,6 +23,9 @@ public static class AdapterLoaderOptionsExtensions
 
     public static void AddTelegram(this IAdapterLoaderOptions loaderOptions, string token)
     {
+        ArgumentNullException.ThrowIfNull(loaderOptions);
+        ArgumentNullException.ThrowIfNull(token);
+
         loaderOptions.AddTelegram(new TelegramAdapterOptions { Token = token });
     }
 

@@ -2,7 +2,7 @@ using Kantaiko.Hosting.Modularity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Replikit.Core.Modules;
+using Replikit.Core.Modularity;
 using Replikit.Integrations.EntityFrameworkCore;
 
 namespace Replikit.Examples.EntityFrameworkCore;

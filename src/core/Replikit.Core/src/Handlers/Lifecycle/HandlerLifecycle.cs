@@ -1,44 +1,33 @@
-using Kantaiko.Hosting.Lifecycle;
-using Kantaiko.Hosting.Modularity.Introspection;
-using Kantaiko.Routing;
-using Kantaiko.Routing.AutoRegistration;
 using Kantaiko.Routing.Events;
+using Replikit.Abstractions.Events;
+using Replikit.Core.Handlers.Context;
 
 namespace Replikit.Core.Handlers.Lifecycle;
 
 internal class HandlerLifecycle : IHandlerLifecycle
 {
-    private IHandler<IEventContext<EventHandlerCreatedEvent>, Task> _eventHandlerCreated;
-    private IHandler<IEventContext<EventHandledEvent>, Task> _eventHandled;
+    public event AsyncEventHandler<IAsyncEventContext<EventHandlerCreatedEvent>>? EventHandlerCreated;
+    public event AsyncEventHandler<IAsyncEventContext<EventHandledEvent>>? EventHandled;
 
-    public HandlerLifecycle(HostInfo hostInfo)
+    public Task OnEventHandlerCreatedAsync(IAdapterEventContext<IAdapterEvent> eventContext,
+        CancellationToken cancellationToken)
     {
-        var types = hostInfo.Assemblies.SelectMany(x => x.GetTypes()).ToArray();
+        var context = new AsyncEventContext<EventHandlerCreatedEvent>(
+            new EventHandlerCreatedEvent(eventContext),
+            cancellationToken: cancellationToken
+        );
 
-        _eventHandlerCreated = EventHandlerFactory
-            .CreateParallelEventHandler<EventHandlerCreatedEvent>(types, ServiceHandlerFactory.Instance);
-
-        _eventHandled = EventHandlerFactory
-            .CreateParallelEventHandler<EventHandledEvent>(types, ServiceHandlerFactory.Instance);
+        return EventHandlerCreated.InvokeAsync(context);
     }
 
-    public IHandler<IEventContext<EventHandlerCreatedEvent>, Task> EventHandlerCreated
+    public Task OnEventHandledAsync(IAdapterEventContext<IAdapterEvent> eventContext,
+        CancellationToken cancellationToken)
     {
-        get => _eventHandlerCreated;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            _eventHandlerCreated = value;
-        }
-    }
+        var context = new AsyncEventContext<EventHandledEvent>(
+            new EventHandledEvent(eventContext),
+            cancellationToken: cancellationToken
+        );
 
-    public IHandler<IEventContext<EventHandledEvent>, Task> EventHandled
-    {
-        get => _eventHandled;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            _eventHandled = value;
-        }
+        return EventHandled.InvokeAsync(context);
     }
 }

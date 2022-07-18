@@ -11,7 +11,7 @@ public class AttachmentController : Controller
     [Command("photo with text")]
     public OutMessage GetPhotoWithText()
     {
-        return CreateBuilder()
+        return OutMessage.CreateBuilder()
             .AddText("Hi")
             .WithAttachment(OutAttachment.FromUrl(AttachmentType.Photo, "https://picsum.photos/512"));
     }

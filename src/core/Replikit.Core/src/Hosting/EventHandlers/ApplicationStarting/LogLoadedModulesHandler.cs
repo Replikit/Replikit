@@ -1,15 +1,13 @@
 using System.Drawing;
 using Kantaiko.ConsoleFormatting;
-using Kantaiko.Hosting.Lifecycle;
 using Kantaiko.Hosting.Lifecycle.Events;
 using Kantaiko.Hosting.Modularity.Introspection;
-using Kantaiko.Routing;
 using Kantaiko.Routing.Events;
 using Microsoft.Extensions.Logging;
 
 namespace Replikit.Core.Hosting.EventHandlers.ApplicationStarting;
 
-public class LogLoadedModulesHandler : LifecycleEventHandler<ApplicationStartingEvent>
+public class LogLoadedModulesHandler : AsyncEventHandlerBase<ApplicationStartingEvent>
 {
     private readonly HostInfo _hostInfo;
     private readonly ILogger<ModuleLoader> _logger;
@@ -21,7 +19,7 @@ public class LogLoadedModulesHandler : LifecycleEventHandler<ApplicationStarting
         _logger = logger;
     }
 
-    protected override Task<Unit> HandleAsync(IEventContext<ApplicationStartingEvent> context)
+    protected override Task HandleAsync(IAsyncEventContext<ApplicationStartingEvent> context)
     {
         foreach (var moduleInfo in _hostInfo.Modules)
         {
@@ -46,6 +44,6 @@ public class LogLoadedModulesHandler : LifecycleEventHandler<ApplicationStarting
             );
         }
 
-        return Unit.Task;
+        return Task.CompletedTask;
     }
 }

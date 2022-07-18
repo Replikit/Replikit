@@ -1,14 +1,14 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
-using Kantaiko.Properties.Immutable;
-using Kantaiko.Routing.Events;
 using Kantaiko.Routing.Exceptions;
+using Kantaiko.Routing.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Events;
 using Replikit.Abstractions.Repositories.Events;
+using Replikit.Core.Handlers.Context;
 using Replikit.Core.Handlers.Lifecycle;
 
 namespace Replikit.Core.Handlers.Internal;
@@ -18,21 +18,26 @@ internal class AdapterEventHandler : IAdapterEventHandler
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<AdapterEventHandler> _logger;
     private readonly IHostApplicationLifetime _applicationLifetime;
-    private readonly IAdapterEventRouter _adapterEventRouter;
-    private readonly IHandlerLifecycle _handlerLifecycle;
+    private readonly HandlerLifecycle _handlerLifecycle;
+    private readonly EventContextFactory _eventContextFactory;
+    private readonly AdapterEventRouter _eventRouter;
 
-    public AdapterEventHandler(IServiceProvider serviceProvider, ILogger<AdapterEventHandler> logger,
-        IHostApplicationLifetime applicationLifetime, IAdapterEventRouter adapterEventRouter,
-        IHandlerLifecycle handlerLifecycle)
+    public AdapterEventHandler(IServiceProvider serviceProvider,
+        ILogger<AdapterEventHandler> logger,
+        IHostApplicationLifetime applicationLifetime,
+        HandlerLifecycle handlerLifecycle,
+        EventContextFactory eventContextFactory,
+        AdapterEventRouter eventRouter)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
         _applicationLifetime = applicationLifetime;
-        _adapterEventRouter = adapterEventRouter;
         _handlerLifecycle = handlerLifecycle;
+        _eventContextFactory = eventContextFactory;
+        _eventRouter = eventRouter;
     }
 
-    public async Task HandleAsync(IEvent @event, IAdapter adapter, CancellationToken cancellationToken = default)
+    public async Task HandleAsync(IAdapterEvent @event, IAdapter adapter, CancellationToken cancellationToken = default)
     {
         var stopwatch = Stopwatch.StartNew();
 
@@ -41,29 +46,23 @@ internal class AdapterEventHandler : IAdapterEventHandler
 
         await using var scope = _serviceProvider.CreateAsyncScope();
 
-        var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken,
-            _applicationLifetime.ApplicationStopping);
+        var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
+            cancellationToken,
+            _applicationLifetime.ApplicationStopping
+        );
 
-        var properties = ImmutablePropertyCollection.Empty.Set(new AdapterContextProperties(adapter));
-
-        var context = (IEventContext<Event>) Activator.CreateInstance(
-            typeof(EventContext<>).MakeGenericType(eventType),
-            @event, scope.ServiceProvider, properties, cancellationTokenSource.Token)!;
+        var context = (IAdapterEventContext<AdapterEvent>) _eventContextFactory.CreateContext(@event,
+            adapter, scope.ServiceProvider, cancellationTokenSource.Token);
 
         UpdateCultureInfo(@event);
 
         try
         {
-            await _adapterEventRouter.Handler.Handle(context);
+            await _eventRouter.Handler.Handle(context);
 
-            await using var lifecycleEventScope = scope.ServiceProvider.CreateAsyncScope();
-
-            var eventContext = new EventContext<EventHandledEvent>(new EventHandledEvent(context),
-                lifecycleEventScope.ServiceProvider, cancellationToken: cancellationTokenSource.Token);
-
-            await _handlerLifecycle.EventHandled.Handle(eventContext);
+            await _handlerLifecycle.OnEventHandledAsync(context, cancellationTokenSource.Token);
         }
-        catch (ChainEndedException)
+        catch (NoHandlersLeftException)
         {
             _logger.LogDebug("Event was ignored since no appreciate handler was found");
         }
@@ -79,7 +78,7 @@ internal class AdapterEventHandler : IAdapterEventHandler
         }
     }
 
-    private void UpdateCultureInfo(IEvent @event)
+    private void UpdateCultureInfo(IAdapterEvent @event)
     {
         Thread.CurrentThread.CurrentUICulture = @event is IAccountEvent accountEvent
             ? accountEvent.Account.CultureInfo ?? CultureInfo.InvariantCulture

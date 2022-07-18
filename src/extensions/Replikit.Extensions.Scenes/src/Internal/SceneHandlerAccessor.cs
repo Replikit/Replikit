@@ -13,7 +13,7 @@ namespace Replikit.Extensions.Scenes.Internal;
 internal class SceneHandlerAccessor : ISceneIntrospectionInfoAccessor
 {
     public IntrospectionInfo IntrospectionInfo { get; }
-    public IHandler<SceneContext, Task<ControllerExecutionResult>> Handler { get; }
+    public IControllerHandler<SceneContext> Handler { get; }
 
     public SceneHandlerAccessor(HostInfo hostInfo, IServiceProvider serviceProvider)
     {
@@ -27,17 +27,15 @@ internal class SceneHandlerAccessor : ISceneIntrospectionInfoAccessor
 
         IntrospectionInfo = introspectionBuilder.CreateIntrospectionInfo(lookupTypes);
 
-        var pipelineBuilder = new PipelineBuilder<SceneContext>();
+        var handlers = new HandlerCollection<SceneContext>();
 
-        pipelineBuilder.AddEndpointMatching();
-        pipelineBuilder.AddSubHandlerExecution();
-        pipelineBuilder.AddControllerInstantiation(ServiceHandlerFactory.Instance);
-        pipelineBuilder.AddHandler(new LoadStateHandler());
-        pipelineBuilder.AddHandler(new LoadSceneEndpointParametersHandler());
-        pipelineBuilder.AddEndpointInvocation();
-        pipelineBuilder.AddHandler(new CompleteTransitionAndSaveStateHandler());
-
-        var handlers = pipelineBuilder.Build();
+        handlers.AddEndpointMatching();
+        handlers.AddSubHandlerExecution();
+        handlers.AddControllerInstantiation(ServiceHandlerFactory.Instance);
+        handlers.Add(new LoadStateHandler());
+        handlers.Add(new LoadSceneEndpointParametersHandler());
+        handlers.AddEndpointInvocation();
+        handlers.Add(new CompleteTransitionAndSaveStateHandler());
 
         Handler = ControllerHandlerFactory.CreateControllerHandler(IntrospectionInfo, handlers);
     }

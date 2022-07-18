@@ -6,11 +6,12 @@ using Kantaiko.Controllers.Matching.Text;
 using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Repositories.Events;
+using Replikit.Core.Controllers.Context;
 using Replikit.Core.Localization;
 
 namespace Replikit.Core.Controllers.Patterns;
 
-public class KeyboardButtonMatcher : IEndpointMatcher<IEventContext<MessageReceivedEvent>>
+public class KeyboardButtonMatcher : IEndpointMatcher<IMessageControllerContext>
 {
     private readonly ILocalizer _localizer;
     private readonly Type _localeType;
@@ -25,7 +26,7 @@ public class KeyboardButtonMatcher : IEndpointMatcher<IEventContext<MessageRecei
         _localeName = localeName;
     }
 
-    public EndpointMatchResult Match(EndpointMatchContext<IEventContext<MessageReceivedEvent>> context)
+    public EndpointMatchResult Match(EndpointMatchContext<IMessageControllerContext> context)
     {
         var messageText = context.RequestContext.Event.Message.Text;
         if (string.IsNullOrEmpty(messageText)) return EndpointMatchResult.NotMatched;

@@ -16,8 +16,7 @@ namespace Replikit.Extensions.Scenes.ExecutionHandlers;
 
 internal class CompleteTransitionAndSaveStateHandler : ControllerExecutionHandler<SceneContext>
 {
-    protected override async Task<ControllerExecutionResult> HandleAsync(
-        ControllerExecutionContext<SceneContext> context,
+    protected override async Task<ControllerResult> HandleAsync(ControllerContext<SceneContext> context,
         NextAction next)
     {
         var sceneManager = context.ServiceProvider.GetRequiredService<ISceneManager>();
@@ -92,7 +91,7 @@ internal class CompleteTransitionAndSaveStateHandler : ControllerExecutionHandle
                 sceneRequest.EventContext, sceneState);
 
             await sceneManager.EnterSceneAsync(transitionRequest, context.CancellationToken);
-            return ControllerExecutionResult.Empty;
+            return ControllerResult.Empty;
         }
 
         OutMessage? outMessage = null;
@@ -149,6 +148,6 @@ internal class CompleteTransitionAndSaveStateHandler : ControllerExecutionHandle
 
         await stateLoader.SaveAsync(context.CancellationToken);
 
-        return ControllerExecutionResult.Empty;
+        return ControllerResult.Empty;
     }
 }

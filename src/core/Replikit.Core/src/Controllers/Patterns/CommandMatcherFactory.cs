@@ -7,13 +7,14 @@ using Kantaiko.Routing.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Replikit.Abstractions.Messages.Events;
+using Replikit.Core.Controllers.Context;
 using Replikit.Core.Options;
 
 namespace Replikit.Core.Controllers.Patterns;
 
 internal static class CommandMatcherFactory
 {
-    public static IEndpointMatcher<IEventContext<MessageReceivedEvent>> CreateEndpointMatcher(
+    public static IEndpointMatcher<IMessageControllerContext> CreateEndpointMatcher(
         EndpointFactoryContext context, string[] commandNames)
     {
         var options = context.ServiceProvider.GetRequiredService<IOptions<ControllersOptions>>();

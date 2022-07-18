@@ -1,30 +1,38 @@
-﻿using Kantaiko.Routing.Events;
+﻿using Kantaiko.Routing;
+using Kantaiko.Routing.AutoRegistration;
+using Kantaiko.Routing.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Events;
-using Replikit.Core.Handlers.Extensions;
+using Replikit.Core.Handlers.Context;
 using Replikit.Core.Handlers.Lifecycle;
 
 namespace Replikit.Core.Handlers;
 
-public abstract class AdapterEventHandler : AdapterEventHandler<Event> { }
+public abstract class AdapterEventHandler : AdapterEventHandler<AdapterEvent> { }
 
-public abstract class AdapterEventHandler<TEvent> : ChainedEventHandler<TEvent> where TEvent : IEvent
+public abstract class AdapterEventHandler<TEvent> : AdapterEventHandler<TEvent, IAdapterEventContext<TEvent>>
+    where TEvent : IAdapterEvent { }
+
+public abstract class AdapterEventHandler<TEvent, TContext> : AsyncChainedEventHandlerBase<TEvent, TContext>
+    where TEvent : IAdapterEvent
+    where TContext : IAdapterEventContext<TEvent>
 {
-    private IAdapter? _adapter;
+    protected delegate Task<Unit> NextAction();
 
-    protected IAdapter Adapter => _adapter ??= Context.GetRequiredAdapter();
-
-    protected override async Task BeforeHandleAsync(IEventContext<TEvent> context)
+    protected override Task<Unit> HandleAsync(TContext context, Func<Task<Unit>> next)
     {
-        var lifecycle = context.ServiceProvider.GetRequiredService<IHandlerLifecycle>();
+        return HandleAsync(context, () => next());
+    }
 
-        await using var scope = ServiceProvider.CreateAsyncScope();
+    protected abstract Task<Unit> HandleAsync(TContext context, NextAction next);
 
-        var eventContext = new EventContext<EventHandlerCreatedEvent>(
-            new EventHandlerCreatedEvent((IEventContext<IEvent>) context),
-            scope.ServiceProvider, cancellationToken: CancellationToken);
+    protected IAdapter Adapter => Context.Adapter;
 
-        await lifecycle.EventHandlerCreated.Handle(eventContext);
+    protected override Task BeforeHandleAsync(TContext context)
+    {
+        var lifecycle = context.ServiceProvider.GetRequiredService<HandlerLifecycle>();
+
+        return lifecycle.OnEventHandlerCreatedAsync((IAdapterEventContext<IAdapterEvent>) context, CancellationToken);
     }
 }

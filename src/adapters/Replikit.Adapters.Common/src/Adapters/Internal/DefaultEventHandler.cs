@@ -5,7 +5,7 @@ namespace Replikit.Adapters.Common.Adapters.Internal;
 
 internal class DefaultEventHandler : IAdapterEventHandler
 {
-    public Task HandleAsync(IEvent @event, IAdapter adapter, CancellationToken cancellationToken = default)
+    public Task HandleAsync(IAdapterEvent @event, IAdapter adapter, CancellationToken cancellationToken = default)
     {
         return Task.CompletedTask;
     }

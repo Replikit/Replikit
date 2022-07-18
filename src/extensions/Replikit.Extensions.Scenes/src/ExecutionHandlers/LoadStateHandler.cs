@@ -8,8 +8,8 @@ namespace Replikit.Extensions.Scenes.ExecutionHandlers;
 
 internal class LoadStateHandler : ControllerExecutionHandler<SceneContext>
 {
-    protected override async Task<ControllerExecutionResult> HandleAsync(
-        ControllerExecutionContext<SceneContext> context, NextAction next)
+    protected override async Task<ControllerResult> HandleAsync(ControllerContext<SceneContext> context,
+        NextAction next)
     {
         var stateLoader = context.ServiceProvider.GetRequiredService<IStateLoader>();
 

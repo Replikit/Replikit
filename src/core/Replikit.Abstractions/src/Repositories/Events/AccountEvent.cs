@@ -4,7 +4,7 @@ using Replikit.Abstractions.Repositories.Models;
 
 namespace Replikit.Abstractions.Repositories.Events;
 
-public abstract class AccountEvent : Event, IAccountEvent
+public abstract class AccountEvent : AdapterEvent, IAccountEvent
 {
     public AccountEvent(AdapterIdentifier adapterId, AccountInfo account) : base(adapterId)
     {

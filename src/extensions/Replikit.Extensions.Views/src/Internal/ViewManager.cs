@@ -1,9 +1,6 @@
-﻿using Kantaiko.Properties.Immutable;
-using Microsoft.Extensions.DependencyInjection;
-using Replikit.Abstractions.Adapters;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Extensions.State;
-using Replikit.Extensions.State.Context;
 using Replikit.Extensions.Views.Exceptions;
 
 namespace Replikit.Extensions.Views.Internal;
@@ -35,8 +32,8 @@ internal class ViewManager : IViewManager
 
         await using var scope = _serviceProvider.CreateAsyncScope();
 
-        var context = CreateContext(request, scope.ServiceProvider, cancellationToken);
-        await _handlerAccessor.Handler.Handle(context);
+        var context = new ViewContext(request, scope.ServiceProvider, cancellationToken);
+        await _handlerAccessor.Handler.HandleAsync(context, scope.ServiceProvider, cancellationToken);
 
         return context.MessageId!.Value;
     }
@@ -54,17 +51,8 @@ internal class ViewManager : IViewManager
 
         await using var scope = _serviceProvider.CreateAsyncScope();
 
-        var context = CreateContext(request, scope.ServiceProvider, cancellationToken);
-        await _handlerAccessor.Handler.Handle(context);
-    }
-
-    internal static ViewContext CreateContext(ViewRequest request, IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
-    {
-        var properties = ImmutablePropertyCollection.Empty
-            .Set(new StateContextProperties(ViewStateKeyFactory.Instance));
-
-        return new ViewContext(request, serviceProvider, properties, cancellationToken);
+        var context = new ViewContext(request, scope.ServiceProvider, cancellationToken);
+        await _handlerAccessor.Handler.HandleAsync(context, scope.ServiceProvider, cancellationToken);
     }
 
     private void ValidateViewRequest(ViewRequest request, string viewType, bool isExternal)

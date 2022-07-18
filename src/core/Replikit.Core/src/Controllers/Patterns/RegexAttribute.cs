@@ -4,11 +4,12 @@ using Kantaiko.Controllers.Introspection.Factory.Context;
 using Kantaiko.Controllers.Matching;
 using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Messages.Events;
+using Replikit.Core.Controllers.Context;
 
 namespace Replikit.Core.Controllers.Patterns;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public class RegexAttribute : Attribute, IEndpointMatcherFactory<IEventContext<MessageReceivedEvent>>
+public class RegexAttribute : Attribute, IEndpointMatcherFactory<IMessageControllerContext>
 {
     private readonly string _pattern;
     private readonly RegexOptions _regexOptions;
@@ -19,7 +20,7 @@ public class RegexAttribute : Attribute, IEndpointMatcherFactory<IEventContext<M
         _regexOptions = regexOptions;
     }
 
-    public IEndpointMatcher<IEventContext<MessageReceivedEvent>> CreateEndpointMatcher(EndpointFactoryContext context)
+    public IEndpointMatcher<IMessageControllerContext> CreateEndpointMatcher(EndpointFactoryContext context)
     {
         return new RegexMatcher(_pattern, _regexOptions);
     }

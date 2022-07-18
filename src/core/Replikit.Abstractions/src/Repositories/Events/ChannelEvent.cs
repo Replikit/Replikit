@@ -4,7 +4,7 @@ using Replikit.Abstractions.Repositories.Models;
 
 namespace Replikit.Abstractions.Repositories.Events;
 
-public abstract class ChannelEvent : Event, IChannelEvent
+public abstract class ChannelEvent : AdapterEvent, IChannelEvent
 {
     public ChannelEvent(AdapterIdentifier adapterId, ChannelInfo channel) : base(adapterId)
     {

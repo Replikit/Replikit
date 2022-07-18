@@ -1,7 +1,8 @@
 using Kantaiko.Routing;
-using Kantaiko.Routing.Events;
+using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Core.Handlers;
+using Replikit.Core.Handlers.Context;
 using Replikit.Extensions.Scenes.Models;
 using Replikit.Extensions.State;
 
@@ -18,7 +19,7 @@ internal class SceneMessageHandler : MessageEventHandler<MessageReceivedEvent>
         _stateManager = stateManager;
     }
 
-    protected override async Task<Unit> HandleAsync(IEventContext<MessageReceivedEvent> context, NextAction next)
+    protected override async Task<Unit> HandleAsync(IChannelEventContext<MessageReceivedEvent> context, NextAction next)
     {
         var sceneState = await _stateManager.GetSceneStateAsync<SceneState>(Channel.Id, CancellationToken);
 
@@ -33,8 +34,10 @@ internal class SceneMessageHandler : MessageEventHandler<MessageReceivedEvent>
             ? new SceneRequest(Channel.Id, transition.Stage, true, Context, sceneState)
             : new SceneRequest(Channel.Id, sceneInstance.CurrentStage, false, Context, sceneState);
 
-        var sceneContext = SceneManager.CreateContext(sceneRequest, ServiceProvider, CancellationToken);
-        await _sceneHandlerAccessor.Handler.Handle(sceneContext);
+        await using var scope = ServiceProvider.CreateAsyncScope();
+
+        var sceneContext = new SceneContext(sceneRequest, scope.ServiceProvider, CancellationToken);
+        await _sceneHandlerAccessor.Handler.HandleAsync(sceneContext, scope.ServiceProvider, CancellationToken);
 
         return default;
     }

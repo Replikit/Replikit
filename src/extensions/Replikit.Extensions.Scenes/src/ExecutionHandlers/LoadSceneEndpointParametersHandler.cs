@@ -6,8 +6,7 @@ namespace Replikit.Extensions.Scenes.ExecutionHandlers;
 
 internal class LoadSceneEndpointParametersHandler : ControllerExecutionHandler<SceneContext>
 {
-    protected override Task<ControllerExecutionResult> HandleAsync(ControllerExecutionContext<SceneContext> context,
-        NextAction next)
+    protected override Task<ControllerResult> HandleAsync(ControllerContext<SceneContext> context, NextAction next)
     {
         var parameters = context.Endpoint!.Parameters;
 

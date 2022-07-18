@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using Replikit.Core.Modules;
+using Replikit.Core.Modularity;
 
 namespace Replikit.Integrations.EntityFrameworkCore;
 

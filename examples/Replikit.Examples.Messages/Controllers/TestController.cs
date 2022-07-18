@@ -19,4 +19,15 @@ public class TestController : Controller
 
         return OutMessage.FromCode(message);
     }
+
+    [Command("id")]
+    public OutMessage GetId()
+    {
+        if (Message.Reply is not null)
+        {
+            return OutMessage.FromText("Reply author id: " + Message.Reply.AccountId?.Identifier);
+        }
+
+        return OutMessage.FromText(Account.Id.Identifier);
+    }
 }

@@ -1,7 +1,7 @@
 ﻿using Kantaiko.Hosting.Modularity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Replikit.Core.Modules;
+using Replikit.Core.Modularity;
 using Replikit.Integrations.MongoDB;
 
 namespace Replikit.Examples.MongoDB;

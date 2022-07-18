@@ -1,14 +1,14 @@
-using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Events;
+using Replikit.Core.Handlers.Context;
 
 namespace Replikit.Core.Handlers.Lifecycle;
 
 public class EventHandledEvent
 {
-    public EventHandledEvent(IEventContext<IEvent> eventContext)
+    public EventHandledEvent(IAdapterEventContext<IAdapterEvent> eventContext)
     {
         EventContext = eventContext;
     }
 
-    public IEventContext<IEvent> EventContext { get; }
+    public IAdapterEventContext<IAdapterEvent> EventContext { get; }
 }

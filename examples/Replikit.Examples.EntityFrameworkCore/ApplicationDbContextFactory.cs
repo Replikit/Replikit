@@ -1,4 +1,3 @@
-using Kantaiko.Hosting;
 using Kantaiko.Hosting.Modularity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -12,10 +11,8 @@ internal class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applica
 {
     public ApplicationDbContext CreateDbContext(string[] args)
     {
-        var host = ModularHost.CreateDefaultBuilder()
+        var host = Host.CreateDefaultBuilder()
             .AddModule<EfCoreExampleModule>()
-            .ConfigureServices(x => x.AddModularLifecycleEvents())
-            .ConfigureServices(x => x.AddManagedHostLifecycle())
             .ConfigureAppConfiguration(x => x.AddUserSecrets<ApplicationDbContext>())
             .Build();
 

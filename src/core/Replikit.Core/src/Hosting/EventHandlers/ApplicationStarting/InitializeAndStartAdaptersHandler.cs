@@ -1,7 +1,6 @@
-using Kantaiko.Hosting.Lifecycle;
 using Kantaiko.Hosting.Lifecycle.Events;
-using Kantaiko.Routing;
 using Kantaiko.Routing.Events;
+using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Events;
 using Replikit.Core.Hosting.Adapters;
@@ -9,35 +8,40 @@ using Replikit.Core.Hosting.Events;
 
 namespace Replikit.Core.Hosting.EventHandlers.ApplicationStarting;
 
-internal class InitializeAndStartAdaptersHandler : LifecycleEventHandler<ApplicationStartingEvent>
+internal class InitializeAndStartAdaptersHandler : AsyncEventHandlerBase<ApplicationStartingEvent>
 {
     private readonly IAdapterEventHandler _adapterEventHandler;
     private readonly AdapterLoader _adapterLoader;
-    private readonly IReplikitLifecycle _replikitLifecycle;
+    private readonly ReplikitCoreLifecycle _replikitCoreLifecycle;
     private readonly AdapterCollection _adapterCollection;
 
     public InitializeAndStartAdaptersHandler(
         IAdapterEventHandler adapterEventHandler,
-        AdapterLoader adapterLoader, IReplikitLifecycle replikitLifecycle, AdapterCollection adapterCollection)
+        AdapterLoader adapterLoader, ReplikitCoreLifecycle replikitCoreLifecycle,
+        AdapterCollection adapterCollection)
     {
         _adapterEventHandler = adapterEventHandler;
         _adapterLoader = adapterLoader;
-        _replikitLifecycle = replikitLifecycle;
+        _replikitCoreLifecycle = replikitCoreLifecycle;
         _adapterCollection = adapterCollection;
     }
 
-    protected override async Task<Unit> HandleAsync(IEventContext<ApplicationStartingEvent> context)
+    protected override async Task HandleAsync(IAsyncEventContext<ApplicationStartingEvent> context)
     {
         var adapterContext = new AdapterFactoryContext(_adapterEventHandler);
+
         await _adapterLoader.LoadAdapters(adapterContext, context.CancellationToken);
 
-        var eventContext = new EventContext<AdaptersInitializedEvent>(new AdaptersInitializedEvent(),
-            context.ServiceProvider, cancellationToken: context.CancellationToken);
+        await using var scope = context.ServiceProvider.CreateAsyncScope();
 
-        await _replikitLifecycle.AdaptersInitialized.Handle(eventContext);
+        var eventContext = new AsyncEventContext<AdaptersInitializedEvent>(
+            new AdaptersInitializedEvent(),
+            scope.ServiceProvider,
+            context.CancellationToken
+        );
+
+        await _replikitCoreLifecycle.OnAdaptersInitialized(eventContext);
 
         await _adapterCollection.StartAsync(context.CancellationToken);
-
-        return default;
     }
 }

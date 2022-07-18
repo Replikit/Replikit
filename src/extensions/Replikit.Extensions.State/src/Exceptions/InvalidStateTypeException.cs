@@ -8,12 +8,12 @@ namespace Replikit.Extensions.State.Exceptions;
 
 public class InvalidStateTypeException : ReplikitException
 {
-    public InvalidStateTypeException(StateType stateType, IContext context) :
+    public InvalidStateTypeException(StateType stateType, object context) :
         base(CreateMessage(stateType, context)) { }
 
-    private static string CreateMessage(StateType stateType, IContext context)
+    private static string CreateMessage(StateType stateType, object context)
     {
-        var @event = context is IEventContext<IEvent> eventContext ? eventContext.Event : null;
+        var @event = context is IEventContext<IAdapterEvent> eventContext ? eventContext.Event : null;
 
         return @event is not null
             ? $"{stateType} cannot be used in context of {@event.GetType().Name} event"

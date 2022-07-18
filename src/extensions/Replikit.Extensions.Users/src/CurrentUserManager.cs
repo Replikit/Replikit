@@ -1,7 +1,7 @@
 using Kantaiko.Routing.Context;
-using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Repositories.Events;
 using Replikit.Core.Abstractions.Users;
+using Replikit.Core.Handlers.Context;
 using Replikit.Core.Services;
 
 namespace Replikit.Extensions.Users;
@@ -11,7 +11,7 @@ internal class CurrentUserManager<TUser, TUserId> : ContextService<IAccountEvent
 {
     private readonly UserManager<TUser, TUserId> _userManager;
 
-    public CurrentUserManager(IContextAccessor<IEventContext<IAccountEvent>> contextAccessor,
+    public CurrentUserManager(ContextAccessor<IAdapterEventContext<IAccountEvent>> contextAccessor,
         UserManager<TUser, TUserId> userManager) : base(contextAccessor)
     {
         _userManager = userManager;

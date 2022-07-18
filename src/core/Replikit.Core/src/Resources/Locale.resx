@@ -26,4 +26,7 @@
   <data name="InvalidParameter" xml:space="preserve">
         <value>Invalid parameter "{0}"</value>
     </data>
+  <data name="InvalidIdentifier" xml:space="preserve">
+    <value>Invalid identifier</value>
+  </data>
 </root>

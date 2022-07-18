@@ -1,7 +1,7 @@
 using Kantaiko.Hosting.Modularity;
 using Kantaiko.Hosting.Modularity.Introspection;
 using Microsoft.Extensions.DependencyInjection;
-using Replikit.Core.Modules;
+using Replikit.Core.Modularity;
 using Replikit.Extensions.Scenes.Internal;
 using Replikit.Extensions.State;
 
@@ -17,7 +17,7 @@ public class ScenesModule : ReplikitModule
         services.AddSingleton<SceneHandlerAccessor>();
         services.AddSingleton<ISceneIntrospectionInfoAccessor>(sp => sp.GetRequiredService<SceneHandlerAccessor>());
 
-        services.AddScoped<SceneManager>();
-        services.AddScoped<ISceneManager>(sp => sp.GetRequiredService<SceneManager>());
+        services.AddSingleton<SceneManager>();
+        services.AddSingleton<ISceneManager>(sp => sp.GetRequiredService<SceneManager>());
     }
 }

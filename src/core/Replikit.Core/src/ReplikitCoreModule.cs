@@ -1,4 +1,5 @@
-﻿using Kantaiko.Hosting.Modularity;
+﻿using Kantaiko.Hosting.Lifecycle;
+using Kantaiko.Hosting.Modularity;
 using Kantaiko.Hosting.Modularity.Introspection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +10,7 @@ using Replikit.Core.Handlers;
 using Replikit.Core.Hosting;
 using Replikit.Core.Localization;
 using Replikit.Core.Logging;
-using Replikit.Core.Modules;
+using Replikit.Core.Modularity;
 using Replikit.Core.Services;
 
 namespace Replikit.Core;
@@ -26,8 +27,8 @@ public class ReplikitCoreModule : ReplikitModule
 
     protected override void ConfigureServices(IServiceCollection services)
     {
-        services.AddScoped<ICancellationTokenProvider, CancellationTokenProvider>();
-
+        services.AddReplikitServices();
+        services.AddApplicationLifecycle();
         services.AddReplikitLogging();
         services.AddReplikitHandlers();
         services.AddReplikitControllers();

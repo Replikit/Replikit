@@ -19,9 +19,9 @@ public class AnswerView : View
     [Action(AutoUpdate = false)]
     public void Reply()
     {
-        if (Adapter is ITelegramAdapter adapter && Event.RequestId is not null)
+        if (Adapter is ITelegramAdapter adapter && AdapterEvent.RequestId is not null)
         {
-            adapter.Backend.AnswerCallbackQueryAsync(Event.RequestId, "No");
+            adapter.Backend.AnswerCallbackQueryAsync(AdapterEvent.RequestId, "No");
         }
     }
 }

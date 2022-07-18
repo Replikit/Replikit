@@ -1,16 +1,17 @@
 using Kantaiko.Properties.Immutable;
 using Kantaiko.Routing.Context;
 using Replikit.Core.EntityCollections;
+using Replikit.Extensions.Scenes.Internal;
+using Replikit.Extensions.State.Implementation;
 
 namespace Replikit.Extensions.Scenes;
 
-public class SceneContext : ContextBase
+public class SceneContext : AsyncContextBase, IHasStateKeyFactory
 {
     public SceneContext(SceneRequest request,
         IServiceProvider? serviceProvider = null,
-        IImmutablePropertyCollection? properties = null,
         CancellationToken cancellationToken = default) :
-        base(serviceProvider, properties, cancellationToken)
+        base(serviceProvider, cancellationToken)
     {
         Request = request;
     }
@@ -20,5 +21,7 @@ public class SceneContext : ContextBase
     private IMessageCollection? _messageCollection;
 
     public IMessageCollection MessageCollection =>
-        _messageCollection ??= Core.EntityCollections.MessageCollection.Create(Request.ChannelId!, ServiceProvider);
+        _messageCollection ??= Core.EntityCollections.MessageCollection.Create(Request.ChannelId, ServiceProvider);
+
+    IStateKeyFactory IHasStateKeyFactory.StateKeyFactory => SceneStateKeyFactory.Instance;
 }

@@ -2,21 +2,24 @@
 using Kantaiko.Controllers.Execution;
 using Kantaiko.Controllers.Introspection;
 using Kantaiko.Controllers.Introspection.Factory;
+using Kantaiko.Controllers.ParameterConversion;
 using Kantaiko.Controllers.ParameterConversion.Text;
-using Kantaiko.Controllers.Result;
 using Kantaiko.Hosting.Lifecycle;
 using Kantaiko.Hosting.Modularity.Introspection;
-using Kantaiko.Routing;
 using Kantaiko.Routing.Events;
-using Replikit.Abstractions.Messages.Events;
-using Replikit.Core.Controllers.ExecutionHandlers;
+using Microsoft.Extensions.DependencyInjection;
+using Replikit.Core.Controllers.Configuration;
+using Replikit.Core.Controllers.Configuration.Context;
+using Replikit.Core.Controllers.Context;
 
 namespace Replikit.Core.Controllers.Internal;
 
-internal class ControllerHandlerAccessor : IControllerIntrospectionInfoAccessor
+internal class ControllerHandlerAccessor : IControllerIntrospectionInfoAccessor, IMessageControllerConfiguration
 {
     public IntrospectionInfo IntrospectionInfo { get; }
-    public IHandler<IEventContext<MessageReceivedEvent>, Task<ControllerExecutionResult>> Handler { get; }
+    public IControllerHandler<IMessageControllerContext> Handler { get; }
+
+    public event SyncEventHandler<IControllerConfigurationContext<IMessageControllerContext>>? Configuring;
 
     public ControllerHandlerAccessor(HostInfo hostInfo, IServiceProvider serviceProvider)
     {
@@ -24,26 +27,33 @@ internal class ControllerHandlerAccessor : IControllerIntrospectionInfoAccessor
 
         var converterCollection = new TextParameterConverterCollection(lookupTypes);
 
-        var introspectionBuilder = new IntrospectionBuilder<IEventContext<MessageReceivedEvent>>();
+        var introspectionBuilder = new IntrospectionBuilder<IMessageControllerContext>();
 
         introspectionBuilder.SetServiceProvider(serviceProvider);
         introspectionBuilder.AddDefaultTransformation();
         introspectionBuilder.AddEndpointMatching();
         introspectionBuilder.AddTextParameterConversion(converterCollection);
 
+        var handlers = new HandlerCollection<IMessageControllerContext>();
+
+        handlers.AddEndpointMatching();
+        handlers.AddSubHandlerExecution();
+        handlers.AddParameterConversion(h => h.AddTextParameterConversion(ServiceHandlerFactory.Instance));
+        handlers.AddControllerInstantiation(ServiceHandlerFactory.Instance);
+        handlers.AddEndpointInvocation();
+        handlers.AddRequestCompletion();
+
+        if (Configuring is not null)
+        {
+            using var scope = serviceProvider.CreateScope();
+
+            var configurationContext = new ControllerConfigurationContext<IMessageControllerContext>(
+                introspectionBuilder, handlers, scope.ServiceProvider);
+
+            Configuring(configurationContext);
+        }
+
         IntrospectionInfo = introspectionBuilder.CreateIntrospectionInfo(lookupTypes);
-
-        var pipelineBuilder = new PipelineBuilder<IEventContext<MessageReceivedEvent>>();
-
-        pipelineBuilder.AddEndpointMatching();
-        pipelineBuilder.AddSubHandlerExecution();
-        pipelineBuilder.AddTextParameterConversion(ServiceHandlerFactory.Instance);
-        pipelineBuilder.AddControllerInstantiation(ServiceHandlerFactory.Instance);
-        pipelineBuilder.AddHandler(new DispatchControllerInstantiatedEventHandler());
-        pipelineBuilder.AddEndpointInvocation();
-        pipelineBuilder.AddRequestCompletion();
-
-        var handlers = pipelineBuilder.Build();
 
         Handler = ControllerHandlerFactory.CreateControllerHandler(IntrospectionInfo, handlers);
     }

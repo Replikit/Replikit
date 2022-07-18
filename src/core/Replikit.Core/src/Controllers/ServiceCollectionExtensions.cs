@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Replikit.Core.Controllers.Internal;
-using Replikit.Core.Controllers.Lifecycle;
 
 namespace Replikit.Core.Controllers;
 
@@ -12,7 +11,5 @@ internal static class ServiceCollectionExtensions
 
         services.AddSingleton<IControllerIntrospectionInfoAccessor>(sp =>
             sp.GetRequiredService<ControllerHandlerAccessor>());
-
-        services.AddSingleton<IControllerLifecycle, ControllerLifecycle>();
     }
 }

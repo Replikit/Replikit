@@ -6,8 +6,7 @@ namespace Replikit.Extensions.Views.ExecutionHandlers;
 
 internal class LoadViewEndpointParametersHandler : ControllerExecutionHandler<ViewContext>
 {
-    protected override Task<ControllerExecutionResult> HandleAsync(ControllerExecutionContext<ViewContext> context,
-        NextAction next)
+    protected override Task<ControllerResult> HandleAsync(ControllerContext<ViewContext> context, NextAction next)
     {
         var parameters = context.Endpoint!.Parameters;
 

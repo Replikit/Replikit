@@ -37,8 +37,7 @@ internal class UpdateViewAndSaveStateHandler : ControllerExecutionHandler<ViewCo
         _messageService = messageService;
     }
 
-    protected override async Task<ControllerExecutionResult> HandleAsync(
-        ControllerExecutionContext<ViewContext> context, NextAction next)
+    protected override async Task<ControllerResult> HandleAsync(ControllerContext<ViewContext> context, NextAction next)
     {
         var controller = context.ControllerInstance!;
 
@@ -182,6 +181,6 @@ internal class UpdateViewAndSaveStateHandler : ControllerExecutionHandler<ViewCo
 
         await stateLoader.SaveAsync(context.CancellationToken);
 
-        return ControllerExecutionResult.Empty;
+        return ControllerResult.Empty;
     }
 }

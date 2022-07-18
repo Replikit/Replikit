@@ -1,4 +1,4 @@
-﻿using Replikit.Core.Modules;
+﻿using Replikit.Core.Modularity;
 
 namespace Replikit.Examples.Messages;
 

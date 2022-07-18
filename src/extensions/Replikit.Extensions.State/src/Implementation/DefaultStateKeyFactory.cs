@@ -8,7 +8,7 @@ namespace Replikit.Extensions.State.Implementation;
 
 internal class DefaultStateKeyFactory : IStateKeyFactory
 {
-    public StateKey CreateStateKey(StateType stateType, IContext context)
+    public StateKey CreateStateKey(StateType stateType, object context)
     {
         return stateType switch
         {
@@ -20,7 +20,7 @@ internal class DefaultStateKeyFactory : IStateKeyFactory
         };
     }
 
-    private static StateKey CreateChannelStateKey(IContext context)
+    private static StateKey CreateChannelStateKey(object context)
     {
         if (context is not IEventContext<IChannelEvent> { Event: var channelEvent })
         {
@@ -30,7 +30,7 @@ internal class DefaultStateKeyFactory : IStateKeyFactory
         return StateKey.FromChannelId(StateType.ChannelState, channelEvent.Channel.Id);
     }
 
-    private static StateKey CreateAccountStateKey(IContext context)
+    private static StateKey CreateAccountStateKey(object context)
     {
         if (context is not IEventContext<IAccountEvent> { Event: var accountEvent })
         {

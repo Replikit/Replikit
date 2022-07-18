@@ -2,6 +2,7 @@
 using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Core.Common;
+using Replikit.Core.Handlers.Context;
 using Replikit.Extensions.State;
 using Replikit.Extensions.Views.Models;
 
@@ -12,7 +13,7 @@ public class ViewRequest
     public ViewRequest(string type, string method,
         IReadOnlyList<DynamicValue> parameters,
         IState<ViewState>? viewState = null,
-        IEventContext<ButtonPressedEvent>? eventContext = null,
+        IAdapterEventContext<ButtonPressedEvent>? eventContext = null,
         GlobalIdentifier? channelId = null)
     {
         Type = type;
@@ -28,6 +29,6 @@ public class ViewRequest
     public IReadOnlyList<DynamicValue> Parameters { get; }
 
     public IState<ViewState>? ViewState { get; }
-    public IEventContext<ButtonPressedEvent>? EventContext { get; }
+    public IAdapterEventContext<ButtonPressedEvent>? EventContext { get; }
     public GlobalIdentifier? ChannelId { get; }
 }

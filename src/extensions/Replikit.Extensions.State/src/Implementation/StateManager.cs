@@ -1,7 +1,6 @@
 using Kantaiko.Routing.Context;
 using Replikit.Core.Abstractions.State;
 using Replikit.Core.Common;
-using Replikit.Extensions.State.Context;
 
 namespace Replikit.Extensions.State.Implementation;
 
@@ -237,7 +236,9 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
             throw new InvalidOperationException("State cannot be used outside of context");
         }
 
-        var stateKeyFactory = _contextAccessor.Context.GetStateKeyFactory() ?? DefaultStateKeyFactory.Instance;
+        var stateKeyFactory = _contextAccessor.Context is IHasStateKeyFactory hasStateKeyFactory
+            ? hasStateKeyFactory.StateKeyFactory
+            : DefaultStateKeyFactory.Instance;
 
         return stateKeyFactory.CreateStateKey(state.Type, _contextAccessor.Context);
     }

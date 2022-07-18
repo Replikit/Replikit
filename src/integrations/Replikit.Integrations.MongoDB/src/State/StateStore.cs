@@ -30,7 +30,6 @@ internal class StateStore : IStateStore
         {
             var filter = new ExpressionFilterDefinition<StateItem>(x => x.Key == stateItem.Key);
 
-
             if (Equals(stateItem.Value, default))
             {
                 operations.Add(new DeleteOneModel<StateItem>(filter));

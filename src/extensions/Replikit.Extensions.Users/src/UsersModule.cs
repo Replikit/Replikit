@@ -3,7 +3,7 @@ using Kantaiko.Hosting.Modularity.Introspection;
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Core.Abstractions.Users;
 using Replikit.Core.Common;
-using Replikit.Core.Modules;
+using Replikit.Core.Modularity;
 using Replikit.Extensions.Users.Parameters;
 
 namespace Replikit.Extensions.Users;

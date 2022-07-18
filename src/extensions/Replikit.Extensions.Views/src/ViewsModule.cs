@@ -1,7 +1,7 @@
 ﻿using Kantaiko.Hosting.Modularity;
 using Kantaiko.Hosting.Modularity.Introspection;
 using Microsoft.Extensions.DependencyInjection;
-using Replikit.Core.Modules;
+using Replikit.Core.Modularity;
 using Replikit.Extensions.State;
 using Replikit.Extensions.Views.Internal;
 
@@ -14,7 +14,7 @@ public class ViewsModule : ReplikitModule
     {
         services.AddModule<StateModule>();
 
-        services.AddScoped<IViewManager, ViewManager>();
+        services.AddSingleton<IViewManager, ViewManager>();
 
         services.AddSingleton<ViewHandlerAccessor>();
         services.AddSingleton<IViewIntrospectionInfoAccessor>(sp => sp.GetRequiredService<ViewHandlerAccessor>());

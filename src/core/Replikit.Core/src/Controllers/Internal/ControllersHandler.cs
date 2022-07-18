@@ -1,11 +1,13 @@
 ﻿using System.Runtime.ExceptionServices;
 using Kantaiko.Controllers.Result;
 using Kantaiko.Routing;
-using Kantaiko.Routing.Events;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Messages.Models;
+using Replikit.Core.Controllers.Context;
 using Replikit.Core.Handlers;
+using Replikit.Core.Handlers.Context;
 using Replikit.Core.Resources;
 
 namespace Replikit.Core.Controllers.Internal;
@@ -21,9 +23,22 @@ internal class ControllersHandler : MessageEventHandler<MessageReceivedEvent>
         _logger = logger;
     }
 
-    protected override async Task<Unit> HandleAsync(IEventContext<MessageReceivedEvent> context, NextAction next)
+    protected override async Task<Unit> HandleAsync(IChannelEventContext<MessageReceivedEvent> context, NextAction next)
     {
-        var result = await _controllerHandlerAccessor.Handler.Handle(context);
+        await using var scope = ServiceProvider.CreateAsyncScope();
+
+        var controllerContext = new MessageControllerContext(
+            context.Event,
+            context.Adapter,
+            scope.ServiceProvider,
+            context.CancellationToken
+        );
+
+        var result = await _controllerHandlerAccessor.Handler.HandleAsync(
+            controllerContext,
+            scope.ServiceProvider,
+            context.CancellationToken
+        );
 
         if (!result.IsMatched)
         {
@@ -47,7 +62,7 @@ internal class ControllersHandler : MessageEventHandler<MessageReceivedEvent>
         return default;
     }
 
-    private static OutMessage? CreateResponse(ControllerExecutionResult result)
+    private static OutMessage? CreateResponse(ControllerResult result)
     {
         switch (result)
         {
