@@ -1,8 +1,11 @@
 ﻿using System.Linq.Expressions;
 using System.Text.Json;
 using Replikit.Abstractions.Messages.Builder;
+using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Messages.Models.InlineButtons;
+using Replikit.Core.Handlers.Context;
+using Replikit.Extensions.Views.Internal;
 
 namespace Replikit.Extensions.Views.Messages;
 
@@ -25,21 +28,9 @@ public class ViewMessageBuilder : MessageBuilder<ViewMessageBuilder>
         return this;
     }
 
-    public ViewMessageBuilder AddAction(ViewMessageAction messageAction)
-    {
-        _actions.Add(messageAction);
-        InlineButtonBuilder.AddButton(CreateButton(messageAction));
+    public delegate void ViewActionFactory(IAdapterEventContext<ButtonPressedEvent> context);
 
-        return this;
-    }
-
-    public ViewMessageBuilder AddAction(int row, ViewMessageAction messageAction)
-    {
-        _actions.Add(messageAction);
-        InlineButtonBuilder.AddButton(row, CreateButton(messageAction));
-
-        return this;
-    }
+    public delegate Task ViewActionAsyncFactory(IAdapterEventContext<ButtonPressedEvent> context);
 
     public ViewMessageBuilder AddAction(int row, string text, Expression<Action> action)
     {
@@ -47,6 +38,16 @@ public class ViewMessageBuilder : MessageBuilder<ViewMessageBuilder>
     }
 
     public ViewMessageBuilder AddAction(int row, string text, Expression<Func<Task>> action)
+    {
+        return AddAction(row, new ViewMessageAction(text, action));
+    }
+
+    public ViewMessageBuilder AddAction(int row, string text, Expression<ViewActionFactory> action)
+    {
+        return AddAction(row, new ViewMessageAction(text, action));
+    }
+
+    public ViewMessageBuilder AddAction(int row, string text, Expression<ViewActionAsyncFactory> action)
     {
         return AddAction(row, new ViewMessageAction(text, action));
     }
@@ -61,9 +62,36 @@ public class ViewMessageBuilder : MessageBuilder<ViewMessageBuilder>
         return AddAction(new ViewMessageAction(text, action));
     }
 
+    public ViewMessageBuilder AddAction(string text, Expression<ViewActionFactory> action)
+    {
+        return AddAction(new ViewMessageAction(text, action));
+    }
+
+    public ViewMessageBuilder AddAction(string text, Expression<ViewActionAsyncFactory> action)
+    {
+        return AddAction(new ViewMessageAction(text, action));
+    }
+
+    private ViewMessageBuilder AddAction(ViewMessageAction messageAction)
+    {
+        _actions.Add(messageAction);
+        InlineButtonBuilder.AddButton(CreateButton(messageAction));
+
+        return this;
+    }
+
+    private ViewMessageBuilder AddAction(int row, ViewMessageAction messageAction)
+    {
+        _actions.Add(messageAction);
+        InlineButtonBuilder.AddButton(row, CreateButton(messageAction));
+
+        return this;
+    }
+
     private IInlineButton CreateButton(ViewMessageAction messageAction, int index = 0)
     {
         var payload = JsonSerializer.Serialize(new ViewActionPayload(_actions.Count - 1 + index));
+
         return new CallbackInlineButton(messageAction.Text, payload);
     }
 

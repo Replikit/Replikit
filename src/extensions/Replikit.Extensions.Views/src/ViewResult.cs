@@ -22,4 +22,6 @@ public class ViewResult
     public static implicit operator ViewResult(OutMessage outMessage) => new(outMessage);
     public static implicit operator ViewResult(MessageBuilder messageBuilder) => new(messageBuilder);
     public static implicit operator ViewResult(ViewMessageBuilder viewMessageBuilder) => new(viewMessageBuilder);
+
+    public static ViewMessageBuilder CreateBuilder() => new();
 }

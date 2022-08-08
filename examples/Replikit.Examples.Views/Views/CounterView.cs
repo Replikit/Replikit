@@ -21,7 +21,7 @@ public class CounterView : View
 
     public override ViewResult Render()
     {
-        return CreateBuilder()
+        return ViewResult.CreateBuilder()
             .AddText($"Count: {_state.Value.Count}")
             .AddAction("+1", () => Increment(1))
             .AddAction("+10", () => Increment(10))

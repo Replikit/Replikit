@@ -13,7 +13,6 @@ public class ViewRequest
     public ViewRequest(string type, string method,
         IReadOnlyList<DynamicValue> parameters,
         IState<ViewState>? viewState = null,
-        IAdapterEventContext<ButtonPressedEvent>? eventContext = null,
         GlobalIdentifier? channelId = null)
     {
         Type = type;
@@ -21,7 +20,6 @@ public class ViewRequest
         Method = method;
         Parameters = parameters;
         ChannelId = channelId;
-        EventContext = eventContext;
     }
 
     public string Type { get; }
@@ -29,6 +27,5 @@ public class ViewRequest
     public IReadOnlyList<DynamicValue> Parameters { get; }
 
     public IState<ViewState>? ViewState { get; }
-    public IAdapterEventContext<ButtonPressedEvent>? EventContext { get; }
     public GlobalIdentifier? ChannelId { get; }
 }

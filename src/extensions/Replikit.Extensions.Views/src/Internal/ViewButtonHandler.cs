@@ -77,7 +77,7 @@ internal class ViewButtonHandler : AdapterEventHandler<ButtonPressedEvent>
 
         await using var scope = ServiceProvider.CreateAsyncScope();
 
-        var request = new ViewRequest(viewInstance.Type, method, parameters, viewState, Context);
+        var request = new ViewRequest(viewInstance.Type, method, parameters, viewState);
         var viewContext = new ViewContext(request, scope.ServiceProvider, CancellationToken);
 
         await _handlerAccessor.Handler.HandleAsync(viewContext, scope.ServiceProvider, CancellationToken);

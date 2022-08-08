@@ -1,6 +1,6 @@
-﻿namespace Replikit.Extensions.Views.Messages;
+﻿namespace Replikit.Extensions.Views.Internal;
 
-public class ViewActionPayload
+internal class ViewActionPayload
 {
     public ViewActionPayload(int actionIndex)
     {
