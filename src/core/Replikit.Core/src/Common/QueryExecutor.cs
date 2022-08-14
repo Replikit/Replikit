@@ -2,6 +2,8 @@ namespace Replikit.Core.Common;
 
 public class QueryExecutor : IQueryExecutor
 {
+    public static QueryExecutor Instance { get; } = new();
+
     public virtual Task<IReadOnlyList<TItem>> ToReadOnlyListAsync<TItem>(IQueryable<TItem> queryable,
         CancellationToken cancellationToken = default)
     {

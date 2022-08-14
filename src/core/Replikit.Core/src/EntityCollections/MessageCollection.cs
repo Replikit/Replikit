@@ -1,9 +1,14 @@
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Adapters;
+using Replikit.Abstractions.Adapters.Services;
+using Replikit.Abstractions.Common.Exceptions;
 using Replikit.Abstractions.Common.Models;
+using Replikit.Abstractions.Events;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Messages.Models.Options;
 using Replikit.Abstractions.Messages.Services;
+using Replikit.Abstractions.Repositories.Events;
+using Replikit.Core.Routing.Context;
 
 namespace Replikit.Core.EntityCollections;
 
@@ -77,5 +82,26 @@ public class MessageCollection : IMessageCollection
         var adapter = adapterCollection.ResolveRequired(channelId);
 
         return new MessageCollection(channelId, adapter.MessageService);
+    }
+
+    internal static MessageCollection Create(IAdapterEventContext<IAdapterEvent>? context)
+    {
+        if (context is null)
+        {
+            throw new ReplikitException("Message collection can be accessed only inside adapter event context.");
+        }
+
+        if (context.Event is not IChannelEvent channelEvent)
+        {
+            throw new ReplikitException("Message collection can be accessed only for channel events.");
+        }
+
+        if (!context.Adapter.TryGetService<IMessageService>(out var messageCollection))
+        {
+            throw new ReplikitException(
+                "Message collection can be accessed only for adapters supporting message service.");
+        }
+
+        return new MessageCollection(channelEvent.Channel.Id, messageCollection);
     }
 }

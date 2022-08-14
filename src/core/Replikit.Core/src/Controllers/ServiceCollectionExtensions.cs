@@ -1,15 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Replikit.Core.Controllers.Internal;
+using Microsoft.Extensions.DependencyInjection;
+using Replikit.Core.Modularity;
 
 namespace Replikit.Core.Controllers;
 
 internal static class ServiceCollectionExtensions
 {
-    public static void AddReplikitControllers(this IServiceCollection services)
+    public static void AddControllersInternal(this IServiceCollection services)
     {
-        services.AddSingleton<ControllerHandlerAccessor>();
-
-        services.AddSingleton<IControllerIntrospectionInfoAccessor>(sp =>
-            sp.GetRequiredService<ControllerHandlerAccessor>());
+        services.AddSingleton<IModuleRoutingContributor, ControllerModuleRoutingContributor>();
     }
 }

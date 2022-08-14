@@ -3,8 +3,6 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Kantaiko.Controllers.Matching;
 using Kantaiko.Controllers.Matching.Text;
-using Kantaiko.Routing.Events;
-using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Repositories.Events;
 using Replikit.Core.Controllers.Context;
 using Replikit.Core.Localization;

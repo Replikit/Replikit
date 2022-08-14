@@ -6,11 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Kantaiko.ConsoleFormatting" Version="0.2.1" />
-    <PackageReference Include="Kantaiko.Controllers" Version="0.8.2" />
-    <PackageReference Include="Kantaiko.Hosting" Version="0.7.1" />
-    <PackageReference Include="Kantaiko.Routing" Version="0.9.4" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
+    <PackageReference Include="Kantaiko.Controllers" Version="1.0.0-alpha.0" />
+    <PackageReference Include="Kantaiko.Modularity" Version="1.0.0-alpha.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

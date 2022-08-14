@@ -1,9 +1,7 @@
 using Kantaiko.Controllers.Introspection.Factory.Attributes;
 using Kantaiko.Controllers.Introspection.Factory.Context;
 using Kantaiko.Controllers.Matching;
-using Kantaiko.Routing.Events;
 using Microsoft.Extensions.DependencyInjection;
-using Replikit.Abstractions.Messages.Events;
 using Replikit.Core.Controllers.Context;
 using Replikit.Core.Localization;
 

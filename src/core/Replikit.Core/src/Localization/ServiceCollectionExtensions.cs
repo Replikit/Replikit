@@ -2,9 +2,9 @@
 
 namespace Replikit.Core.Localization;
 
-public static class ServiceCollectionExtensions
+internal static class ServiceCollectionExtensions
 {
-    public static void AddReplikitLocalization(this IServiceCollection services)
+    public static void AddLocalizationInternal(this IServiceCollection services)
     {
         services.AddSingleton<ILocalizer, Localizer>();
     }

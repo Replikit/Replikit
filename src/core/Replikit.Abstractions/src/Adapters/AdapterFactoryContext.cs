@@ -5,12 +5,13 @@ namespace Replikit.Abstractions.Adapters;
 
 public class AdapterFactoryContext
 {
-    public AdapterFactoryContext(IAdapterEventHandler? eventHandler = null, IAttachmentCache? attachmentCache = null)
+    public AdapterFactoryContext(IAdapterEventDispatcher? eventDispatcher = null,
+        IAttachmentCache? attachmentCache = null)
     {
-        EventHandler = eventHandler;
+        EventDispatcher = eventDispatcher;
         AttachmentCache = attachmentCache;
     }
 
-    public IAdapterEventHandler? EventHandler { get; }
+    public IAdapterEventDispatcher? EventDispatcher { get; }
     public IAttachmentCache? AttachmentCache { get; }
 }

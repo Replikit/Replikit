@@ -1,6 +1,6 @@
 using Replikit.Abstractions.Messages.Events;
-using Replikit.Core.Handlers.Context;
+using Replikit.Core.Routing.Context;
 
 namespace Replikit.Core.Controllers.Context;
 
-public interface IMessageControllerContext : IChannelEventContext<MessageReceivedEvent> { }
+public interface IMessageControllerContext : IAdapterEventContext<MessageReceivedEvent> { }

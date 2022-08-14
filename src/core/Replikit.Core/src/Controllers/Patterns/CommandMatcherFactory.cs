@@ -3,12 +3,10 @@ using System.Text.RegularExpressions;
 using Kantaiko.Controllers.Introspection;
 using Kantaiko.Controllers.Introspection.Factory.Context;
 using Kantaiko.Controllers.Matching;
-using Kantaiko.Routing.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Replikit.Abstractions.Messages.Events;
 using Replikit.Core.Controllers.Context;
-using Replikit.Core.Options;
+using Replikit.Core.Controllers.Options;
 
 namespace Replikit.Core.Controllers.Patterns;
 

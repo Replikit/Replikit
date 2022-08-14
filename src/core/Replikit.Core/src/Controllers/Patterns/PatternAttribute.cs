@@ -1,8 +1,6 @@
 ﻿using Kantaiko.Controllers.Introspection.Factory.Attributes;
 using Kantaiko.Controllers.Introspection.Factory.Context;
 using Kantaiko.Controllers.Matching;
-using Kantaiko.Routing.Events;
-using Replikit.Abstractions.Messages.Events;
 using Replikit.Core.Controllers.Context;
 
 namespace Replikit.Core.Controllers.Patterns;

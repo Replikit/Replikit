@@ -18,9 +18,9 @@ internal class MessageIdentifierConverter : JsonConverter<MessageIdentifier>
     public override void Write(Utf8JsonWriter writer, MessageIdentifier value, JsonSerializerOptions options)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (value.Identifiers is not null)
+        if (value.PartIdentifiers is not null)
         {
-            JsonSerializer.Serialize(writer, value.Identifiers, options);
+            JsonSerializer.Serialize(writer, value.PartIdentifiers, options);
         }
         else
         {

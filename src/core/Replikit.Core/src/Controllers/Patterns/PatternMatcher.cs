@@ -1,7 +1,5 @@
 ﻿using Kantaiko.Controllers.Matching;
 using Kantaiko.Controllers.Matching.Text;
-using Kantaiko.Routing.Events;
-using Replikit.Abstractions.Messages.Events;
 using Replikit.Core.Controllers.Context;
 
 namespace Replikit.Core.Controllers.Patterns;

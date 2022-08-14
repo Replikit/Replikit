@@ -2,9 +2,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Replikit.Core.GlobalServices;
 
-public static class ServiceCollectionExtensions
+internal static class ServiceCollectionExtensions
 {
-    public static void AddReplikitGlobalServices(this IServiceCollection services)
+    public static void AddGlobalServicesInternal(this IServiceCollection services)
     {
         services.AddSingleton<IGlobalMessageService, GlobalMessageService>();
         services.AddSingleton<IGlobalMemberService, GlobalMemberService>();

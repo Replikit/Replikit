@@ -12,7 +12,7 @@ internal class Localizer : ILocalizer
 
     public string Localize(Type localeType, string localeName, CultureInfo? cultureInfo)
     {
-        ArgumentNullException.ThrowIfNull(localeName);
+        ArgumentNullException.ThrowIfNull(localeType);
         ArgumentNullException.ThrowIfNull(localeName);
 
         var resourceManager = _resourceManagers.GetOrAdd(localeType, CreateResourceManager);
