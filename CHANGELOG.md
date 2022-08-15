@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.
 
+<a name="1.0.0-alpha.3"></a>
+## [1.0.0-alpha.3](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.3) (2022-8-15)
+
+### Features
+
+* Improve message creation API ([b10173e](https://www.github.com/Replikit/Replikit/commit/b10173e4c1a7fd6d343420b46fd32e6a674a59a2))
+* Update routing and hosting infrastructure ([c5be042](https://www.github.com/Replikit/Replikit/commit/c5be04241d9f478fed8c69b299d6118a57502842))
+* **Core:** Simplify routing, extract hosting into a separate package ([aedba22](https://www.github.com/Replikit/Replikit/commit/aedba2271136cfd408fd1ea82270fa61eb5ac2ec))
+
+### Bug Fixes
+
+* Fix controller pipeline ([4f63698](https://www.github.com/Replikit/Replikit/commit/4f6369895ea68b3cb0f32de0aa858ef4b72eabb9))
+* Fix views ([68b9286](https://www.github.com/Replikit/Replikit/commit/68b928609735512f0e3a9260b61b60787814f67f))
+* Update extensions ([36f4a14](https://www.github.com/Replikit/Replikit/commit/36f4a14ec7dfc68f287f1148343faef618106736))
+* **Telegram:** Make update fetching fault-tolerant ([8361d5b](https://www.github.com/Replikit/Replikit/commit/8361d5b763cdd4e79428fd762c87322ac970a4fb))
+
 <a name="1.0.0-alpha.2"></a>
 ## [1.0.0-alpha.2](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.2) (2022-6-28)
 
