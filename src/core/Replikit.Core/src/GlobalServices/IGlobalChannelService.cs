@@ -10,6 +10,6 @@ public interface IGlobalChannelService : IGlobalHasFeatures<ChannelServiceFeatur
     Task ChangeTitleAsync(GlobalIdentifier channelId, string title, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="IChannelService.ChangePhotoAsync" />
-    Task ChangePhotoAsync(GlobalIdentifier channelId, PhotoAttachment photo,
+    Task ChangePhotoAsync(GlobalIdentifier channelId, OutAttachment photo,
         CancellationToken cancellationToken = default);
 }

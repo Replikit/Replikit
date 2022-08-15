@@ -1,4 +1,4 @@
-﻿using Kantaiko.Hosting.Modularity;
+﻿using Kantaiko.Modularity;
 using Microsoft.Extensions.DependencyInjection;
 using Replikit.Core.Modularity;
 using Replikit.Extensions.Users;
@@ -9,6 +9,6 @@ public class UsersExampleModule : ReplikitModule
 {
     protected override void ConfigureServices(IServiceCollection services)
     {
-        services.AddModule<UsersModule>();
+        services.AddModule<ReplikitUsersModule>();
     }
 }

@@ -1,7 +1,7 @@
+using Replikit.Core.Abstractions.State;
 using Replikit.Core.Controllers;
 using Replikit.Core.Controllers.Patterns;
 using Replikit.Examples.Views.Views;
-using Replikit.Extensions.State;
 using Replikit.Extensions.Views;
 using Replikit.Extensions.Views.Models;
 
@@ -16,10 +16,10 @@ public class CounterController : Controller
         _viewManager = viewManager;
     }
 
-    [Command("counter")]
+    [Command("create counter")]
     public Task CreateCounter()
     {
-        return _viewManager.SendViewAsync<CounterView>(Channel.Id, CancellationToken);
+        return _viewManager.SendViewAsync<CounterView>(Channel.Id);
     }
 
     [Command("increment all")]
@@ -27,7 +27,7 @@ public class CounterController : Controller
     {
         var counters = await _viewManager.FindByStateAsync<CounterState>();
 
-        async Task ActivateCounter(IState<ViewState> counter)
+        async Task ActivateCounter(StateItem<ViewState> counter)
         {
             await _viewManager.ActivateAsync<CounterView>(counter, x => x.Increment(1));
         }

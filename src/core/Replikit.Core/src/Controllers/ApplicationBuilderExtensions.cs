@@ -23,13 +23,11 @@ public static class ApplicationBuilderExtensions
 
         var routingProperties = app.Properties.GetOrCreate<RoutingControllersProperties>();
 
-        if (routingProperties.UsedAssemblies.Contains(assembly))
+        if (!routingProperties.UsedAssemblies.Contains(assembly))
         {
-            return;
+            routingProperties.UsedAssemblies.Add(assembly);
+
+            app.UseMiddleware(new ControllerMiddleware(assembly, app.ApplicationServices, configureDelegate));
         }
-
-        routingProperties.UsedAssemblies.Add(assembly);
-
-        app.UseMiddleware(new ControllerMiddleware(assembly, app.ApplicationServices, configureDelegate));
     }
 }

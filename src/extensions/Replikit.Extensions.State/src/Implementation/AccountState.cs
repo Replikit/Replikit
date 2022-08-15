@@ -6,5 +6,5 @@ internal class AccountState<TValue> : State<TValue>, IAccountState<TValue> where
 {
     public AccountState(IStateTracker stateTracker) : base(stateTracker) { }
 
-    protected override StateType Type => StateType.AccountState;
+    protected override StateKind Kind => StateKind.AccountState;
 }

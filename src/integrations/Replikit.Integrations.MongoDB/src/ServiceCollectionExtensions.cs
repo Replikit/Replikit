@@ -1,4 +1,4 @@
-using Kantaiko.Hosting.Modularity;
+using Kantaiko.Modularity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Replikit.Integrations.MongoDB;
@@ -6,12 +6,11 @@ namespace Replikit.Integrations.MongoDB;
 public static class ServiceCollectionExtensions
 {
     // ReSharper disable once InconsistentNaming
-    public static MongoDBModuleBuilder AddMongoDBModule(this IServiceCollection services)
+    public static void AddReplikitMongoDBIntegration(this IServiceCollection services,
+        Action<ReplikitMongoDBModuleBuilder>? configureDelegate)
     {
-        ArgumentNullException.ThrowIfNull(services);
+        services.AddModule<ReplikitMongoDBModule>();
 
-        services.AddModule<MongoDBModule>();
-
-        return new MongoDBModuleBuilder(services);
+        configureDelegate?.Invoke(new ReplikitMongoDBModuleBuilder(services));
     }
 }

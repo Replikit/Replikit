@@ -10,7 +10,7 @@ internal class MessageIdentifierSerializer : SerializerBase<MessageIdentifier>
     public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args,
         MessageIdentifier value)
     {
-        BsonSerializer.Serialize(context.Writer, value.Identifiers.ToArray());
+        BsonSerializer.Serialize(context.Writer, value.PartIdentifiers.ToArray());
     }
 
     public override MessageIdentifier Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)

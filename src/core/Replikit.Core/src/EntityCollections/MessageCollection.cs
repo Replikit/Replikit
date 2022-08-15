@@ -29,51 +29,51 @@ public class MessageCollection : IMessageCollection
     public Task<Message> SendAsync(OutMessage message, SendMessageOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        return _messageService.SendAsync(ChannelId, message, options, cancellationToken);
+        return _messageService.SendAsync(ChannelId.Value, message, options, cancellationToken);
     }
 
     public Task<Message> EditAsync(MessageIdentifier messageId, OutMessage message, OutMessage? oldMessage = null,
         CancellationToken cancellationToken = default)
     {
-        return _messageService.EditAsync(ChannelId, messageId, message, oldMessage, cancellationToken);
+        return _messageService.EditAsync(ChannelId.Value, messageId, message, oldMessage, cancellationToken);
     }
 
     public Task DeleteAsync(Identifier messageId, CancellationToken cancellationToken = default)
     {
-        return _messageService.DeleteAsync(ChannelId, messageId, cancellationToken);
+        return _messageService.DeleteAsync(ChannelId.Value, messageId, cancellationToken);
     }
 
     public Task DeleteManyAsync(IReadOnlyCollection<MessageIdentifier> messageIds,
         CancellationToken cancellationToken = default)
     {
-        return _messageService.DeleteManyAsync(ChannelId, messageIds, cancellationToken);
+        return _messageService.DeleteManyAsync(ChannelId.Value, messageIds, cancellationToken);
     }
 
     public Task<Message?> GetAsync(MessageIdentifier messageId, CancellationToken cancellationToken = default)
     {
-        return _messageService.GetAsync(ChannelId, messageId, cancellationToken);
+        return _messageService.GetAsync(ChannelId.Value, messageId, cancellationToken);
     }
 
     public Task<IReadOnlyList<Message>> GetManyAsync(IReadOnlyCollection<MessageIdentifier> messageIds,
         CancellationToken cancellationToken = default)
     {
-        return _messageService.GetManyAsync(ChannelId, messageIds, cancellationToken);
+        return _messageService.GetManyAsync(ChannelId.Value, messageIds, cancellationToken);
     }
 
     public Task<IReadOnlyList<Message>> FindAsync(string? query = null, int? take = null, int? skip = null,
         CancellationToken cancellationToken = default)
     {
-        return _messageService.FindAsync(ChannelId, query, take, skip, cancellationToken);
+        return _messageService.FindAsync(ChannelId.Value, query, take, skip, cancellationToken);
     }
 
     public Task PinAsync(MessageIdentifier messageId, CancellationToken cancellationToken = default)
     {
-        return _messageService.PinAsync(ChannelId, messageId, cancellationToken);
+        return _messageService.PinAsync(ChannelId.Value, messageId, cancellationToken);
     }
 
     public Task UnpinAsync(MessageIdentifier messageId, CancellationToken cancellationToken = default)
     {
-        return _messageService.UnpinAsync(ChannelId, messageId, cancellationToken);
+        return _messageService.UnpinAsync(ChannelId.Value, messageId, cancellationToken);
     }
 
     public static IMessageCollection Create(GlobalIdentifier channelId, IServiceProvider serviceProvider)

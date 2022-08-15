@@ -1,26 +1,24 @@
-using Kantaiko.Routing;
 using Replikit.Abstractions.Messages.Events;
+using Replikit.Abstractions.Messages.Models;
 using Replikit.Adapters.Telegram.Abstractions;
 using Replikit.Core.Handlers;
-using Replikit.Core.Handlers.Context;
+using Replikit.Core.Routing.Context;
 using TelegramMessage = Telegram.Bot.Types.Message;
 
 namespace Replikit.Examples.AdapterServices.Handlers;
 
-public class DiceHandler : MessageEventHandler<MessageReceivedEvent>
+public class DiceHandler : AdapterEventHandler<MessageReceivedEvent>
 {
-    protected override async Task<Unit> HandleAsync(IChannelEventContext<MessageReceivedEvent> context, NextAction next)
+    public override async Task HandleAsync(IAdapterEventContext<MessageReceivedEvent> context)
     {
-        if (Adapter is ITelegramAdapter)
+        if (context.Adapter is ITelegramAdapter)
         {
-            var telegramMessage = Message.GetOriginal<TelegramMessage>();
+            var telegramMessage = context.Event.Message.GetOriginal<TelegramMessage>();
 
             if (telegramMessage.Dice is { } dice)
             {
-                await MessageCollection.SendAsync($"Value: {dice.Value}");
+                await context.MessageCollection.SendAsync($"Value: {dice.Value}");
             }
         }
-
-        return await next();
     }
 }

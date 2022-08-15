@@ -41,5 +41,13 @@ public interface IStateManager
     /// <typeparam name="TValue"></typeparam>
     /// <returns></returns>
     Task<IState<TValue>> GetStateAsync<TValue>(StateKey key, CancellationToken cancellationToken = default)
-        where TValue : notnull, new();
+        where TValue : class, new();
+
+    /// <summary>
+    /// Loads an existing state from the specified <see cref="StateItem"/>.
+    /// </summary>
+    /// <param name="stateItem"></param>
+    /// <typeparam name="TValue"></typeparam>
+    /// <returns></returns>
+    IState<TValue> LoadState<TValue>(StateItem<TValue> stateItem) where TValue : class, new();
 }

@@ -5,11 +5,11 @@ using Replikit.Abstractions.Messages.Models;
 namespace Replikit.Core.Abstractions.State;
 
 public record StateKey(
-    StateType StateType,
+    StateKind Kind,
     AdapterIdentifier? AdapterId = null,
     Identifier? ChannelId = null,
     Identifier? AccountId = null,
-    MessageIdentifier? MessageId = null,
+    Identifier? MessagePartId = null,
     [property: JsonIgnore] Type? Type = null
 )
 {
@@ -19,22 +19,22 @@ public record StateKey(
         init => Type ??= value is null ? null : Type.GetType(value);
     }
 
-    public static StateKey FromChannelId(StateType type, GlobalIdentifier channelId)
+    public static StateKey FromChannelId(StateKind kind, GlobalIdentifier channelId)
     {
-        return new StateKey(type, channelId.AdapterId, channelId);
+        return new StateKey(kind, channelId.AdapterId, channelId.Value);
     }
 
-    public static StateKey FromAccountId(StateType type, GlobalIdentifier accountId)
+    public static StateKey FromAccountId(StateKind kind, GlobalIdentifier accountId)
     {
-        return new StateKey(type, accountId.AdapterId, AccountId: accountId);
+        return new StateKey(kind, accountId.AdapterId, AccountId: accountId.Value);
     }
 
-    public static StateKey FromMessageId(StateType type, GlobalMessageIdentifier messageId)
+    public static StateKey FromMessageId(StateKind kind, GlobalMessageIdentifier messageId)
     {
-        return new StateKey(type,
+        return new StateKey(kind,
             messageId.ChannelId.AdapterId,
-            messageId.ChannelId,
-            MessageId: messageId
+            messageId.ChannelId.Value,
+            MessagePartId: messageId.Value.PartIdentifiers[0]
         );
     }
 }

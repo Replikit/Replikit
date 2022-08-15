@@ -4,7 +4,7 @@ namespace Replikit.Extensions.State;
 
 public interface IState
 {
-    StateKey Key { get; }
+    StateKey? Key { get; }
     object Value { get; }
 
     bool HasValue { get; }

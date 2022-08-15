@@ -18,8 +18,17 @@ public abstract class ReplikitModule : Module, IModule
 
         ConfigureServices(services);
 
-        services.ConfigureReplikitApplication(app => Configure(app, GetType(), metadata));
-        services.PostConfigureReplikitApplication(app => PostConfigure(app, GetType(), metadata));
+        services.ConfigureReplikitApplication(app =>
+        {
+            Configure(app, GetType(), metadata);
+            Configure(app);
+        });
+
+        services.PostConfigureReplikitApplication(app =>
+        {
+            PostConfigure(app, GetType(), metadata);
+            PostConfigure(app);
+        });
     }
 
     private void Configure(IApplicationBuilder app, Type moduleType, ModuleMetadata moduleMetadata)

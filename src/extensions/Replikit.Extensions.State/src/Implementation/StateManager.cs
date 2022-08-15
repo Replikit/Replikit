@@ -1,21 +1,22 @@
-using Kantaiko.Routing.Context;
 using Replikit.Core.Abstractions.State;
 using Replikit.Core.Common;
+using Replikit.Core.Routing.Context;
 
 namespace Replikit.Extensions.State.Implementation;
 
-internal class StateManager : IStateManager, IStateTracker, IStateLoader
+internal class StateManager : IStateManager, IStateTracker, IStateLoader, IStateKeyFactoryAcceptor
 {
     private List<IInternalState>? _trackedStates;
     private readonly Dictionary<StateKey, IInternalState> _loadedStates = new();
 
+    private IStateKeyFactory _stateKeyFactory;
     private readonly IStateStore _store;
-    private readonly IContextAccessor _contextAccessor;
 
-    public StateManager(IStateStore store, IContextAccessor contextAccessor)
+    public StateManager(IStateStore store, IAdapterEventContextAccessor eventContextAccessor)
     {
         _store = store;
-        _contextAccessor = contextAccessor;
+
+        _stateKeyFactory = new DefaultStateKeyFactory(eventContextAccessor);
     }
 
     public IEnumerable<IState> LoadedStates => _loadedStates.Values;
@@ -24,21 +25,12 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
         QueryBuilder<StateItem<TValue>>? queryBuilder = null,
         CancellationToken cancellationToken = default) where TValue : class, new()
     {
-        var query = _store.CreateQuery()
-            .Where(x => x.Key.TypeName == typeof(TValue).AssemblyQualifiedName!)
-            .Select(x => new StateItem<TValue>(x.Key, (TValue?) x.Value));
+        var stateItems = await _store.FindStateItemsAsync(queryBuilder, cancellationToken);
+        var states = new IState<TValue>[stateItems.Count];
 
-        if (queryBuilder is not null)
+        for (var index = 0; index < stateItems.Count; index++)
         {
-            query = queryBuilder.Invoke(query);
-        }
-
-        var stateValues = await _store.QueryExecutor.ToReadOnlyListAsync(query, cancellationToken: cancellationToken);
-        var states = new IState<TValue>[stateValues.Count];
-
-        for (var index = 0; index < stateValues.Count; index++)
-        {
-            var stateItem = stateValues[index];
+            var stateItem = stateItems[index];
 
             if (_loadedStates.TryGetValue(stateItem.Key, out var existingState))
             {
@@ -46,7 +38,7 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
                 continue;
             }
 
-            states[index] = CreateLoadedState<TValue>(stateItem.Key, new DynamicValue(stateItem.Value));
+            states[index] = CreateLoadedState<TValue>(stateItem.Key, stateItem.Value);
         }
 
         return states;
@@ -55,16 +47,14 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
     public async Task<IReadOnlyList<IState>> FindAllStatesAsync(QueryBuilder<StateItem> queryBuilder,
         CancellationToken cancellationToken = default)
     {
-        var query = _store.CreateQuery();
+        ArgumentNullException.ThrowIfNull(queryBuilder);
 
-        query = queryBuilder.Invoke(query);
+        var stateItems = await _store.FindAllStateItemsAsync(queryBuilder, cancellationToken);
+        var states = new IState[stateItems.Count];
 
-        var stateValues = await _store.QueryExecutor.ToReadOnlyListAsync(query, cancellationToken);
-        var states = new IState[stateValues.Count];
-
-        for (var index = 0; index < stateValues.Count; index++)
+        for (var index = 0; index < stateItems.Count; index++)
         {
-            var stateItem = stateValues[index];
+            var stateItem = stateItems[index];
 
             if (_loadedStates.TryGetValue(stateItem.Key, out var existingState))
             {
@@ -72,15 +62,17 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
                 continue;
             }
 
-            states[index] = CreateLoadedState(stateItem.Key, stateItem.DynamicValue);
+            states[index] = CreateLoadedState(stateItem.Key, stateItem.Value);
         }
 
         return states;
     }
 
     public async Task<IState<TValue>> GetStateAsync<TValue>(StateKey key, CancellationToken cancellationToken = default)
-        where TValue : notnull, new()
+        where TValue : class, new()
     {
+        ArgumentNullException.ThrowIfNull(key);
+
         key = key with { Type = typeof(TValue) };
 
         if (_loadedStates.TryGetValue(key, out var existingValue))
@@ -93,14 +85,21 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
 
         var item = await _store.QueryExecutor.FirstOrDefaultAsync(query, cancellationToken);
 
-        return CreateLoadedState<TValue>(key, item?.DynamicValue);
+        return CreateLoadedState<TValue>(key, item?.Value);
     }
 
-    private IState CreateLoadedState(StateKey key, DynamicValue? item)
+    public IState<TValue> LoadState<TValue>(StateItem<TValue> stateItem) where TValue : class, new()
+    {
+        ArgumentNullException.ThrowIfNull(stateItem);
+
+        return CreateLoadedState<TValue>(stateItem.Key, stateItem.Value);
+    }
+
+    private IState CreateLoadedState(StateKey key, object? item)
     {
         State state;
 
-        if (item?.GetValue(key.Type!) is not { } value)
+        if (DynamicValueHelper.Deserialize(item, key.Type!) is not { } value)
         {
             state = new State(key);
         }
@@ -114,11 +113,11 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
         return state;
     }
 
-    private IState<TValue> CreateLoadedState<TValue>(StateKey key, DynamicValue? item) where TValue : notnull, new()
+    private IState<TValue> CreateLoadedState<TValue>(StateKey key, object? item) where TValue : notnull, new()
     {
         State<TValue> state;
 
-        if (item is null || item.GetValue<TValue>() is not { } value)
+        if (DynamicValueHelper.Deserialize<TValue>(item) is not { } value)
         {
             state = new State<TValue>(key);
         }
@@ -138,6 +137,13 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
         _trackedStates.Add(state);
     }
 
+    public void SetKeyFactory(IStateKeyFactory keyFactory)
+    {
+        ArgumentNullException.ThrowIfNull(keyFactory);
+
+        _stateKeyFactory = keyFactory;
+    }
+
     public virtual async Task LoadAsync(CancellationToken cancellationToken = default)
     {
         if (_trackedStates is not { Count: > 0 })
@@ -150,7 +156,7 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
 
         foreach (var trackedState in _trackedStates)
         {
-            if (CreateStateKey(trackedState) is not { } key)
+            if (_stateKeyFactory.CreateStateKey(trackedState.Kind, trackedState.ValueType) is not { } key)
             {
                 remainingTrackedStates ??= new List<IInternalState>();
                 remainingTrackedStates.Add(trackedState);
@@ -186,7 +192,7 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
 
         foreach (var stateItem in states)
         {
-            var value = stateItem.DynamicValue?.GetValue(stateItem.Key.Type!);
+            var value = DynamicValueHelper.Deserialize(stateItem.Value, stateItem.Key.Type!);
 
             if (value is null)
             {
@@ -204,7 +210,7 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
             var (key, value) = state;
 
             var newValue = value.Status is StateStatus.HasModifiedValue
-                ? new DynamicValue(value.RawValue)
+                ? value.RawValue
                 : null;
 
             return new StateItem(key, newValue);
@@ -221,25 +227,11 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader
 
         var values = changedStates.Select(MapValue);
 
-        await _store.SetManyAsync(values, cancellationToken);
+        await _store.SaveManyAsync(values, cancellationToken);
 
         foreach (var state in changedStates)
         {
-            state.Value.ApplyStatusChange();
+            state.Value.Persist();
         }
-    }
-
-    private StateKey? CreateStateKey(IInternalState state)
-    {
-        if (_contextAccessor.Context is null)
-        {
-            throw new InvalidOperationException("State cannot be used outside of context");
-        }
-
-        var stateKeyFactory = _contextAccessor.Context is IHasStateKeyFactory hasStateKeyFactory
-            ? hasStateKeyFactory.StateKeyFactory
-            : DefaultStateKeyFactory.Instance;
-
-        return stateKeyFactory.CreateStateKey(state.Type, _contextAccessor.Context);
     }
 }

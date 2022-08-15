@@ -1,12 +1,17 @@
-using Replikit.Core.Common;
-
 namespace Replikit.Core.Abstractions.State;
 
+/// <summary>
+/// The representation of the state item in database.
+/// An instance of this type can be fetched from <see cref="IStateStore"/>.
+/// This type is not a state itself and cannot be used as a state.
+/// But it can be used to create a state in some scope in order not to fetch it from the database again.
+/// </summary>
 public class StateItem
 {
-    protected StateItem() { }
+    // ReSharper disable once UnusedMember.Local
+    private StateItem() { }
 
-    public StateItem(StateKey key, DynamicValue? value)
+    public StateItem(StateKey key, object? value)
     {
         Key = key;
         // ReSharper disable once VirtualMemberCallInConstructor
@@ -19,14 +24,20 @@ public class StateItem
     }
 
     public virtual StateKey Key { get; private set; } = null!;
-    public virtual object? Value { get; set; }
-
-    public DynamicValue? DynamicValue => (DynamicValue?) Value;
+    public virtual object? Value { get; private set; }
 }
 
+/// <summary>
+/// The representation of the state item in database.
+/// An instance of this type can be fetched from <see cref="IStateStore"/>.
+/// This type is not a state itself and cannot be used as a state.
+/// But it can be used to create a state in some scope in order not to fetch it from the database again.
+/// </summary>
+/// <typeparam name="TValue">The type of the state value.</typeparam>
 public class StateItem<TValue> where TValue : class
 {
-    protected StateItem() { }
+    // ReSharper disable once UnusedMember.Local
+    private StateItem() { }
 
     public StateItem(StateKey key, TValue? value)
     {

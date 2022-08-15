@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using Replikit.Core.Abstractions.State;
-using Replikit.Core.Abstractions.Users;
 using Replikit.Integrations.MongoDB.Options;
 
 namespace Replikit.Integrations.MongoDB.Internal;

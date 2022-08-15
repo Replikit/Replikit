@@ -26,16 +26,16 @@ internal class GlobalAdapterRepository : IGlobalAdapterRepository
         return _adapterCollection.ResolveRequired(identifier).Repository;
     }
 
-    public Task<ChannelInfo?> GetChannelInfoAsync(GlobalIdentifier identifier,
+    public Task<ChannelInfo?> GetChannelInfoAsync(GlobalIdentifier channelId,
         CancellationToken cancellationToken = default)
     {
-        return GetAdapterRepository(identifier).GetChannelInfoAsync(identifier, cancellationToken);
+        return GetAdapterRepository(channelId).GetChannelInfoAsync(channelId, cancellationToken);
     }
 
-    public Task<AccountInfo?> GetAccountInfoAsync(GlobalIdentifier identifier,
+    public Task<AccountInfo?> GetAccountInfoAsync(GlobalIdentifier accountId,
         CancellationToken cancellationToken = default)
     {
-        return GetAdapterRepository(identifier).GetAccountInfoAsync(identifier, cancellationToken);
+        return GetAdapterRepository(accountId).GetAccountInfoAsync(accountId, cancellationToken);
     }
 
     public Task<Attachment> ResolveAttachmentUrlAsync(Attachment attachment,

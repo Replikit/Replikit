@@ -30,7 +30,7 @@ internal class GlobalChannelService : IGlobalChannelService
         return ResolveChannelService(channelId).ChangeTitleAsync(channelId, title, cancellationToken);
     }
 
-    public Task ChangePhotoAsync(GlobalIdentifier channelId, PhotoAttachment photo,
+    public Task ChangePhotoAsync(GlobalIdentifier channelId, OutAttachment photo,
         CancellationToken cancellationToken = default)
     {
         return ResolveChannelService(channelId).ChangePhotoAsync(channelId, photo, cancellationToken);

@@ -85,7 +85,7 @@ internal abstract class StateBase : IInternalState
         Key = key;
     }
 
-    void IInternalState.ApplyStatusChange()
+    void IInternalState.Persist()
     {
         _persisted = true;
 
@@ -117,7 +117,7 @@ internal abstract class StateBase : IInternalState
 
     object? IInternalState.RawValue => _value;
 
-    protected virtual StateType Type => StateType.State;
+    protected virtual StateKind Kind => StateKind.State;
 
-    StateType IInternalState.Type => Type;
+    StateKind IInternalState.Kind => Kind;
 }

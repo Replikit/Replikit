@@ -6,5 +6,5 @@ internal class GlobalState<TValue> : State<TValue>, IGlobalState<TValue> where T
 {
     public GlobalState(IStateTracker stateTracker) : base(stateTracker) { }
 
-    protected override StateType Type => StateType.GlobalState;
+    protected override StateKind Kind => StateKind.GlobalState;
 }

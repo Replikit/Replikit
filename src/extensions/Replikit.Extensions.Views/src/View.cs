@@ -1,29 +1,24 @@
-﻿using Kantaiko.Controllers;
-using Replikit.Abstractions.Adapters;
-using Replikit.Abstractions.Messages.Events;
-using Replikit.Core.Handlers.Context;
+﻿using System.Linq.Expressions;
+using Kantaiko.Controllers;
 using Replikit.Extensions.State;
-using Replikit.Extensions.Views.Messages;
+using Replikit.Extensions.Views.Actions;
+using Replikit.Extensions.Views.Internal;
 
 namespace Replikit.Extensions.Views;
 
-public abstract class View : ControllerBase<ViewContext>
+public abstract class View : IAutoRegistrableController<InternalViewContext>
 {
-    protected void Update()
-    {
-        UpdateRequested = true;
-    }
-
-    [Action]
-    public void Init() => Update();
-
-    public virtual Task<ViewResult> RenderAsync(CancellationToken cancellationToken) =>
+    public virtual Task<ViewMessage> RenderAsync(CancellationToken cancellationToken) =>
         Task.FromResult(Render());
 
-    public virtual ViewResult Render() =>
+    public virtual ViewMessage Render() =>
         throw new NotImplementedException("You must implement Render or RenderAsync view method");
 
-    internal bool UpdateRequested { get; private set; }
+    protected static ViewAction Action(string text, Expression<Func<IViewActionContext, object>> action) =>
+        new(text, action);
+
+    protected static ViewAction Action(string text, Expression<Action<IViewActionContext>> action) =>
+        new(text, action);
 }
 
 public abstract class View<TState> : View where TState : notnull, new()

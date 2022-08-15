@@ -1,6 +1,5 @@
 using MongoDB.Bson.Serialization;
 using Replikit.Core.Abstractions.State;
-using Replikit.Core.Common;
 
 namespace Replikit.Integrations.MongoDB.Serialization;
 
@@ -16,7 +15,7 @@ internal static class SerializationConfigurationInitializer
         BsonSerializer.RegisterSerializer(new GlobalIdentifierSerializer());
         BsonSerializer.RegisterSerializer(new MessageIdentifierSerializer());
         BsonSerializer.RegisterSerializer(new GlobalMessageIdentifierSerializer());
-        BsonSerializer.RegisterSerializer(DynamicValueSerializer.Instance);
+        BsonSerializer.RegisterSerializer(ObjectSerializer.Instance);
 
         BsonClassMap.RegisterClassMap<StateKey>(map =>
         {
@@ -28,9 +27,7 @@ internal static class SerializationConfigurationInitializer
         BsonClassMap.RegisterClassMap<StateItem>(map =>
         {
             map.MapIdProperty(x => x.Key);
-
-            map.MapProperty(x => x.Value)
-                .SetSerializer(new ObjectDynamicValueSerializer());
+            map.MapProperty(x => x.Value);
         });
 
         _initialized = true;

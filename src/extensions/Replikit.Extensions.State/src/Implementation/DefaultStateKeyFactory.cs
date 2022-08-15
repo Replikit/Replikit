@@ -1,44 +1,49 @@
-using Kantaiko.Routing.Context;
-using Kantaiko.Routing.Events;
 using Replikit.Abstractions.Repositories.Events;
 using Replikit.Core.Abstractions.State;
+using Replikit.Core.Routing.Context;
 using Replikit.Extensions.State.Exceptions;
 
 namespace Replikit.Extensions.State.Implementation;
 
-internal class DefaultStateKeyFactory : IStateKeyFactory
+public class DefaultStateKeyFactory : IStateKeyFactory
 {
-    public StateKey CreateStateKey(StateType stateType, object context)
+    private readonly IAdapterEventContextAccessor _eventContextAccessor;
+
+    public DefaultStateKeyFactory(IAdapterEventContextAccessor eventContextAccessor)
     {
-        return stateType switch
+        _eventContextAccessor = eventContextAccessor;
+    }
+
+    public StateKey CreateStateKey(StateKind stateKind, Type type)
+    {
+        return stateKind switch
         {
-            StateType.GlobalState => new StateKey(StateType.GlobalState),
-            StateType.ChannelState => CreateChannelStateKey(context),
-            StateType.AccountState => CreateAccountStateKey(context),
-            StateType.State => throw new InvalidStateTypeException(StateType.State, context),
-            _ => throw new ArgumentOutOfRangeException(nameof(stateType))
+            StateKind.GlobalState => new StateKey(StateKind.GlobalState),
+            StateKind.ChannelState => CreateChannelStateKey(),
+            StateKind.AccountState => CreateAccountStateKey(),
+            StateKind.State => throw new InvalidStateTypeException(StateKind.State,
+                _eventContextAccessor.CurrentContext),
+            _ => throw new ArgumentOutOfRangeException(nameof(stateKind))
         };
     }
 
-    private static StateKey CreateChannelStateKey(object context)
+    private StateKey CreateChannelStateKey()
     {
-        if (context is not IEventContext<IChannelEvent> { Event: var channelEvent })
+        if (_eventContextAccessor.CurrentContext is not IAdapterEventContext<IChannelEvent> { Event: var channelEvent })
         {
-            throw new InvalidStateTypeException(StateType.ChannelState, context);
+            throw new InvalidStateTypeException(StateKind.ChannelState, _eventContextAccessor.CurrentContext);
         }
 
-        return StateKey.FromChannelId(StateType.ChannelState, channelEvent.Channel.Id);
+        return StateKey.FromChannelId(StateKind.ChannelState, channelEvent.Channel.Id);
     }
 
-    private static StateKey CreateAccountStateKey(object context)
+    private StateKey CreateAccountStateKey()
     {
-        if (context is not IEventContext<IAccountEvent> { Event: var accountEvent })
+        if (_eventContextAccessor.CurrentContext is not IAdapterEventContext<IAccountEvent> { Event: var accountEvent })
         {
-            throw new InvalidStateTypeException(StateType.AccountState, context);
+            throw new InvalidStateTypeException(StateKind.AccountState, _eventContextAccessor.CurrentContext);
         }
 
-        return StateKey.FromAccountId(StateType.AccountState, accountEvent.Account.Id);
+        return StateKey.FromAccountId(StateKind.AccountState, accountEvent.Account.Id);
     }
-
-    public static DefaultStateKeyFactory Instance { get; } = new();
 }

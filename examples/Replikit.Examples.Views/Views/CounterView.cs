@@ -1,30 +1,33 @@
-using Replikit.Abstractions.Messages.Builder;
 using Replikit.Extensions.State;
 using Replikit.Extensions.Views;
 
 namespace Replikit.Examples.Views.Views;
 
-public class CounterView : View
+public class CounterView : View<CounterState>
 {
-    private readonly IState<CounterState> _state;
+    public CounterView(IState<CounterState> state) : base(state) { }
 
-    public CounterView(IState<CounterState> state)
+    public override ViewMessage Render() => new()
     {
-        _state = state;
-    }
+        Text = $"Count: {State.Count}",
+        Actions =
+        {
+            {
+                Action("+1", c => Increment(1)),
+                Action("+10", c => Increment(10)),
+                Action("+100", c => Increment(100))
+            },
+            {
+                Action("-1", c => Increment(-1)),
+                Action("-10", c => Increment(-10)),
+                Action("-100", c => Increment(-100))
+            },
 
-    [Action(AllowExternalActivation = true)]
-    public void Increment(int step) => _state.Value.Increment(step);
+            Action("Clear", c => Clear())
+        }
+    };
 
-    [Action]
-    public void Clear() => _state.Clear();
+    public void Increment(int step) => State.Increment(step);
 
-    public override ViewResult Render()
-    {
-        return ViewResult.CreateBuilder()
-            .AddText($"Count: {_state.Value.Count}")
-            .AddAction("+1", () => Increment(1))
-            .AddAction("+10", () => Increment(10))
-            .AddAction("Clear", () => Clear());
-    }
+    private void Clear() => ClearState();
 }

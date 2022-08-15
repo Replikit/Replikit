@@ -22,7 +22,7 @@ internal class StateStore : IStateStore
         return _dbContext.States.AsQueryable();
     }
 
-    public Task SetManyAsync(IEnumerable<StateItem> items, CancellationToken cancellationToken = default)
+    public Task SaveManyAsync(IEnumerable<StateItem> items, CancellationToken cancellationToken = default)
     {
         var operations = new List<WriteModel<StateItem>>();
 

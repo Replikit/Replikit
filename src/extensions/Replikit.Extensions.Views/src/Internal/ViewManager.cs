@@ -1,80 +1,159 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Linq.Expressions;
+using Microsoft.Extensions.DependencyInjection;
+using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Messages.Models;
+using Replikit.Core.Abstractions.State;
+using Replikit.Core.Common;
 using Replikit.Extensions.State;
-using Replikit.Extensions.Views.Exceptions;
+using Replikit.Extensions.State.Implementation;
+using Replikit.Extensions.Views.Models;
 
 namespace Replikit.Extensions.Views.Internal;
 
 internal class ViewManager : IViewManager
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly ViewHandlerAccessor _handlerAccessor;
-    private readonly ViewExternalActivationDeterminant _viewExternalActivationDeterminant;
+    private readonly IStateStore _stateStore;
 
-    public IStateManager StateManager { get; }
-
-    public ViewManager(IServiceProvider serviceProvider, ViewHandlerAccessor handlerAccessor,
-        IStateManager stateManager,
-        ViewExternalActivationDeterminant viewExternalActivationDeterminant)
+    public ViewManager(IServiceProvider serviceProvider, IStateStore stateStore)
     {
         _serviceProvider = serviceProvider;
-        _handlerAccessor = handlerAccessor;
-        StateManager = stateManager;
-        _viewExternalActivationDeterminant = viewExternalActivationDeterminant;
+        _stateStore = stateStore;
     }
 
-    public async Task<GlobalMessageIdentifier> SendViewAsync<TView>(ViewRequest request,
+    public Dictionary<string, InternalViewHandler> ViewHandlers { get; } = new();
+
+    public async Task<IReadOnlyList<StateItem<ViewState>>> FindByStateAsync<TState>(
+        QueryBuilder<StateItem<TState>>? queryBuilder = null,
+        CancellationToken cancellationToken = default)
+        where TState : class, new()
+    {
+        var states = await _stateStore.FindStateItemsAsync(queryBuilder, cancellationToken);
+
+        var stateKeys = states.Select(x => x.Key with { Type = typeof(ViewState) }).ToArray();
+
+        return await _stateStore.FindStateItemsAsync<ViewState>(
+            q => q.Where(x => stateKeys.Contains(x.Key)), cancellationToken);
+    }
+
+    public Task<GlobalMessageIdentifier> SendViewAsync<TView>(GlobalIdentifier channelId,
         CancellationToken cancellationToken = default) where TView : View
     {
-        var fullName = typeof(TView).FullName!;
+        return SendViewCoreAsync<TView>(channelId, null, cancellationToken);
+    }
 
-        ValidateViewRequest(request, fullName, false);
+    public Task<GlobalMessageIdentifier> SendViewAsync<TView>(GlobalIdentifier channelId,
+        Expression<Action<TView>> action,
+        CancellationToken cancellationToken = default) where TView : View
+    {
+        return SendViewCoreAsync<TView>(channelId, action, cancellationToken);
+    }
+
+    public Task<GlobalMessageIdentifier> SendViewAsync<TView>(GlobalIdentifier channelId,
+        Expression<Func<TView, object>> action, CancellationToken cancellationToken = default) where TView : View
+    {
+        return SendViewCoreAsync<TView>(channelId, action, cancellationToken);
+    }
+
+    public Task<bool> ActivateAsync<TView>(GlobalMessageIdentifier messageId, Expression<Action<TView>> action,
+        CancellationToken cancellationToken = default) where TView : View
+    {
+        return ActivateViewCoreAsync<TView>(messageId, action, cancellationToken);
+    }
+
+    public Task<bool> ActivateAsync<TView>(GlobalMessageIdentifier messageId, Expression<Func<TView, object>> action,
+        CancellationToken cancellationToken = default) where TView : View
+    {
+        return ActivateViewCoreAsync<TView>(messageId, action, cancellationToken);
+    }
+
+    public Task<bool> ActivateAsync<TView>(StateItem<ViewState> stateItem, Expression<Action<TView>> action,
+        CancellationToken cancellationToken = default) where TView : View
+    {
+        return ActivateViewCoreAsync<TView>(stateItem, action, cancellationToken);
+    }
+
+    public Task<bool> ActivateAsync<TView>(StateItem<ViewState> stateItem, Expression<Func<TView, object>> action,
+        CancellationToken cancellationToken = default) where TView : View
+    {
+        return ActivateViewCoreAsync<TView>(stateItem, action, cancellationToken);
+    }
+
+    private async Task<GlobalMessageIdentifier> SendViewCoreAsync<TView>(GlobalIdentifier channelId,
+        Expression? action, CancellationToken cancellationToken) where TView : View
+    {
+        await using var scope = _serviceProvider.CreateAsyncScope();
+
+        var viewState = scope.ServiceProvider.GetRequiredService<IState<ViewState>>();
+
+        if (!ViewHandlers.TryGetValue(typeof(TView).FullName!, out var viewHandler))
+        {
+            throw new InvalidOperationException($"No view handler registered for {typeof(TView).FullName}");
+        }
+
+        var viewContext = new InternalViewContext(viewHandler.ControllerInfo, action, viewState, channelId);
+
+        var keyFactoryAcceptor = scope.ServiceProvider.GetRequiredService<IStateKeyFactoryAcceptor>();
+        keyFactoryAcceptor.SetKeyFactory(new ViewStateKeyFactory(viewContext));
+
+        await viewHandler.Handler.HandleAsync(viewContext, scope.ServiceProvider, cancellationToken);
+
+        return viewContext.ViewMessageId!.Value;
+    }
+
+    private async Task<bool> ActivateViewCoreAsync<TView>(GlobalMessageIdentifier messageId, Expression action,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        await using var scope = _serviceProvider.CreateAsyncScope();
+        var stateManager = scope.ServiceProvider.GetRequiredService<IStateManager>();
+
+        var viewState = await stateManager
+            .GetViewStateAsync<ViewState>(messageId, cancellationToken: cancellationToken);
+
+        if (viewState.Value.ViewInstance is null)
+        {
+            return false;
+        }
+
+        return await ActivateViewCoreAsync<TView>(scope, viewState, action, cancellationToken);
+    }
+
+    private async Task<bool> ActivateViewCoreAsync<TView>(StateItem<ViewState> stateItem, Expression action,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(action);
 
         await using var scope = _serviceProvider.CreateAsyncScope();
 
-        var context = new ViewContext(request, scope.ServiceProvider, cancellationToken);
-        await _handlerAccessor.Handler.HandleAsync(context, scope.ServiceProvider, cancellationToken);
+        var stateManager = scope.ServiceProvider.GetRequiredService<IStateManager>();
+        var viewState = stateManager.LoadState(stateItem);
 
-        return context.MessageId!.Value;
+        return await ActivateViewCoreAsync<TView>(scope, viewState, action, cancellationToken);
     }
 
-    public async Task ActivateAsync(ViewRequest request, CancellationToken cancellationToken = default)
+    private async Task<bool> ActivateViewCoreAsync<TView>(IServiceScope scope, IState<ViewState> viewState,
+        Expression action,
+        CancellationToken cancellationToken)
     {
-        var viewInstance = request.ViewState?.Value.ViewInstance;
-
-        if (viewInstance is null)
+        if (viewState.Value.ViewInstance is null)
         {
-            throw new InvalidOperationException("View instance cannot be null for an activation request");
+            return false;
         }
 
-        ValidateViewRequest(request, viewInstance.Type, true);
-
-        await using var scope = _serviceProvider.CreateAsyncScope();
-
-        var context = new ViewContext(request, scope.ServiceProvider, cancellationToken);
-        await _handlerAccessor.Handler.HandleAsync(context, scope.ServiceProvider, cancellationToken);
-    }
-
-    private void ValidateViewRequest(ViewRequest request, string viewType, bool isExternal)
-    {
-        var controllerInfo = _handlerAccessor.IntrospectionInfo.Controllers
-            .FirstOrDefault(x => x.Type.FullName == viewType);
-
-        if (controllerInfo is null)
+        if (!ViewHandlers.TryGetValue(typeof(TView).FullName!, out var viewHandler))
         {
-            throw new ViewNotRegisteredException(viewType);
+            throw new InvalidOperationException($"No view handler registered for {typeof(TView).FullName}");
         }
 
-        var endpoint = controllerInfo.Endpoints.FirstOrDefault(x => x.MethodInfo.ToString() == request.Method);
+        var viewContext = new InternalViewContext(viewHandler.ControllerInfo, action, viewState, null);
 
-        if (endpoint is null)
-        {
-            throw new ViewMethodNotFoundException(controllerInfo.Type.Name, request.Method);
-        }
+        var keyFactoryAcceptor = scope.ServiceProvider.GetRequiredService<IStateKeyFactoryAcceptor>();
+        keyFactoryAcceptor.SetKeyFactory(new ViewStateKeyFactory(viewContext));
 
-        if (isExternal && !_viewExternalActivationDeterminant.IsExternalActivationAllowed(endpoint))
-        {
-            throw new ExternalActivationNotAllowedException(endpoint);
-        }
+        await viewHandler.Handler.HandleAsync(viewContext, scope.ServiceProvider, cancellationToken);
+
+        return true;
     }
 }

@@ -14,7 +14,6 @@ using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Core.Controllers.Configuration;
 using Replikit.Core.Controllers.Context;
-using Replikit.Core.Controllers.Converters;
 using Replikit.Core.Controllers.ExecutionHandlers;
 using Replikit.Core.Controllers.Options;
 using Replikit.Core.Resources;
@@ -32,14 +31,11 @@ internal class ControllerMiddleware : IAdapterEventMiddleware
     public ControllerMiddleware(Assembly assembly, IServiceProvider serviceProvider,
         Action<ControllerConfigurationBuilder>? localConfigureDelegate)
     {
-        var converterCollection = new TextParameterConverterCollection(new[] { typeof(IdentifierConverter) });
-
         var introspectionBuilder = new IntrospectionBuilder<IMessageControllerContext>();
 
         introspectionBuilder.SetServiceProvider(serviceProvider);
         introspectionBuilder.AddDefaultTransformation();
         introspectionBuilder.AddEndpointMatching();
-        introspectionBuilder.AddTextParameterConversion(converterCollection);
 
         var handlers = new HandlerCollection<IMessageControllerContext>();
 
@@ -63,11 +59,9 @@ internal class ControllerMiddleware : IAdapterEventMiddleware
 
         var lookupTypes = assembly.GetTypes();
 
-        _controllerHandler = ControllerHandlerFactory.CreateControllerHandler(
-            introspectionBuilder.CreateIntrospectionInfo(lookupTypes),
-            handlers
-        );
+        var introspectionInfo = introspectionBuilder.CreateIntrospectionInfo(lookupTypes);
 
+        _controllerHandler = ControllerHandlerFactory.CreateControllerHandler(introspectionInfo, handlers);
         _logger = serviceProvider.GetRequiredService<ILogger<ControllerMiddleware>>();
     }
 

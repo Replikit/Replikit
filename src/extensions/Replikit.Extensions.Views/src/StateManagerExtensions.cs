@@ -10,15 +10,15 @@ public static class StateManagerExtensions
     public static Task<IState<TState>> GetViewStateAsync<TState>(this IStateManager stateManager,
         AdapterIdentifier adapterId,
         Identifier channelId, MessageIdentifier messageId, CancellationToken cancellationToken = default)
-        where TState : notnull, new()
+        where TState : class, new()
     {
         ArgumentNullException.ThrowIfNull(stateManager);
 
         var key = new StateKey(
-            StateType.State,
+            StateKind.State,
             adapterId,
             channelId,
-            MessageId: messageId
+            MessagePartId: messageId.PartIdentifiers[0]
         );
 
         return stateManager.GetStateAsync<TState>(key, cancellationToken);
@@ -26,19 +26,15 @@ public static class StateManagerExtensions
 
     public static Task<IState<TState>> GetViewStateAsync<TState>(this IStateManager stateManager,
         GlobalIdentifier channelId, MessageIdentifier messageId, CancellationToken cancellationToken = default)
-        where TState : notnull, new()
+        where TState : class, new()
     {
-        ArgumentNullException.ThrowIfNull(stateManager);
-
         return stateManager.GetViewStateAsync<TState>(channelId.AdapterId, channelId, messageId, cancellationToken);
     }
 
     public static Task<IState<TState>> GetViewStateAsync<TState>(this IStateManager stateManager,
         GlobalMessageIdentifier messageId, CancellationToken cancellationToken = default)
-        where TState : notnull, new()
+        where TState : class, new()
     {
-        ArgumentNullException.ThrowIfNull(stateManager);
-
         return stateManager.GetViewStateAsync<TState>(messageId.ChannelId, messageId, cancellationToken);
     }
 }

@@ -6,5 +6,5 @@ internal class ChannelState<TValue> : State<TValue>, IChannelState<TValue> where
 {
     public ChannelState(IStateTracker stateTracker) : base(stateTracker) { }
 
-    protected override StateType Type => StateType.ChannelState;
+    protected override StateKind Kind => StateKind.ChannelState;
 }

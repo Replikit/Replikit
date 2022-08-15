@@ -25,7 +25,8 @@ internal class HandlerMiddleware : IAdapterEventMiddleware
 
         foreach (var handlerType in _handlerTypes)
         {
-            var handler = ServiceHandlerFactory.Instance.CreateHandler<AdapterEventHandler>(context.ServiceProvider);
+            var handler = (AdapterEventHandler) ServiceHandlerFactory.Instance
+                .CreateHandler(handlerType, context.ServiceProvider);
 
             // ReSharper disable once PossibleMultipleEnumeration
             foreach (var instanceInterceptor in instanceInterceptors)

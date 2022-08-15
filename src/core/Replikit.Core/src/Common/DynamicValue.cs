@@ -1,25 +1,16 @@
-﻿namespace Replikit.Core.Common;
+namespace Replikit.Core.Common;
 
-public class DynamicValue
+public class DynamicValue : IDynamicValue
 {
-    private readonly Func<Type, object?>? _valueResolver;
+    private readonly Func<Type, object?> _deserializeDelegate;
 
-    public DynamicValue(object? value)
+    public DynamicValue(Func<Type, object?> deserializeDelegate)
     {
-        Value = value;
-        _valueResolver = null;
+        _deserializeDelegate = deserializeDelegate;
     }
 
-    public DynamicValue(Func<Type, object?>? valueResolver)
+    public object? Deserialize(Type valueType)
     {
-        Value = null;
-        _valueResolver = valueResolver;
-    }
-
-    public object? Value { get; }
-
-    public object? GetValue(Type type)
-    {
-        return Value ?? _valueResolver?.Invoke(type);
+        return _deserializeDelegate(valueType);
     }
 }

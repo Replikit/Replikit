@@ -17,8 +17,8 @@ internal class GlobalMessageIdentifierSerializer : SerializerBase<GlobalMessageI
         context.Writer.WriteName(nameof(GlobalMessageIdentifier.ChannelId));
         BsonSerializer.Serialize(context.Writer, value.ChannelId);
 
-        context.Writer.WriteName(nameof(GlobalMessageIdentifier.Identifier));
-        BsonSerializer.Serialize(context.Writer, value.Identifier);
+        context.Writer.WriteName(nameof(GlobalMessageIdentifier.Value));
+        BsonSerializer.Serialize(context.Writer, value.Value);
 
         context.Writer.WriteEndDocument();
     }
@@ -40,9 +40,9 @@ internal class GlobalMessageIdentifierSerializer : SerializerBase<GlobalMessageI
             throw new BsonSerializationException("Channel id must not be null");
         }
 
-        if (context.Reader.ReadName(Utf8NameDecoder.Instance) is not nameof(GlobalMessageIdentifier.Identifier))
+        if (context.Reader.ReadName(Utf8NameDecoder.Instance) is not nameof(GlobalMessageIdentifier.Value))
         {
-            throw new BsonSerializationException($"Expected field '{nameof(GlobalMessageIdentifier.Identifier)}'");
+            throw new BsonSerializationException($"Expected field '{nameof(GlobalMessageIdentifier.Value)}'");
         }
 
         var identifier = BsonSerializer.Deserialize<MessageIdentifier>(context.Reader);

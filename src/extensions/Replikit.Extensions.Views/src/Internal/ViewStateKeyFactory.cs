@@ -1,35 +1,36 @@
 using Replikit.Core.Abstractions.State;
-using Replikit.Extensions.State.Exceptions;
 using Replikit.Extensions.State.Implementation;
+using Replikit.Extensions.Views.Exceptions;
 
 namespace Replikit.Extensions.Views.Internal;
 
 internal class ViewStateKeyFactory : IStateKeyFactory
 {
-    public StateKey? CreateStateKey(StateType stateType, object context)
-    {
-        var viewContext = (ViewContext) context;
+    private readonly InternalViewContext _viewContext;
 
-        if (stateType is StateType.GlobalState)
+    public ViewStateKeyFactory(InternalViewContext viewContext)
+    {
+        _viewContext = viewContext;
+    }
+
+    public StateKey? CreateStateKey(StateKind stateKind, Type type)
+    {
+        if (stateKind is StateKind.GlobalState)
         {
-            return new StateKey(StateType.GlobalState);
+            return new StateKey(StateKind.GlobalState);
         }
 
-        if (viewContext.MessageId is null)
+        if (_viewContext.ViewMessageId is not { } messageId)
         {
             return null;
         }
 
-        return stateType switch
+        return stateKind switch
         {
-            StateType.State => StateKey.FromMessageId(StateType.State, viewContext.MessageId.Value),
-            StateType.ChannelState => StateKey.FromChannelId(
-                StateType.ChannelState,
-                viewContext.MessageId.Value.ChannelId),
-            StateType.AccountState => throw new InvalidStateTypeException(stateType, context),
-            _ => throw new ArgumentOutOfRangeException(nameof(stateType))
+            StateKind.State => StateKey.FromMessageId(StateKind.State, messageId),
+            StateKind.ChannelState => StateKey.FromChannelId(StateKind.State, messageId.ChannelId),
+            StateKind.AccountState => throw new InvalidViewStateTypeException(stateKind),
+            _ => throw new ArgumentOutOfRangeException(nameof(stateKind))
         };
     }
-
-    public static ViewStateKeyFactory Instance { get; } = new();
 }

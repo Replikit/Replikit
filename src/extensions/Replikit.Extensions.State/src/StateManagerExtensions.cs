@@ -6,19 +6,19 @@ namespace Replikit.Extensions.State;
 public static class StateManagerExtensions
 {
     public static Task<IState<TValue>> GetGlobalStateAsync<TValue>(this IStateManager stateManager,
-        CancellationToken cancellationToken = default) where TValue : notnull, new()
+        CancellationToken cancellationToken = default) where TValue : class, new()
     {
-        var key = new StateKey(StateType.GlobalState);
+        var key = new StateKey(StateKind.GlobalState);
 
         return stateManager.GetStateAsync<TValue>(key, cancellationToken);
     }
 
     public static Task<IState<TValue>> GetChannelStateAsync<TValue>(this IStateManager stateManager,
         AdapterIdentifier adapterId, Identifier channelId, CancellationToken cancellationToken = default)
-        where TValue : notnull, new()
+        where TValue : class, new()
     {
         var key = new StateKey(
-            StateType.ChannelState,
+            StateKind.ChannelState,
             adapterId,
             channelId
         );
@@ -28,17 +28,17 @@ public static class StateManagerExtensions
 
     public static Task<IState<TValue>> GetChannelStateAsync<TValue>(this IStateManager stateManager,
         GlobalIdentifier channelId, CancellationToken cancellationToken = default)
-        where TValue : notnull, new()
+        where TValue : class, new()
     {
         return stateManager.GetChannelStateAsync<TValue>(channelId.AdapterId, channelId, cancellationToken);
     }
 
     public static Task<IState<TValue>> GetAccountStateAsync<TValue>(this IStateManager stateManager,
         AdapterIdentifier adapterId, Identifier accountId, CancellationToken cancellationToken = default)
-        where TValue : notnull, new()
+        where TValue : class, new()
     {
         var key = new StateKey(
-            StateType.AccountState,
+            StateKind.AccountState,
             adapterId,
             AccountId: accountId
         );
@@ -48,7 +48,7 @@ public static class StateManagerExtensions
 
     public static Task<IState<TValue>> GetAccountStateAsync<TValue>(this IStateManager stateManager,
         GlobalIdentifier accountId, CancellationToken cancellationToken = default)
-        where TValue : notnull, new()
+        where TValue : class, new()
     {
         return stateManager.GetAccountStateAsync<TValue>(accountId.AdapterId, accountId, cancellationToken);
     }
