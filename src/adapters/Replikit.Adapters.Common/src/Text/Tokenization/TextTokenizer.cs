@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-using Replikit.Abstractions.Messages.Models.Tokens;
+using Replikit.Abstractions.Messages.Models.TextTokens;
 using Replikit.Adapters.Common.Extensions;
 
 namespace Replikit.Adapters.Common.Text.Tokenization;

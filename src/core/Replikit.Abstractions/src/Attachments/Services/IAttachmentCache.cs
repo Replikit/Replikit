@@ -6,6 +6,6 @@ public interface IAttachmentCache
 {
     public Task SaveAsync(IReadOnlyList<SentAttachment> attachments, CancellationToken cancellationToken = default);
 
-    public Task<IReadOnlyList<OutAttachment>> ResolveAsync(IReadOnlyList<OutAttachment> attachments,
+    public Task<IReadOnlyList<OutAttachment>> ResolveAsync(IEnumerable<OutAttachment> attachments,
         CancellationToken cancellationToken = default);
 }

@@ -22,7 +22,7 @@ public abstract class Adapter : IAdapter
         Id = id;
 
         AttachmentCache = context.AttachmentCache ?? DefaultAttachmentCache.Instance;
-        EventHandler = context.EventHandler ?? DefaultEventHandler.Instance;
+        EventDispatcher = context.EventDispatcher ?? DefaultEventDispatcher.Instance;
     }
 
     public object? GetService(Type serviceType)
@@ -83,9 +83,9 @@ public abstract class Adapter : IAdapter
         protected init => SetService<IChannelService>(new CommonChannelService(Id, value));
     }
 
-    protected IAdapterEventHandler EventHandler
+    protected IAdapterEventDispatcher EventDispatcher
     {
-        get => this.GetRequiredService<IAdapterEventHandler>();
+        get => this.GetRequiredService<IAdapterEventDispatcher>();
         private init => SetService(value);
     }
 

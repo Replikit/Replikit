@@ -1,6 +1,6 @@
 ﻿using Replikit.Abstractions.Common.Models;
 
-namespace Replikit.Abstractions.Messages.Models.Tokens;
+namespace Replikit.Abstractions.Messages.Models.TextTokens;
 
 public record MentionTextToken(
     string Text,

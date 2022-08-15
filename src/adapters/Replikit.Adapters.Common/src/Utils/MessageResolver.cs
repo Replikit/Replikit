@@ -30,7 +30,7 @@ public abstract class MessageResolver<TAttachmentSource>
     public async ValueTask<ResolvedMessage<TAttachmentSource>> ResolveMessageAsync(OutMessage message,
         CancellationToken cancellationToken = default)
     {
-        var text = _textFormatter.FormatText(message.Tokens);
+        var text = _textFormatter.FormatText(message.Text);
 
         var attachments = await _attachmentCache.ResolveAsync(message.Attachments, cancellationToken);
 

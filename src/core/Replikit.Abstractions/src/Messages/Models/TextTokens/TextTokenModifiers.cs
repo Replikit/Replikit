@@ -1,4 +1,4 @@
-﻿namespace Replikit.Abstractions.Messages.Models.Tokens;
+﻿namespace Replikit.Abstractions.Messages.Models.TextTokens;
 
 [Flags]
 public enum TextTokenModifiers
@@ -7,7 +7,8 @@ public enum TextTokenModifiers
     Bold = 1 << 0,
     Italic = 1 << 1,
     Underline = 1 << 2,
-    Strikethrough = 1 << 3,
+    Strike = 1 << 3,
     Code = 1 << 4,
-    InlineCode = 1 << 5
+    InlineCode = 1 << 5,
+    Spoiler = 1 << 6,
 }

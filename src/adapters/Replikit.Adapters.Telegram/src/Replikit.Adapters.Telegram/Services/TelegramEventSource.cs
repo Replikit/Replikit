@@ -18,8 +18,8 @@ internal class TelegramEventSource : PollingEventSource<Update>
     private DateTime _startDate;
     private int _nextUpdateId = -1;
 
-    public TelegramEventSource(IAdapter adapter, IAdapterEventHandler eventHandler, ITelegramBotClient backend,
-        TelegramAdapterRepository repository, TelegramEntityFactory entityFactory) : base(adapter, eventHandler)
+    public TelegramEventSource(IAdapter adapter, IAdapterEventDispatcher eventDispatcher, ITelegramBotClient backend,
+        TelegramAdapterRepository repository, TelegramEntityFactory entityFactory) : base(adapter, eventDispatcher)
     {
         _backend = backend;
         _repository = repository;

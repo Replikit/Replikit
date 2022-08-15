@@ -16,7 +16,7 @@ internal class TelegramMessageBuilder
     {
         _telegramEntityFactory = telegramEntityFactory;
 
-        ReplyToMessageId = (int?) message.Reply?.Identifiers[0].Value ?? 0;
+        ReplyToMessageId = (int?) message.Reply?.Value ?? 0;
         ReplyMarkup = CreateReplyMarkup(message);
     }
 
@@ -54,9 +54,9 @@ internal class TelegramMessageBuilder
 
     private static IReplyMarkup? CreateReplyMarkup(OutMessage message)
     {
-        if (message.InlineButtonMatrix is not null)
+        if (message.InlineButtons.Count > 0)
         {
-            var rows = message.InlineButtonMatrix.Rows.Select(row =>
+            var rows = message.InlineButtons.Select(row =>
             {
                 return row.Select(button => button switch
                 {
@@ -69,14 +69,14 @@ internal class TelegramMessageBuilder
             return new InlineKeyboardMarkup(rows);
         }
 
-        if (message.MessageKeyboard is not null)
+        if (message.Keyboard.Count > 0)
         {
-            if (message.MessageKeyboard.ShouldRemove)
+            if (message.Keyboard.RemoveKeyboard)
             {
                 return new ReplyKeyboardRemove();
             }
 
-            var rows = message.MessageKeyboard.ButtonMatrix.Rows.Select(row =>
+            var rows = message.Keyboard.Select(row =>
             {
                 return row.Select(button => new KeyboardButton(button.Text));
             });

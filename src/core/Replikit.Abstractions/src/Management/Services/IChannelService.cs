@@ -24,6 +24,6 @@ public interface IChannelService : IHasFeatures<ChannelServiceFeatures>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    Task ChangePhotoAsync(Identifier channelId, PhotoAttachment photo, CancellationToken cancellationToken = default)
+    Task ChangePhotoAsync(Identifier channelId, OutAttachment photo, CancellationToken cancellationToken = default)
         => throw HasFeaturesHelper.CreateUnsupportedException(this, ChannelServiceFeatures.ChangePhoto);
 }

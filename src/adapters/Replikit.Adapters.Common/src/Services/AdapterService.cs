@@ -41,7 +41,7 @@ public abstract class AdapterService
         [CallerArgumentExpression("identifier")]
         string? paramName = null)
     {
-        ArgumentNullException.ThrowIfNull(identifier.Identifiers);
+        ArgumentNullException.ThrowIfNull(identifier.PartIdentifiers);
     }
 
     protected void CheckIdentifiers(IEnumerable<MessageIdentifier> identifiers,
@@ -52,9 +52,9 @@ public abstract class AdapterService
 
         foreach (var identifier in identifiers)
         {
-            ArgumentNullException.ThrowIfNull(identifier.Identifiers);
+            ArgumentNullException.ThrowIfNull(identifier.PartIdentifiers);
 
-            foreach (var messageId in identifier.Identifiers)
+            foreach (var messageId in identifier.PartIdentifiers)
             {
                 ArgumentNullException.ThrowIfNull(messageId.Value);
             }

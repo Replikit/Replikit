@@ -22,7 +22,7 @@ internal class CommonChannelService : AdapterService, IChannelService
         return _channelService.ChangeTitleAsync(channelId, title, cancellationToken);
     }
 
-    public Task ChangePhotoAsync(Identifier channelId, PhotoAttachment photo,
+    public Task ChangePhotoAsync(Identifier channelId, OutAttachment photo,
         CancellationToken cancellationToken = default)
     {
         CheckIdentifier(channelId);

@@ -1,5 +1,4 @@
 using Replikit.Abstractions.Attachments.Models;
-using Replikit.Abstractions.Messages.Builder;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Core.Controllers;
 using Replikit.Core.Controllers.Patterns;
@@ -11,9 +10,14 @@ public class AttachmentController : Controller
     [Command("photo with text")]
     public OutMessage GetPhotoWithText()
     {
-        return OutMessage.CreateBuilder()
-            .AddText("Hi")
-            .WithAttachment(OutAttachment.FromUrl(AttachmentType.Photo, "https://picsum.photos/512"));
+        return new OutMessage
+        {
+            Text = "hi",
+            Attachments =
+            {
+                OutAttachment.FromUrl(AttachmentType.Photo, "https://picsum.photos/512")
+            }
+        };
     }
 
     [Command("sticker")]

@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Replikit.Abstractions.Messages.Models.Tokens;
+using Replikit.Abstractions.Messages.Models.TextTokens;
 using Replikit.Abstractions.Messages.Services;
 using Replikit.Adapters.Common.Exceptions;
 using Replikit.Adapters.Common.Extensions;

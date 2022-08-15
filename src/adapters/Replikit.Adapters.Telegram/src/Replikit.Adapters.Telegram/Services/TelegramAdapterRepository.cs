@@ -78,7 +78,7 @@ internal class TelegramAdapterRepository : AdapterRepository
     {
         try
         {
-            var file = await _backend.GetFileAsync(identifier, cancellationToken);
+            var file = await _backend.GetFileAsync(identifier.Value, cancellationToken);
 
             Debug.Assert(file.FilePath is not null);
             return CreateFileUrl(file.FilePath);

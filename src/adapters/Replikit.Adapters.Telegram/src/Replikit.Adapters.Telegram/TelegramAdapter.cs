@@ -27,7 +27,7 @@ internal class TelegramAdapter : Adapter, ITelegramAdapter
 
         var messageResolver = new TelegramMessageResolver(Id, TextFormatter, repository, AttachmentCache);
 
-        EventSource = new TelegramEventSource(this, EventHandler, Backend, repository, entityFactory);
+        EventSource = new TelegramEventSource(this, EventDispatcher, Backend, repository, entityFactory);
         MessageService = new TelegramMessageService(Backend, messageResolver, entityFactory);
 
         MemberService = new TelegramMemberService(Backend);

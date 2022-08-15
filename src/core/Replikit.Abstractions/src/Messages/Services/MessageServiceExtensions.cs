@@ -26,7 +26,7 @@ public static class MessageServiceExtensions
             return messageService.DeleteManyAsync(channelId, messageIdentifiers, cancellationToken);
         }
 
-        var identifiers = messageIdentifiers.SelectMany(x => x.Identifiers);
+        var identifiers = messageIdentifiers.SelectMany(x => x.PartIdentifiers);
         return Task.WhenAll(identifiers.Select(x => messageService.DeleteAsync(channelId, x, cancellationToken)));
     }
 }

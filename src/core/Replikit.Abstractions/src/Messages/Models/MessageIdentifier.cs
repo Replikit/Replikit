@@ -3,31 +3,40 @@ using Replikit.Abstractions.Common.Models;
 
 namespace Replikit.Abstractions.Messages.Models;
 
+/// <summary>
+/// The identifier of the message.
+/// Consists of part message identifiers.
+/// </summary>
 public readonly record struct MessageIdentifier
 {
-    public MessageIdentifier(Identifier identifier)
+    public MessageIdentifier(Identifier partIdentifier)
     {
-        Identifiers = ImmutableArray.Create(identifier);
+        PartIdentifiers = ImmutableArray.Create(partIdentifier);
     }
 
-    public MessageIdentifier(IEnumerable<Identifier> identifiers)
+    public MessageIdentifier(IEnumerable<Identifier> partIdentifiers)
     {
-        Identifiers = ImmutableArray.CreateRange(identifiers);
+        PartIdentifiers = ImmutableArray.CreateRange(partIdentifiers);
     }
 
-    public MessageIdentifier(IImmutableList<Identifier> identifiers)
+    public MessageIdentifier(IImmutableList<Identifier> partIdentifiers)
     {
-        Identifiers = identifiers;
+        PartIdentifiers = partIdentifiers;
     }
 
-    public IImmutableList<Identifier> Identifiers { get; }
+    /// <summary>
+    /// The part identifiers of the message.
+    /// <br/>
+    /// Depending on the adapter, it may contain either one identifier or several.
+    /// </summary>
+    public IReadOnlyList<Identifier> PartIdentifiers { get; }
 
     public bool Equals(MessageIdentifier other)
     {
-        return Identifiers.SequenceEqual(other.Identifiers);
+        return PartIdentifiers.SequenceEqual(other.PartIdentifiers);
     }
 
-    public override int GetHashCode() => Identifiers.Aggregate(0, HashCode.Combine);
+    public override int GetHashCode() => PartIdentifiers.Aggregate(0, HashCode.Combine);
 
-    public static implicit operator MessageIdentifier(Identifier identifier) => new(identifier);
+    public static implicit operator MessageIdentifier(Identifier partIdentifier) => new(partIdentifier);
 }

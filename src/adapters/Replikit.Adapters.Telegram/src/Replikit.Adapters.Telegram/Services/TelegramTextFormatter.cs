@@ -1,5 +1,5 @@
 ﻿using System.Web;
-using Replikit.Abstractions.Messages.Models.Tokens;
+using Replikit.Abstractions.Messages.Models.TextTokens;
 using Replikit.Adapters.Common.Text.Formatting;
 
 namespace Replikit.Adapters.Telegram.Services;
@@ -11,7 +11,7 @@ internal class TelegramTextFormatter : TextFormatter
         AddModifiersFormatter(TextTokenModifiers.Bold, "<b>", "</b>");
         AddModifiersFormatter(TextTokenModifiers.Code, "<pre>", "</pre>");
         AddModifiersFormatter(TextTokenModifiers.Italic, "<i>", "</i>");
-        AddModifiersFormatter(TextTokenModifiers.Strikethrough, "<s>", "</s>");
+        AddModifiersFormatter(TextTokenModifiers.Strike, "<s>", "</s>");
         AddModifiersFormatter(TextTokenModifiers.Underline, "<u>", "</u>");
         AddModifiersFormatter(TextTokenModifiers.InlineCode, "<code>", "</code>");
 

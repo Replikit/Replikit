@@ -8,7 +8,7 @@ public abstract class PollingEventSource<TUpdate> : EventSource
 {
     private CancellationTokenSource? _pollingCancellationTokenSource;
 
-    protected PollingEventSource(IAdapter adapter, IAdapterEventHandler eventHandler) : base(adapter, eventHandler) { }
+    protected PollingEventSource(IAdapter adapter, IAdapterEventDispatcher eventDispatcher) : base(adapter, eventDispatcher) { }
 
     protected abstract Task<IEnumerable<TUpdate>?> FetchUpdatesAsync(CancellationToken cancellationToken);
     protected abstract bool ShouldRetryAfterException(Exception exception);

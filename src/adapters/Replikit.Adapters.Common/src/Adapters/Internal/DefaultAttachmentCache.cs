@@ -10,10 +10,10 @@ internal class DefaultAttachmentCache : IAttachmentCache
         return Task.CompletedTask;
     }
 
-    public Task<IReadOnlyList<OutAttachment>> ResolveAsync(IReadOnlyList<OutAttachment> attachments,
+    public Task<IReadOnlyList<OutAttachment>> ResolveAsync(IEnumerable<OutAttachment> attachments,
         CancellationToken cancellationToken)
     {
-        return Task.FromResult(attachments);
+        return Task.FromResult<IReadOnlyList<OutAttachment>>(attachments.ToList());
     }
 
     public static DefaultAttachmentCache Instance { get; } = new();

@@ -11,37 +11,37 @@ public abstract class EventSource : IEventSource
 {
     private readonly IAdapter _adapter;
 
-    private readonly IAdapterEventHandler _eventHandler;
+    private readonly IAdapterEventDispatcher _eventDispatcher;
 
-    protected EventSource(IAdapter adapter, IAdapterEventHandler eventHandler)
+    protected EventSource(IAdapter adapter, IAdapterEventDispatcher eventDispatcher)
     {
         _adapter = adapter;
-        _eventHandler = eventHandler;
+        _eventDispatcher = eventDispatcher;
     }
 
     protected void HandleMessageReceived(Message message, ChannelInfo channelInfo, AccountInfo accountInfo)
     {
         var messageReceivedEvent = new MessageReceivedEvent(_adapter.Id, message, channelInfo, accountInfo);
-        _eventHandler.HandleAsync(messageReceivedEvent, _adapter);
+        _eventDispatcher.DispatchAsync(messageReceivedEvent, _adapter);
     }
 
     protected void HandleMessageDeleted(Message message, ChannelInfo channelInfo, AccountInfo accountInfo)
     {
         var messageDeletedEvent = new MessageDeletedEvent(_adapter.Id, message, channelInfo, accountInfo);
-        _eventHandler.HandleAsync(messageDeletedEvent, _adapter);
+        _eventDispatcher.DispatchAsync(messageDeletedEvent, _adapter);
     }
 
     protected void HandleMessageEdited(Message message, ChannelInfo channelInfo, AccountInfo accountInfo)
     {
         var messageEditedEvent = new MessageEditedEvent(_adapter.Id, message, channelInfo, accountInfo);
-        _eventHandler.HandleAsync(messageEditedEvent, _adapter);
+        _eventDispatcher.DispatchAsync(messageEditedEvent, _adapter);
     }
 
     protected void HandleButtonPressed(AccountInfo accountInfo, string? data, Message? message = null,
         Identifier? requestId = null)
     {
         var buttonPressedEvent = new ButtonPressedEvent(_adapter.Id, accountInfo, data, message, requestId);
-        _eventHandler.HandleAsync(buttonPressedEvent, _adapter);
+        _eventDispatcher.DispatchAsync(buttonPressedEvent, _adapter);
     }
 
     public abstract Task StartAsync(CancellationToken cancellationToken);

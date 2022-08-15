@@ -1,6 +1,10 @@
+using Replikit.Abstractions.Messages.Models.Buttons;
+
 namespace Replikit.Abstractions.Messages.Models.Keyboard;
 
-public record MessageKeyboard(bool ShouldRemove, ButtonMatrix<KeyboardButton> ButtonMatrix)
+public class MessageKeyboard : ButtonMatrix<KeyboardButton>
 {
-    public static MessageKeyboard Remove { get; } = new(true, ButtonMatrix<KeyboardButton>.Empty);
+    public bool RemoveKeyboard { get; private init; }
+
+    public static MessageKeyboard Removed { get; } = new() { RemoveKeyboard = true };
 }

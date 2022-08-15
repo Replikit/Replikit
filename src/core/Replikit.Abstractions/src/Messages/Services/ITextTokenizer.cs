@@ -1,5 +1,5 @@
 ﻿using Replikit.Abstractions.Messages.Models;
-using Replikit.Abstractions.Messages.Models.Tokens;
+using Replikit.Abstractions.Messages.Models.TextTokens;
 
 namespace Replikit.Abstractions.Messages.Services;
 

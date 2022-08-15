@@ -1,66 +1,43 @@
 ﻿using Replikit.Abstractions.Attachments.Models;
-using Replikit.Abstractions.Messages.Builder;
+using Replikit.Abstractions.Common.Models;
+using Replikit.Abstractions.Messages.Models.Buttons;
 using Replikit.Abstractions.Messages.Models.InlineButtons;
 using Replikit.Abstractions.Messages.Models.Keyboard;
-using Replikit.Abstractions.Messages.Models.Tokens;
+using Replikit.Abstractions.Messages.Models.TextTokens;
 
 namespace Replikit.Abstractions.Messages.Models;
 
-public sealed record OutMessage
+public class OutMessage
 {
-    public IReadOnlyList<TextToken> Tokens { get; init; }
-    public IReadOnlyList<OutAttachment> Attachments { get; init; }
-    public IReadOnlyList<GlobalMessageIdentifier> ForwardedMessages { get; init; }
+    public TextTokenList Text { get; set; } = new();
+    public IList<OutAttachment> Attachments { get; set; } = new List<OutAttachment>();
+    public IList<ChannelMessageIdentifier> ForwardedMessages { get; set; } = new List<ChannelMessageIdentifier>();
+    public IButtonMatrix<IInlineButton> InlineButtons { get; set; } = new ButtonMatrix<IInlineButton>();
+    public Identifier? Reply { get; set; }
+    public MessageKeyboard Keyboard { get; set; } = new();
 
-    public ButtonMatrix<IInlineButton>? InlineButtonMatrix { get; init; }
-    public MessageIdentifier? Reply { get; init; }
-    public MessageKeyboard? MessageKeyboard { get; init; }
-
-    public OutMessage(IReadOnlyList<TextToken>? tokens = null,
-        IReadOnlyList<OutAttachment>? attachments = null,
-        IReadOnlyList<GlobalMessageIdentifier>? forwardedMessages = null,
-        MessageIdentifier? reply = null,
-        ButtonMatrix<IInlineButton>? inlineButtonMatrix = null,
-        MessageKeyboard? messageKeyboard = null)
+    public static OutMessage FromText(string text, TextTokenModifiers modifiers = TextTokenModifiers.None)
     {
-        Tokens = tokens ?? Array.Empty<TextToken>();
-        Attachments = attachments ?? Array.Empty<OutAttachment>();
-        ForwardedMessages = forwardedMessages ?? Array.Empty<GlobalMessageIdentifier>();
-        Reply = reply;
-
-        InlineButtonMatrix = inlineButtonMatrix;
-        MessageKeyboard = messageKeyboard;
+        return new OutMessage { Text = new TextToken(text, modifiers) };
     }
 
-    public static MessageBuilder CreateBuilder() => new();
-
-    public static OutMessage FromToken(TextToken token)
+    public static OutMessage FromCode(string text)
     {
-        return new MessageBuilder().WithText(token);
+        return new OutMessage { Text = new TextToken(text, TextTokenModifiers.Code) };
     }
 
-    public static OutMessage FromText(object text, TextTokenModifiers modifiers = 0)
+    public static implicit operator OutMessage(TextToken textToken)
     {
-        return FromToken(new TextToken(text.ToString() ?? string.Empty, modifiers));
+        return new OutMessage { Text = textToken };
     }
 
-    public static OutMessage FromCode(object text)
+    public static implicit operator OutMessage(OutAttachment attachment)
     {
-        return FromToken(new TextToken(text.ToString() ?? string.Empty, TextTokenModifiers.Code));
-    }
-
-    public static OutMessage FromAttachment(OutAttachment attachment)
-    {
-        return new OutMessage(attachments: new[] { attachment });
-    }
-
-    public static OutMessage FromAttachments(IEnumerable<OutAttachment> attachments)
-    {
-        return new OutMessage(attachments: attachments.ToArray());
+        return new OutMessage { Attachments = { attachment } };
     }
 
     public static implicit operator OutMessage(string text)
     {
-        return new OutMessage(new[] { new TextToken(text) });
+        return new OutMessage { Text = text };
     }
 }

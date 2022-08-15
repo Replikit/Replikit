@@ -25,9 +25,9 @@ public class TestController : Controller
     {
         if (Message.Reply is not null)
         {
-            return OutMessage.FromText("Reply author id: " + Message.Reply.AccountId?.Identifier);
+            return OutMessage.FromText("Reply author id: " + Message.Reply.AccountId?.Value);
         }
 
-        return OutMessage.FromText(Account.Id.Identifier);
+        return OutMessage.FromText(Account.Id.Value);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Replikit.Abstractions.Messages.Models.Tokens;
+﻿using Replikit.Abstractions.Messages.Models.TextTokens;
 using Replikit.Adapters.Common.Extensions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -104,7 +104,7 @@ internal class MessageTokenizer
                 _modifiers |= TextTokenModifiers.Underline;
                 break;
             case MessageEntityType.Strikethrough:
-                _modifiers |= TextTokenModifiers.Strikethrough;
+                _modifiers |= TextTokenModifiers.Strike;
                 break;
             case MessageEntityType.Code:
                 _modifiers |= TextTokenModifiers.InlineCode;

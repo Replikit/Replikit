@@ -55,6 +55,4 @@ public record OutAttachment
     {
         return new OutAttachment(type, new FileInfo(filePath), caption);
     }
-
-    public static implicit operator OutMessage(OutAttachment attachment) => OutMessage.FromAttachment(attachment);
 }

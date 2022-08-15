@@ -133,7 +133,7 @@ internal class TelegramMessageService : IMessageService
 
         foreach (var forwardedMessage in message.ForwardedMessages)
         {
-            foreach (var messageIdentifier in forwardedMessage.Identifier.Identifiers)
+            foreach (var messageIdentifier in forwardedMessage.Value.PartIdentifiers)
             {
                 var result = await _backend.ForwardMessageAsync(chatId, (long) forwardedMessage.ChannelId,
                     messageIdentifier,
@@ -151,9 +151,9 @@ internal class TelegramMessageService : IMessageService
     {
         var chatId = new ChatId((long) channelId);
 
-        if (messageId.Identifiers.Count == 1)
+        if (messageId.PartIdentifiers.Count == 1)
         {
-            return EditSingleMessageAsync(chatId, messageId.Identifiers[0], message, cancellationToken);
+            return EditSingleMessageAsync(chatId, messageId.PartIdentifiers[0], message, cancellationToken);
         }
 
         if (oldMessage is null)
@@ -239,14 +239,14 @@ internal class TelegramMessageService : IMessageService
     public Task PinAsync(Identifier channelId, MessageIdentifier messageId,
         CancellationToken cancellationToken = default)
     {
-        return _backend.PinChatMessageAsync((long) channelId, messageId.Identifiers[0],
+        return _backend.PinChatMessageAsync((long) channelId, messageId.PartIdentifiers[0],
             cancellationToken: cancellationToken);
     }
 
     public Task UnpinAsync(Identifier channelId, MessageIdentifier messageId,
         CancellationToken cancellationToken = default)
     {
-        return _backend.UnpinChatMessageAsync((long) channelId, messageId.Identifiers[0], cancellationToken);
+        return _backend.UnpinChatMessageAsync((long) channelId, messageId.PartIdentifiers[0], cancellationToken);
     }
 
     public Task AnswerInlineButtonRequestAsync(Identifier requestId, string message,

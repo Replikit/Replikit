@@ -3,13 +3,17 @@ using Replikit.Abstractions.Common.Models;
 
 namespace Replikit.Abstractions.Messages.Models;
 
+/// <summary>
+/// The global identifier of the message.
+/// Consists of the global channel identifier and the message identifier.
+/// </summary>
 public readonly record struct GlobalMessageIdentifier(
     GlobalIdentifier ChannelId,
-    MessageIdentifier Identifier
-) : IEquatable<MessageIdentifier>
+    MessageIdentifier Value
+)
 {
-    public GlobalMessageIdentifier(GlobalIdentifier channelId, Identifier identifier) :
-        this(channelId, new MessageIdentifier(identifier)) { }
+    public GlobalMessageIdentifier(GlobalIdentifier channelId, Identifier value) :
+        this(channelId, new MessageIdentifier(value)) { }
 
     public GlobalMessageIdentifier(GlobalIdentifier channelId, IEnumerable<Identifier> identifiers) :
         this(channelId, new MessageIdentifier(identifiers)) { }
@@ -17,30 +21,5 @@ public readonly record struct GlobalMessageIdentifier(
     public GlobalMessageIdentifier(GlobalIdentifier channelId, IImmutableList<Identifier> identifiers) :
         this(channelId, new MessageIdentifier(identifiers)) { }
 
-    public static implicit operator MessageIdentifier(GlobalMessageIdentifier identifier) => identifier.Identifier;
-
-    public bool Equals(MessageIdentifier other)
-    {
-        return Identifier.Equals(other);
-    }
-
-    public static bool operator ==(MessageIdentifier first, GlobalMessageIdentifier second)
-    {
-        return second.Equals(first);
-    }
-
-    public static bool operator !=(MessageIdentifier first, GlobalMessageIdentifier second)
-    {
-        return !second.Equals(first);
-    }
-
-    public static bool operator ==(GlobalMessageIdentifier first, MessageIdentifier second)
-    {
-        return first.Equals(second);
-    }
-
-    public static bool operator !=(GlobalMessageIdentifier first, MessageIdentifier second)
-    {
-        return !first.Equals(second);
-    }
+    public static implicit operator MessageIdentifier(GlobalMessageIdentifier identifier) => identifier.Value;
 }

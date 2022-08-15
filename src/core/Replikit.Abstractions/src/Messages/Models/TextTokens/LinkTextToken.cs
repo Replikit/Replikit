@@ -1,4 +1,4 @@
-﻿namespace Replikit.Abstractions.Messages.Models.Tokens;
+﻿namespace Replikit.Abstractions.Messages.Models.TextTokens;
 
 public record LinkTextToken(
     string Text,

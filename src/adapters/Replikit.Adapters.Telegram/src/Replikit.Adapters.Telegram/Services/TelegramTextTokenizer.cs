@@ -1,4 +1,5 @@
-﻿using Replikit.Abstractions.Messages.Models.Tokens;
+﻿using Replikit.Abstractions.Messages.Models;
+using Replikit.Abstractions.Messages.Models.TextTokens;
 using Replikit.Abstractions.Messages.Services;
 using Replikit.Adapters.Telegram.Internal;
 using Telegram.Bot.Types;
