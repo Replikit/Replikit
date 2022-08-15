@@ -57,6 +57,9 @@ internal class ControllerMiddleware : IAdapterEventMiddleware
 
         localConfigureDelegate?.Invoke(configurationBuilder);
 
+        var converterCollection = new TextParameterConverterCollection(configurationBuilder.ConverterLookupTypes);
+        introspectionBuilder.AddTextParameterConversion(converterCollection);
+
         var lookupTypes = assembly.GetTypes();
 
         var introspectionInfo = introspectionBuilder.CreateIntrospectionInfo(lookupTypes);
