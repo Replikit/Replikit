@@ -2,12 +2,14 @@
 
 namespace Replikit.Abstractions.Attachments.Models;
 
-public record StickerAttachment(
-    GlobalIdentifier Id,
-    string? Caption = null,
-    string? Url = null,
-    string? FileName = null,
-    Stream? Content = null,
-    string? UploadId = null,
-    int? Size = null
-) : Attachment(Id, Caption, Url, FileName, Content, UploadId);
+/// <summary>
+/// The sticker attachment.
+/// </summary>
+public class StickerAttachment : Attachment
+{
+    /// <summary>
+    /// Creates a new instance of <see cref="StickerAttachment"/>.
+    /// </summary>
+    /// <param name="id">An identifier of the attachment.</param>
+    public StickerAttachment(GlobalIdentifier id) : base(id, AttachmentType.Sticker) { }
+}

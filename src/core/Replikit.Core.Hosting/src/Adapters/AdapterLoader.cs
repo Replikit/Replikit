@@ -2,7 +2,7 @@
 using Kantaiko.ConsoleFormatting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Replikit.Abstractions.Adapters;
+using Replikit.Abstractions.Adapters.Factory;
 using Replikit.Core.Hosting.Options;
 
 namespace Replikit.Core.Hosting.Adapters;
@@ -41,8 +41,8 @@ internal class AdapterLoader
             _adapterCollection.Add(adapter);
 
             _logger.LogInformation("Loaded adapter {AdapterType} [Id = {BotId}]",
-                Colors.FgColor(adapter.Info.DisplayName, Color.Cyan),
-                Colors.FgColor(adapter.Id.ToString(), Color.LightCyan));
+                Colors.FgColor(adapter.AdapterInfo.DisplayName, Color.Cyan),
+                Colors.FgColor(adapter.BotInfo.Account.Id.Value.ToString()!, Color.LightCyan));
         }
 
         if (_options.AdapterDescriptors.Count == 0)

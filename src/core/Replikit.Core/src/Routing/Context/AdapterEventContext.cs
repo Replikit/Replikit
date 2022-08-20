@@ -6,7 +6,7 @@ using Replikit.Core.EntityCollections;
 namespace Replikit.Core.Routing.Context;
 
 internal class AdapterEventContext<TEvent> : IAdapterEventContext<TEvent>
-    where TEvent : IAdapterEvent
+    where TEvent : IBotEvent
 {
     public AdapterEventContext(TEvent @event, IAdapter adapter, IServiceProvider serviceProvider,
         CancellationToken cancellationToken)

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="InvalidIdentifierValue" xml:space="preserve">
+    <value>The identifier value is expected to be of type "{0}" but it is of type "{1}".</value>
+  </data>
+  <data name="CustomDataNotFound" xml:space="preserve">
+    <value>No custom data of type "{0}" associated with this object.</value>
+  </data>
+  <data name="ValueCannotBeDefault" xml:space="preserve">
+    <value>Value cannot be default.</value>
+  </data>
+  <data name="UnsupportedFeatureException" xml:space="preserve">
+    <value>The "{0}" does not support "{1}" feature.</value>
+  </data>
+  <data name="UnexpectedlyUnsupportedFeature" xml:space="preserve">
+    <value>The "{0}" does not support "{1}" feature, but the opposite has been reported. Please make sure you are using the latest version of this adapter and then open an issue the adapter repository of the adapter you are using.</value>
+  </data>
+  <data name="ValueCannotBeNullOrWhiteSpace" xml:space="preserve">
+    <value>Value cannot be null or white space.</value>
+  </data>
+  <data name="AttachmentTypeCannotBeUnknown" xml:space="preserve">
+    <value>Attachment type cannot be unknown.</value>
+  </data>
+  <data name="StreamMustBeReadable" xml:space="preserve">
+    <value>The stream must be readable.</value>
+  </data>
+  <data name="AdapterNotFound" xml:space="preserve">
+    <value>Adapter for bot with identifier "{0}" not found.</value>
+  </data>
+  <data name="AdapterServiceNotImplemented" xml:space="preserve">
+    <value>The service of type "{0}" is not implemented by the "{1}".</value>
+  </data>
+</root>

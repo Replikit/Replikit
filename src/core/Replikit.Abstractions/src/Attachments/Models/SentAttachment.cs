@@ -1,9 +1,21 @@
-﻿namespace Replikit.Abstractions.Attachments.Models;
+﻿using Replikit.Abstractions.Common.Utilities;
 
-public sealed record SentAttachment(Attachment Attachment, Attachment? Original = null)
+namespace Replikit.Abstractions.Attachments.Models;
+
+/// <summary>
+/// Represents an attachment sent by the adapter.
+/// </summary>
+/// <param name="Attachment">An attachment returned by the adapter.</param>
+/// <param name="OutAttachment">An attachment that was requested to send.</param>
+public sealed record SentAttachment(Attachment Attachment, OutAttachment OutAttachment)
 {
     /// <summary>
-    /// Indicates that sent attachment was uploaded rather than used from the cache.
+    /// The attachment returned by the adapter.
     /// </summary>
-    public bool WasUploaded => Original is not null && Attachment.Id != Original.Id;
+    public Attachment Attachment { get; } = Check.NotNull(Attachment);
+
+    /// <summary>
+    /// The attachment that was requested to send.
+    /// </summary>
+    public OutAttachment OutAttachment { get; } = Check.NotNull(OutAttachment);
 }

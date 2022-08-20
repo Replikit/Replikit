@@ -8,7 +8,7 @@ namespace Replikit.Extensions.Views;
 public static class StateManagerExtensions
 {
     public static Task<IState<TState>> GetViewStateAsync<TState>(this IStateManager stateManager,
-        AdapterIdentifier adapterId,
+        BotIdentifier botId,
         Identifier channelId, MessageIdentifier messageId, CancellationToken cancellationToken = default)
         where TState : class, new()
     {
@@ -16,7 +16,7 @@ public static class StateManagerExtensions
 
         var key = new StateKey(
             StateKind.State,
-            adapterId,
+            botId,
             channelId,
             MessagePartId: messageId.PartIdentifiers[0]
         );
@@ -28,7 +28,7 @@ public static class StateManagerExtensions
         GlobalIdentifier channelId, MessageIdentifier messageId, CancellationToken cancellationToken = default)
         where TState : class, new()
     {
-        return stateManager.GetViewStateAsync<TState>(channelId.AdapterId, channelId, messageId, cancellationToken);
+        return stateManager.GetViewStateAsync<TState>(channelId.BotId, channelId, messageId, cancellationToken);
     }
 
     public static Task<IState<TState>> GetViewStateAsync<TState>(this IStateManager stateManager,

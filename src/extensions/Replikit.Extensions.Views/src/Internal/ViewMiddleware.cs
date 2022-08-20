@@ -24,7 +24,7 @@ internal class ViewMiddleware : IAdapterEventMiddleware
         _viewManager = viewManager;
     }
 
-    public async Task HandleAsync(IAdapterEventContext<IAdapterEvent> context, AdapterEventDelegate next)
+    public async Task HandleAsync(IAdapterEventContext<IBotEvent> context, AdapterEventDelegate next)
     {
         if (context is not IAdapterEventContext<ButtonPressedEvent> buttonContext)
         {
@@ -44,9 +44,9 @@ internal class ViewMiddleware : IAdapterEventMiddleware
 
         try
         {
-            if (string.IsNullOrEmpty(buttonContext.Event.Data)) throw new JsonException();
+            if (string.IsNullOrEmpty(buttonContext.Event.Payload)) throw new JsonException();
 
-            payload = JsonSerializer.Deserialize<ViewActionPayload>(buttonContext.Event.Data);
+            payload = JsonSerializer.Deserialize<ViewActionPayload>(buttonContext.Event.Payload);
             if (payload is null) throw new JsonException();
         }
         catch (JsonException exception)

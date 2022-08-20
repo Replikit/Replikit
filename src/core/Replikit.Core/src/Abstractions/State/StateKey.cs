@@ -6,7 +6,7 @@ namespace Replikit.Core.Abstractions.State;
 
 public record StateKey(
     StateKind Kind,
-    AdapterIdentifier? AdapterId = null,
+    BotIdentifier? BotId = null,
     Identifier? ChannelId = null,
     Identifier? AccountId = null,
     Identifier? MessagePartId = null,
@@ -21,18 +21,18 @@ public record StateKey(
 
     public static StateKey FromChannelId(StateKind kind, GlobalIdentifier channelId)
     {
-        return new StateKey(kind, channelId.AdapterId, channelId.Value);
+        return new StateKey(kind, channelId.BotId, channelId.Value);
     }
 
     public static StateKey FromAccountId(StateKind kind, GlobalIdentifier accountId)
     {
-        return new StateKey(kind, accountId.AdapterId, AccountId: accountId.Value);
+        return new StateKey(kind, accountId.BotId, AccountId: accountId.Value);
     }
 
     public static StateKey FromMessageId(StateKind kind, GlobalMessageIdentifier messageId)
     {
         return new StateKey(kind,
-            messageId.ChannelId.AdapterId,
+            messageId.ChannelId.BotId,
             messageId.ChannelId.Value,
             MessagePartId: messageId.Value.PartIdentifiers[0]
         );

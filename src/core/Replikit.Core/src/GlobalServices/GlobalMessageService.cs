@@ -1,7 +1,6 @@
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Messages.Models;
-using Replikit.Abstractions.Messages.Models.Options;
 using Replikit.Abstractions.Messages.Services;
 
 namespace Replikit.Core.GlobalServices;
@@ -15,9 +14,9 @@ internal class GlobalMessageService : IGlobalMessageService
         _adapterCollection = adapterCollection;
     }
 
-    public MessageServiceFeatures GetFeatures(AdapterIdentifier adapterId)
+    public MessageServiceFeatures GetFeatures(BotIdentifier botId)
     {
-        return _adapterCollection.ResolveRequired(adapterId).MessageService.Features;
+        return _adapterCollection.ResolveRequired(botId).MessageService.Features;
     }
 
     private IMessageService ResolveMessageService(GlobalIdentifier channelId)
@@ -25,10 +24,10 @@ internal class GlobalMessageService : IGlobalMessageService
         return _adapterCollection.ResolveRequired(channelId).MessageService;
     }
 
-    public Task<Message> SendAsync(GlobalIdentifier channelId, OutMessage message, SendMessageOptions? options = null,
+    public Task<Message> SendAsync(GlobalIdentifier channelId, OutMessage message,
         CancellationToken cancellationToken = default)
     {
-        return ResolveMessageService(channelId).SendAsync(channelId, message, options, cancellationToken);
+        return ResolveMessageService(channelId).SendAsync(channelId, message, cancellationToken);
     }
 
     public Task<Message> EditAsync(GlobalIdentifier channelId, MessageIdentifier messageId, OutMessage message,
@@ -37,16 +36,16 @@ internal class GlobalMessageService : IGlobalMessageService
         return ResolveMessageService(channelId).EditAsync(channelId, messageId, message, oldMessage, cancellationToken);
     }
 
-    public Task DeleteAsync(GlobalIdentifier channelId, Identifier messageId,
+    public Task DeleteSingleAsync(GlobalIdentifier channelId, Identifier messagePartId,
         CancellationToken cancellationToken = default)
     {
-        return ResolveMessageService(channelId).DeleteAsync(channelId, messageId, cancellationToken);
+        return ResolveMessageService(channelId).DeleteAsync(channelId, messagePartId, cancellationToken);
     }
 
-    public Task DeleteManyAsync(GlobalIdentifier channelId, IReadOnlyCollection<MessageIdentifier> messageIds,
+    public Task DeleteManyAsync(GlobalIdentifier channelId, IReadOnlyCollection<Identifier> messagePartIds,
         CancellationToken cancellationToken = default)
     {
-        return ResolveMessageService(channelId).DeleteManyAsync(channelId, messageIds, cancellationToken);
+        return ResolveMessageService(channelId).DeleteManyAsync(channelId, messagePartIds, cancellationToken);
     }
 
     public Task<Message?> GetAsync(GlobalIdentifier channelId, MessageIdentifier messageId,
@@ -60,13 +59,6 @@ internal class GlobalMessageService : IGlobalMessageService
         CancellationToken cancellationToken = default)
     {
         return ResolveMessageService(channelId).GetManyAsync(channelId, messageIds, cancellationToken);
-    }
-
-    public Task<IReadOnlyList<Message>> FindAsync(GlobalIdentifier channelId, string? query = null, int? take = null,
-        int? skip = null,
-        CancellationToken cancellationToken = default)
-    {
-        return ResolveMessageService(channelId).FindAsync(channelId, query, take, skip, cancellationToken);
     }
 
     public Task PinAsync(GlobalIdentifier channelId, MessageIdentifier messageId,

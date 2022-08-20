@@ -2,13 +2,19 @@
 
 namespace Replikit.Abstractions.Attachments.Models;
 
-public record VideoAttachment(
-    GlobalIdentifier Id,
-    string? Caption = null,
-    string? Url = null,
-    string? FileName = null,
-    Stream? Content = null,
-    string? UploadId = null,
-    int? Size = null,
-    int? Duration = null
-) : Attachment(Id, Caption, Url, FileName, Content, UploadId);
+/// <summary>
+/// The video attachment.
+/// </summary>
+public class VideoAttachment : Attachment
+{
+    /// <summary>
+    /// Creates a new instance of <see cref="VideoAttachment"/>.
+    /// </summary>
+    /// <param name="id">An identifier of the attachment.</param>
+    public VideoAttachment(GlobalIdentifier id) : base(id, AttachmentType.Video) { }
+
+    /// <summary>
+    /// The duration of the video in seconds.
+    /// </summary>
+    public int? Duration { get; init; }
+}

@@ -1,52 +1,82 @@
-﻿using Replikit.Abstractions.Adapters.Exceptions;
-using Replikit.Abstractions.Adapters.Services;
-using Replikit.Abstractions.Common.Models;
+﻿using Replikit.Abstractions.Accounts.Services;
+using Replikit.Abstractions.Adapters.Exceptions;
+using Replikit.Abstractions.Attachments.Services;
+using Replikit.Abstractions.Channels.Services;
 using Replikit.Abstractions.Events;
-using Replikit.Abstractions.Management.Services;
+using Replikit.Abstractions.Members.Services;
 using Replikit.Abstractions.Messages.Services;
-using Replikit.Abstractions.Repositories.Services;
 
 namespace Replikit.Abstractions.Adapters;
 
-public interface IAdapter : IAdapterServiceProvider
+public interface IAdapter
 {
-    AdapterIdentifier Id { get; }
-
-    /// <exception cref="AdapterServiceNotImplementedException"></exception>
-    AdapterInfo Info { get; }
+    /// <summary>
+    /// The service provider containing all adapter services.
+    /// <br/>
+    /// In most cases, client code should not use this property.
+    /// </summary>
+    IServiceProvider AdapterServices { get; }
 
     /// <summary>
+    /// The <see cref="AdapterInfo"/> associated with this adapter.
     /// </summary>
-    /// <exception cref="AdapterServiceNotImplementedException"></exception>
-    IEventSource EventSource { get; }
+    AdapterInfo AdapterInfo { get; }
 
     /// <summary>
+    /// The <see cref="PlatformInfo"/> associated with the platform implemented by this adapter.
     /// </summary>
-    /// <exception cref="AdapterServiceNotImplementedException"></exception>
-    IAdapterRepository Repository { get; }
+    PlatformInfo PlatformInfo { get; }
 
     /// <summary>
+    /// The information about the bot authenticated by this adapter.
     /// </summary>
-    /// <exception cref="AdapterServiceNotImplementedException"></exception>
+    AdapterBotInfo BotInfo { get; }
+
+    /// <summary>
+    /// The <see cref="IAdapterEventSource"/> of the adapter.
+    /// </summary>
+    /// <exception cref="AdapterServiceNotImplementedException">The service is not implemented.</exception>
+    IAdapterEventSource AdapterEventSource { get; }
+
+    /// <summary>
+    /// The <see cref="ITextFormatter"/> of the adapter.
+    /// </summary>
+    /// <exception cref="AdapterServiceNotImplementedException">The service is not implemented.</exception>
     ITextFormatter TextFormatter { get; }
 
     /// <summary>
+    /// The <see cref="ITextTokenizer"/> of the adapter.
     /// </summary>
-    /// <exception cref="AdapterServiceNotImplementedException"></exception>
+    /// <exception cref="AdapterServiceNotImplementedException">The service is not implemented.</exception>
     ITextTokenizer TextTokenizer { get; }
 
     /// <summary>
+    /// The <see cref="IMessageService"/> of the adapter.
     /// </summary>
-    /// <exception cref="AdapterServiceNotImplementedException"></exception>
+    /// <exception cref="AdapterServiceNotImplementedException">The service is not implemented.</exception>
     IMessageService MessageService { get; }
 
     /// <summary>
+    /// The <see cref="IAccountService"/> of the adapter.
     /// </summary>
-    /// <exception cref="AdapterServiceNotImplementedException"></exception>
+    /// <exception cref="AdapterServiceNotImplementedException">The service is not implemented.</exception>
+    IAccountService AccountService { get; }
+
+    /// <summary>
+    /// The <see cref="IChannelService"/> of the adapter.
+    /// </summary>
+    /// <exception cref="AdapterServiceNotImplementedException">The service is not implemented.</exception>
+    IChannelService ChannelService { get; }
+
+    /// <summary>
+    /// The <see cref="IMemberService"/> of the adapter.
+    /// </summary>
+    /// <exception cref="AdapterServiceNotImplementedException">The service is not implemented.</exception>
     IMemberService MemberService { get; }
 
     /// <summary>
+    /// The <see cref="IAttachmentService"/> of the adapter.
     /// </summary>
-    /// <exception cref="AdapterServiceNotImplementedException"></exception>
-    IChannelService ChannelService { get; }
+    /// <exception cref="AdapterServiceNotImplementedException">The service is not implemented.</exception>
+    IAttachmentService AttachmentService { get; }
 }

@@ -8,12 +8,12 @@ namespace Replikit.Core.Routing.Internal;
 
 internal class EventContextFactory
 {
-    private delegate IAdapterEventContext<IAdapterEvent> FactoryDelegate(IAdapterEvent @event, IAdapter adapter,
+    private delegate IAdapterEventContext<IBotEvent> FactoryDelegate(IBotEvent @event, IAdapter adapter,
         IServiceProvider serviceProvider, CancellationToken cancellationToken);
 
     private readonly ConcurrentDictionary<Type, FactoryDelegate> _factoryDelegates = new();
 
-    public IAdapterEventContext<IAdapterEvent> CreateContext(IAdapterEvent @event, IAdapter adapter,
+    public IAdapterEventContext<IBotEvent> CreateContext(IBotEvent @event, IAdapter adapter,
         IServiceProvider serviceProvider, CancellationToken cancellationToken)
     {
         var factoryDelegate = _factoryDelegates.GetOrAdd(@event.GetType(), CreateFactoryDelegate);
@@ -23,7 +23,7 @@ internal class EventContextFactory
 
     private static FactoryDelegate CreateFactoryDelegate(Type eventType)
     {
-        var @event = Expression.Parameter(typeof(IAdapterEvent));
+        var @event = Expression.Parameter(typeof(IBotEvent));
         var castedEvent = Expression.Convert(@event, eventType);
 
         var adapter = Expression.Parameter(typeof(IAdapter));
@@ -45,7 +45,7 @@ internal class EventContextFactory
 
         var returnExpression = Expression.Convert(
             instantiation,
-            typeof(IAdapterEventContext<IAdapterEvent>)
+            typeof(IAdapterEventContext<IBotEvent>)
         );
 
         return Expression.Lambda<FactoryDelegate>(

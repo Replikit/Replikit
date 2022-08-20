@@ -2,14 +2,19 @@
 
 namespace Replikit.Abstractions.Attachments.Models;
 
-public record AudioAttachment(
-    GlobalIdentifier Id,
-    string? Caption = null,
-    string? Url = null,
-    string? FileName = null,
-    Stream? Content = null,
-    string? UploadId = null,
-    string? Title = null,
-    int? Size = null,
-    int? Duration = null
-) : Attachment(Id, Url, Caption, FileName, Content, UploadId);
+/// <summary>
+/// The audio attachment.
+/// </summary>
+public class AudioAttachment : Attachment
+{
+    /// <summary>
+    /// Creates a new instance of <see cref="AudioAttachment"/>.
+    /// </summary>
+    /// <param name="id">An identifier of the attachment.</param>
+    public AudioAttachment(GlobalIdentifier id) : base(id, AttachmentType.Audio) { }
+
+    /// <summary>
+    /// The duration of the audio file in seconds.
+    /// </summary>
+    public int? Duration { get; init; }
+}

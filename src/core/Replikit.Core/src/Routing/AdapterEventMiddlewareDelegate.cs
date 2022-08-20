@@ -3,5 +3,5 @@ using Replikit.Core.Routing.Context;
 
 namespace Replikit.Core.Routing;
 
-public delegate Task AdapterEventMiddlewareDelegate(IAdapterEventContext<IAdapterEvent> context,
+public delegate Task AdapterEventMiddlewareDelegate(IAdapterEventContext<IBotEvent> context,
     AdapterEventDelegate next);

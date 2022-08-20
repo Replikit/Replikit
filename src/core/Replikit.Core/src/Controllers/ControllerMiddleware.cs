@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Replikit.Abstractions.Events;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Messages.Models;
+using Replikit.Abstractions.Messages.Models.TextTokens;
 using Replikit.Core.Controllers.Configuration;
 using Replikit.Core.Controllers.Context;
 using Replikit.Core.Controllers.ExecutionHandlers;
@@ -68,7 +69,7 @@ internal class ControllerMiddleware : IAdapterEventMiddleware
         _logger = serviceProvider.GetRequiredService<ILogger<ControllerMiddleware>>();
     }
 
-    public async Task HandleAsync(IAdapterEventContext<IAdapterEvent> context, AdapterEventDelegate next)
+    public async Task HandleAsync(IAdapterEventContext<IBotEvent> context, AdapterEventDelegate next)
     {
         if (context is not IAdapterEventContext<MessageReceivedEvent> eventContext)
         {
@@ -131,6 +132,6 @@ internal class ControllerMiddleware : IAdapterEventMiddleware
             _ => errorExitReason.ErrorMessage
         };
 
-        return OutMessage.FromCode(message ?? "Unexpected error");
+        return TextToken.Code(message ?? "Unknown error");
     }
 }

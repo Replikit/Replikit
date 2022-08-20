@@ -8,12 +8,20 @@ namespace Replikit.Adapters.Common.Text.Formatting;
 
 public class TextFormatter : ITextFormatter
 {
-    private readonly Dictionary<Type, TokenVisitorHandler<TextToken>> _tokenVisitors = new();
+    private readonly Dictionary<Type, AsyncTokenVisitorHandler<TextToken>> _tokenVisitors = new();
     private readonly Dictionary<TextTokenModifiers, ModifiersFormatter> _modifiersFormatters = new();
 
     public TextFormatter AddVisitor<T>(TokenVisitorHandler<T> handler) where T : TextToken
     {
-        _tokenVisitors[typeof(T)] = token => handler((T) token);
+        _tokenVisitors[typeof(T)] = (token, _) => ValueTask.FromResult(handler((T) token));
+
+        return this;
+    }
+
+    public TextFormatter AddVisitor<T>(AsyncTokenVisitorHandler<T> handler) where T : TextToken
+    {
+        _tokenVisitors[typeof(T)] = (token, cancellationToken) => handler((T) token, cancellationToken);
+
         return this;
     }
 
@@ -26,7 +34,8 @@ public class TextFormatter : ITextFormatter
         return this;
     }
 
-    public string FormatText(IReadOnlyList<TextToken> tokens)
+    public async ValueTask<string> FormatTextAsync(IReadOnlyCollection<TextToken> tokens,
+        CancellationToken cancellationToken = default)
     {
         var result = new StringBuilder();
 
@@ -45,7 +54,7 @@ public class TextFormatter : ITextFormatter
                 throw new TextFormattingException($"TokenVisitor for type {tokenType} not found");
             }
 
-            var content = visitor(token);
+            var content = await visitor(token, cancellationToken);
             result.Append(ApplyModifiersFormatters(content, token));
         }
 

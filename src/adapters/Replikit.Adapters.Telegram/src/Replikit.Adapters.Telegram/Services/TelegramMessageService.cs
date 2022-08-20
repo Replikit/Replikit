@@ -1,9 +1,10 @@
-﻿using Replikit.Abstractions.Attachments.Models;
+﻿using Replikit.Abstractions.Adapters;
+using Replikit.Abstractions.Attachments.Models;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Messages.Models;
-using Replikit.Abstractions.Messages.Models.Options;
 using Replikit.Abstractions.Messages.Services;
 using Replikit.Adapters.Common.Models;
+using Replikit.Adapters.Common.Services;
 using Replikit.Adapters.Telegram.Exceptions;
 using Replikit.Adapters.Telegram.Internal;
 using Telegram.Bot;
@@ -15,14 +16,15 @@ using TelegramMessage = Telegram.Bot.Types.Message;
 
 namespace Replikit.Adapters.Telegram.Services;
 
-internal class TelegramMessageService : IMessageService
+internal class TelegramMessageService : AdapterService, IMessageService
 {
     private readonly ITelegramBotClient _backend;
     private readonly TelegramMessageResolver _telegramMessageResolver;
     private readonly TelegramEntityFactory _telegramEntityFactory;
 
-    public TelegramMessageService(ITelegramBotClient backend, TelegramMessageResolver telegramMessageResolver,
-        TelegramEntityFactory telegramEntityFactory)
+    public TelegramMessageService(IAdapter adapter, ITelegramBotClient backend,
+        TelegramMessageResolver telegramMessageResolver,
+        TelegramEntityFactory telegramEntityFactory) : base(adapter)
     {
         _backend = backend;
         _telegramMessageResolver = telegramMessageResolver;
@@ -32,21 +34,20 @@ internal class TelegramMessageService : IMessageService
     public MessageServiceFeatures Features =>
         MessageServiceFeatures.Send |
         MessageServiceFeatures.Edit |
-        MessageServiceFeatures.Delete |
+        MessageServiceFeatures.DeleteSingle |
         MessageServiceFeatures.Pin |
-        MessageServiceFeatures.Unpin |
-        MessageServiceFeatures.AnswerInlineButtonRequest;
+        MessageServiceFeatures.Unpin;
 
     private const int MaxAttachmentCount = 10;
 
-    public async Task<Message> SendAsync(Identifier channelId, OutMessage message, SendMessageOptions? options = null,
+    public async Task<Message> SendAsync(Identifier channelId, OutMessage message,
         CancellationToken cancellationToken = default)
     {
         var chatId = new ChatId((long) channelId);
 
         var (text, attachments) = await _telegramMessageResolver.ResolveMessageAsync(message, cancellationToken);
 
-        var messageBuilder = new TelegramMessageBuilder(_telegramEntityFactory, message);
+        var messageBuilder = new TelegramMessageBuilder(Adapter.BotInfo.Id, channelId, _telegramEntityFactory, message);
 
         if (!string.IsNullOrEmpty(text))
         {
@@ -164,7 +165,8 @@ internal class TelegramMessageService : IMessageService
         return EditComplexMessageAsync(chatId, messageId, message, oldMessage, cancellationToken);
     }
 
-    private Task<Message> EditComplexMessageAsync(ChatId chatId, MessageIdentifier messageId, OutMessage message,
+    private Task<Message> EditComplexMessageAsync(ChatId chatId,
+        MessageIdentifier messageId, OutMessage message,
         OutMessage oldMessage, CancellationToken cancellationToken)
     {
         throw new TelegramAdapterException("Editing complex messages is currently unsupported");
@@ -175,7 +177,12 @@ internal class TelegramMessageService : IMessageService
     {
         var (text, attachments) = await _telegramMessageResolver.ResolveMessageAsync(message, cancellationToken);
 
-        var messageBuilder = new TelegramMessageBuilder(_telegramEntityFactory, message);
+        var messageBuilder = new TelegramMessageBuilder(
+            Adapter.BotInfo.Id,
+            chatId.Identifier!.Value,
+            _telegramEntityFactory,
+            message
+        );
 
         if (!string.IsNullOrEmpty(text) && attachments.Count > 0 || attachments.Count > 1)
         {
@@ -247,11 +254,5 @@ internal class TelegramMessageService : IMessageService
         CancellationToken cancellationToken = default)
     {
         return _backend.UnpinChatMessageAsync((long) channelId, messageId.PartIdentifiers[0], cancellationToken);
-    }
-
-    public Task AnswerInlineButtonRequestAsync(Identifier requestId, string message,
-        CancellationToken cancellationToken = default)
-    {
-        return _backend.AnswerCallbackQueryAsync(requestId, message, cancellationToken: cancellationToken);
     }
 }

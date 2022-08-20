@@ -13,4 +13,24 @@
     <ProjectReference Include="..\..\..\core\Replikit.Abstractions\src\Replikit.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\..\..\core\Replikit.Abstractions\src\Common\Utilities\Check.cs" LinkBase="External" />
+    <Compile Include="..\..\..\core\Replikit.Abstractions\src\Resources\Strings.Designer.cs" LinkBase="External" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

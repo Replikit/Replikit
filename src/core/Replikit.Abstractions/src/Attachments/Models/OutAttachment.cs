@@ -1,58 +1,120 @@
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Messages.Models;
+using Replikit.Abstractions.Common.Utilities;
+using Replikit.Abstractions.Resources;
 
 namespace Replikit.Abstractions.Attachments.Models;
 
-public record OutAttachment
+/// <summary>
+/// Represents a model of the outgoing attachment that will be sent by the bot.
+/// </summary>
+public class OutAttachment
 {
-    public AttachmentType Type { get; }
-    public object Source { get; }
-    public string? Caption { get; }
-    public string? FileName { get; }
-
-    private OutAttachment(AttachmentType type, object source, string? caption)
+    private OutAttachment(AttachmentType type, object source, string? caption, string? fileName, string? cacheKey)
     {
-        Type = type;
+        Type = Check.NotUnknown(type);
         Source = source;
         Caption = caption;
-    }
-
-    public OutAttachment(AttachmentType type, Stream stream, string? fileName = null, string? caption = null) :
-        this(type, (object) stream, caption)
-    {
         FileName = fileName;
+        CacheKey = cacheKey;
     }
 
-    public OutAttachment(AttachmentType type, string url, string? caption = null) :
-        this(type, (object) url, caption) { }
+    /// <summary>
+    /// The type of the attachment.
+    /// </summary>
+    public AttachmentType Type { get; }
 
-    public OutAttachment(AttachmentType type, Identifier uploadId, string? caption = null) :
-        this(type, (object) uploadId, caption) { }
+    /// <summary>
+    /// The source of the attachment that should be used by the adapter to send the attachment.
+    /// <br/>
+    /// Can be of four types: <see cref="Identifier"/>, <see cref="Stream"/>, <see cref="FileInfo"/>, <see cref="Uri"/>.
+    /// </summary>
+    public object Source { get; }
 
-    public OutAttachment(AttachmentType type, FileInfo fileInfo, string? caption = null) :
-        this(type, (object) fileInfo, caption)
+    /// <summary>
+    /// The caption of the attachment.
+    /// </summary>
+    public string? Caption { get; }
+
+    /// <summary>
+    /// The file name of the attachment.
+    /// </summary>
+    public string? FileName { get; }
+
+    /// <summary>
+    /// The string-based key used to resolve the attachment from the cache or store it.
+    /// </summary>
+    public string? CacheKey { get; }
+
+    /// <summary>
+    /// Creates a new <see cref="OutAttachment"/> from the specified content stream.
+    /// </summary>
+    /// <param name="type">A type of the attachment.</param>
+    /// <param name="content">A content stream. Must be readable.</param>
+    /// <param name="caption">A caption of the attachment.</param>
+    /// <param name="fileName">A file name of the attachment.</param>
+    /// <param name="cacheKey">A key to resolve or cache the attachment.</param>
+    /// <returns>A created <see cref="OutAttachment"/>.</returns>
+    /// <exception cref="ArgumentException">The specified <paramref name="content"/> stream is not readable.</exception>
+    public static OutAttachment FromContent(AttachmentType type, Stream content, string? caption = null,
+        string? fileName = null, string? cacheKey = null)
     {
-        FileName = fileInfo.Name;
+        Check.NotNull(content);
+
+        if (!content.CanRead)
+        {
+            throw new ArgumentException(Strings.StreamMustBeReadable, nameof(content));
+        }
+
+        return new OutAttachment(type, content, caption, fileName, cacheKey);
     }
 
-    public static OutAttachment FromContent(AttachmentType type, Stream stream, string? fileName = null,
-        string? caption = null)
+    /// <summary>
+    /// Creates a new <see cref="OutAttachment"/> from the specified url.
+    /// </summary>
+    /// <param name="type">A type of the attachment.</param>
+    /// <param name="url">A url of the attachment.</param>
+    /// <param name="caption">A caption of the attachment.</param>
+    /// <param name="fileName">A file name of the attachment.</param>
+    /// <param name="cacheKey">A key to resolve or cache the attachment.</param>
+    /// <returns>A created <see cref="OutAttachment"/>.</returns>
+    public static OutAttachment FromUrl(AttachmentType type, Uri url, string? caption = null, string? fileName = null,
+        string? cacheKey = null)
     {
-        return new OutAttachment(type, stream, fileName, caption);
+        Check.NotNull(url);
+
+        return new OutAttachment(type, url, caption, fileName, cacheKey);
     }
 
-    public static OutAttachment FromUrl(AttachmentType type, string url, string? caption = null)
+    /// <summary>
+    /// Creates a new <see cref="OutAttachment"/> from the specified uploadId.
+    /// </summary>
+    /// <param name="type">A type of the attachment.</param>
+    /// <param name="uploadId">An uploadId of the attachment.</param>
+    /// <param name="caption">A caption of the attachment.</param>
+    /// <param name="fileName">A file name of the attachment.</param>
+    /// <returns>A created <see cref="OutAttachment"/>.</returns>
+    public static OutAttachment FromUploadId(AttachmentType type, Identifier uploadId, string? caption = null,
+        string? fileName = null)
     {
-        return new OutAttachment(type, url, caption);
+        Check.NotDefault(uploadId);
+
+        return new OutAttachment(type, uploadId, caption, fileName, null);
     }
 
-    public static OutAttachment FromUploadId(AttachmentType type, Identifier uploadId, string? caption = null)
+    /// <summary>
+    /// Creates a new <see cref="OutAttachment"/> from the file with the specified path.
+    /// </summary>
+    /// <param name="type">A type of the attachment.</param>
+    /// <param name="filePath">A path to the file.</param>
+    /// <param name="caption">A caption of the attachment.</param>
+    /// <param name="fileName">A file name of the attachment.</param>
+    /// <param name="cacheKey">A key to resolve or cache the attachment.</param>
+    /// <returns>A created <see cref="OutAttachment"/>.</returns>
+    public static OutAttachment FromFile(AttachmentType type, string filePath, string? caption = null,
+        string? fileName = null, string? cacheKey = null)
     {
-        return new OutAttachment(type, uploadId, caption);
-    }
+        Check.NotNullOrWhiteSpace(filePath);
 
-    public static OutAttachment FromFile(AttachmentType type, string filePath, string? caption = null)
-    {
-        return new OutAttachment(type, new FileInfo(filePath), caption);
+        return new OutAttachment(type, new FileInfo(filePath), caption, fileName, cacheKey);
     }
 }

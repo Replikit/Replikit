@@ -1,5 +1,5 @@
 ﻿using Replikit.Abstractions.Adapters;
-using Replikit.Abstractions.Common.Models;
+using Replikit.Abstractions.Adapters.Factory;
 using Replikit.Adapters.Common.Adapters;
 using Telegram.Bot;
 
@@ -7,17 +7,16 @@ namespace Replikit.Adapters.Telegram;
 
 public class TelegramAdapterFactory : AdapterFactory<TelegramAdapterOptions>
 {
-    public const string Type = "tg";
+    protected override AdapterInfo AdapterInfo => new(TelegramAdapter.Type, "Telegram Bot API");
 
-    protected override string DisplayName => "Telegram";
+    protected override PlatformInfo PlatformInfo => new("telegram", "Telegram");
 
-    protected override Task<Adapter> CreateAsync(TelegramAdapterOptions options, AdapterFactoryContext context,
-        CancellationToken cancellationToken = default)
+    protected override Task<Adapter> CreateAsync(TelegramAdapterOptions options,
+        AdapterInfo adapterInfo, PlatformInfo platformInfo,
+        AdapterFactoryContext context, CancellationToken cancellationToken = default)
     {
         var backend = new TelegramBotClient(options.Token);
-        var adapterId = new AdapterIdentifier(Type, backend.BotId!.Value);
-
-        var adapter = new TelegramAdapter(adapterId, context, backend, options);
+        var adapter = new TelegramAdapter(adapterInfo, platformInfo, context, backend, options);
 
         return Task.FromResult<Adapter>(adapter);
     }

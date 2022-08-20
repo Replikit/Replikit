@@ -1,5 +1,4 @@
 ﻿using Replikit.Abstractions.Adapters.Loader;
-using Replikit.Adapters.Common.Adapters;
 
 namespace Replikit.Adapters.Telegram;
 
@@ -9,7 +8,7 @@ public static class AdapterLoaderOptionsExtensions
     {
         ArgumentNullException.ThrowIfNull(loaderOptions);
 
-        loaderOptions.EnsureTelegramAdapterFactoryConfigured();
+        loaderOptions.RegisterFactory(TelegramAdapter.Type, new TelegramAdapterFactory());
     }
 
     public static void AddTelegram(this IAdapterLoaderOptions loaderOptions, TelegramAdapterOptions options)
@@ -17,8 +16,8 @@ public static class AdapterLoaderOptionsExtensions
         ArgumentNullException.ThrowIfNull(loaderOptions);
         ArgumentNullException.ThrowIfNull(options);
 
-        loaderOptions.EnsureTelegramAdapterFactoryConfigured();
-        loaderOptions.AdapterDescriptors.Add(new AdapterDescriptor(TelegramAdapterFactory.Type, options));
+        loaderOptions.RegisterFactory(TelegramAdapter.Type, new TelegramAdapterFactory());
+        loaderOptions.AddDescriptor(new AdapterDescriptor(TelegramAdapter.Type, options));
     }
 
     public static void AddTelegram(this IAdapterLoaderOptions loaderOptions, string token)
@@ -27,10 +26,5 @@ public static class AdapterLoaderOptionsExtensions
         ArgumentNullException.ThrowIfNull(token);
 
         loaderOptions.AddTelegram(new TelegramAdapterOptions { Token = token });
-    }
-
-    private static void EnsureTelegramAdapterFactoryConfigured(this IAdapterLoaderOptions loaderOptions)
-    {
-        loaderOptions.EnsureAdapterFactoryConfigured(TelegramAdapterFactory.Type, () => new TelegramAdapterFactory());
     }
 }

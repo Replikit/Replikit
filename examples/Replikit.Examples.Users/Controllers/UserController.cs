@@ -1,5 +1,6 @@
 using System.Text;
 using Replikit.Abstractions.Messages.Models;
+using Replikit.Abstractions.Messages.Models.TextTokens;
 using Replikit.Core.Abstractions.Users;
 using Replikit.Core.Controllers;
 using Replikit.Core.Controllers.Patterns;
@@ -11,12 +12,12 @@ namespace Replikit.Examples.Users.Controllers;
 
 internal class UserController : Controller
 {
-    private readonly IGlobalAdapterRepository _adapterRepository;
+    private readonly IGlobalAccountService _accountService;
     private readonly UserManager<ReplikitUser, Guid> _userManager;
 
-    public UserController(IGlobalAdapterRepository adapterRepository, UserManager<ReplikitUser, Guid> userManager)
+    public UserController(IGlobalAccountService accountService, UserManager<ReplikitUser, Guid> userManager)
     {
-        _adapterRepository = adapterRepository;
+        _accountService = accountService;
         _userManager = userManager;
     }
 
@@ -32,7 +33,7 @@ internal class UserController : Controller
 
         foreach (var accountId in user.AccountIds)
         {
-            var accountInfo = await _adapterRepository.GetAccountInfoAsync(accountId);
+            var accountInfo = await _accountService.GetAsync(accountId);
 
             var displayName = accountInfo switch
             {
@@ -42,10 +43,10 @@ internal class UserController : Controller
                 _ => "Unknown"
             };
 
-            builder.Append($"[{accountId.AdapterId.Type}] [{accountId.Value}] {displayName}");
+            builder.Append($"[{accountId.BotId.PlatformId}] [{accountId.Value}] {displayName}");
         }
 
-        return OutMessage.FromCode(builder.ToString());
+        return TextToken.Code(builder.ToString());
     }
 
     [Command("username")]
@@ -53,6 +54,6 @@ internal class UserController : Controller
     {
         var success = await _userManager.ChangeUsernameAsync(user, username);
 
-        return OutMessage.FromCode(success ? "Username changed" : "Username already taken");
+        return TextToken.Code(success ? "Username changed" : "Username already taken");
     }
 }

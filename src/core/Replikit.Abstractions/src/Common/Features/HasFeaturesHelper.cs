@@ -2,7 +2,7 @@ using Replikit.Abstractions.Common.Exceptions;
 
 namespace Replikit.Abstractions.Common.Features;
 
-public static class HasFeaturesHelper
+internal static class HasFeaturesHelper
 {
     public static Exception CreateUnsupportedException<TFeatures>(IHasFeatures<TFeatures> hasFeatures,
         TFeatures feature) where TFeatures : Enum

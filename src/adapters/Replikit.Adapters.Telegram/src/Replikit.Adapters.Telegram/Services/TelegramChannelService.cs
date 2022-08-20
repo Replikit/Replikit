@@ -1,37 +1,43 @@
-using Replikit.Abstractions.Attachments.Models;
+using Replikit.Abstractions.Channels.Models;
+using Replikit.Abstractions.Channels.Services;
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Management.Services;
-using Replikit.Adapters.Common.Utils;
+using Replikit.Adapters.Telegram.Internal;
 using Telegram.Bot;
-using Telegram.Bot.Types;
+using Telegram.Bot.Exceptions;
 
 namespace Replikit.Adapters.Telegram.Services;
 
-public class TelegramChannelService : IChannelService
+internal class TelegramChannelService : IChannelService
 {
     private readonly ITelegramBotClient _backend;
-    private readonly MessageResolver<InputMedia> _messageResolver;
+    private readonly TelegramEntityFactory _entityFactory;
 
-    public TelegramChannelService(ITelegramBotClient backend, MessageResolver<InputMedia> messageResolver)
+    public TelegramChannelService(ITelegramBotClient backend, TelegramEntityFactory entityFactory)
     {
         _backend = backend;
-        _messageResolver = messageResolver;
+        _entityFactory = entityFactory;
     }
 
     public ChannelServiceFeatures Features =>
-        ChannelServiceFeatures.ChangeTitle |
-        ChannelServiceFeatures.ChangePhoto;
+        ChannelServiceFeatures.Get |
+        ChannelServiceFeatures.ChangeTitle;
+
+    public async Task<ChannelInfo?> GetAsync(Identifier channelId, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var chat = await _backend.GetChatAsync((long) channelId, cancellationToken);
+
+            return _entityFactory.CreateChannelInfo(chat);
+        }
+        catch (ApiRequestException e) when (e.Message.Contains("chat not found"))
+        {
+            return null;
+        }
+    }
 
     public Task ChangeTitleAsync(Identifier channelId, string title, CancellationToken cancellationToken = default)
     {
         return _backend.SetChatTitleAsync((long) channelId, title, cancellationToken);
-    }
-
-    public async Task ChangePhotoAsync(Identifier channelId, OutAttachment photo,
-        CancellationToken cancellationToken = default)
-    {
-        var attachment = await _messageResolver.ResolveAttachmentAsync(photo, cancellationToken);
-
-        await _backend.SetChatPhotoAsync((long) channelId, attachment.Source, cancellationToken);
     }
 }

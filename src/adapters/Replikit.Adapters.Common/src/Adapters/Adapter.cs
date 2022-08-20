@@ -1,12 +1,15 @@
-﻿using Replikit.Abstractions.Adapters;
-using Replikit.Abstractions.Adapters.Services;
+﻿using Replikit.Abstractions.Accounts.Services;
+using Replikit.Abstractions.Adapters;
+using Replikit.Abstractions.Adapters.Factory;
 using Replikit.Abstractions.Attachments.Services;
+using Replikit.Abstractions.Channels.Services;
+using Replikit.Abstractions.Common.Exceptions;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Events;
-using Replikit.Abstractions.Management.Services;
+using Replikit.Abstractions.Members.Services;
 using Replikit.Abstractions.Messages.Services;
-using Replikit.Abstractions.Repositories.Services;
 using Replikit.Adapters.Common.Adapters.Internal;
+using Replikit.Adapters.Common.Resources;
 using Replikit.Adapters.Common.Services.Internal;
 
 namespace Replikit.Adapters.Common.Adapters;
@@ -15,41 +18,39 @@ public abstract class Adapter : IAdapter
 {
     private readonly AdapterServiceProvider _serviceProvider = new();
 
-    public AdapterIdentifier Id { get; }
-
-    protected Adapter(AdapterIdentifier id, AdapterFactoryContext context)
+    protected Adapter(AdapterInfo adapterInfo, PlatformInfo platformInfo, AdapterFactoryContext context)
     {
-        Id = id;
+        AdapterInfo = adapterInfo;
+        PlatformInfo = platformInfo;
 
         AttachmentCache = context.AttachmentCache ?? DefaultAttachmentCache.Instance;
         EventDispatcher = context.EventDispatcher ?? DefaultEventDispatcher.Instance;
     }
 
-    public object? GetService(Type serviceType)
+    public IServiceProvider AdapterServices => _serviceProvider;
+
+    protected void SetService<TService>(TService service)
     {
-        return _serviceProvider.GetService(serviceType);
+        _serviceProvider.SetService(service);
     }
 
-    protected void SetService<TService>(TService instance)
+    public AdapterInfo AdapterInfo { get; }
+    public PlatformInfo PlatformInfo { get; }
+    public AdapterBotInfo BotInfo { get; private set; } = default!;
+
+    protected abstract Task<AdapterBotInfo> InitializeAsync(CancellationToken cancellationToken);
+
+    internal async Task InitializeCoreAsync(CancellationToken cancellationToken)
     {
-        _serviceProvider.SetService(instance);
+        BotInfo = await InitializeAsync(cancellationToken);
     }
 
-    public AdapterInfo Info
-    {
-        get => this.GetRequiredService<AdapterInfo>();
-        internal set => SetService(value);
-    }
+    protected IAdapterEventDispatcher EventDispatcher { get; }
+    protected IAttachmentCache AttachmentCache { get; }
 
-    public IEventSource EventSource
+    public IAdapterEventSource AdapterEventSource
     {
-        get => this.GetRequiredService<IEventSource>();
-        protected init => SetService(value);
-    }
-
-    public IAdapterRepository Repository
-    {
-        get => this.GetRequiredService<IAdapterRepository>();
+        get => this.GetRequiredService<IAdapterEventSource>();
         protected init => SetService(value);
     }
 
@@ -68,30 +69,30 @@ public abstract class Adapter : IAdapter
     public IMessageService MessageService
     {
         get => this.GetRequiredService<IMessageService>();
-        protected init => SetService<IMessageService>(new CommonMessageService(Id, AttachmentCache, value));
+        protected init => SetService<IMessageService>(new CommonMessageService(this, value, AttachmentCache));
+    }
+
+    public IAccountService AccountService
+    {
+        get => this.GetRequiredService<IAccountService>();
+        protected init => SetService<IAccountService>(new CommonAccountService(this, value));
     }
 
     public IMemberService MemberService
     {
         get => this.GetRequiredService<IMemberService>();
-        protected init => SetService<IMemberService>(new CommonMemberService(Id, value));
+        protected init => SetService<IMemberService>(new CommonMemberService(this, value));
+    }
+
+    public IAttachmentService AttachmentService
+    {
+        get => this.GetRequiredService<IAttachmentService>();
+        protected init => SetService<IAttachmentService>(new CommonAttachmentService(value));
     }
 
     public IChannelService ChannelService
     {
         get => this.GetRequiredService<IChannelService>();
-        protected init => SetService<IChannelService>(new CommonChannelService(Id, value));
-    }
-
-    protected IAdapterEventDispatcher EventDispatcher
-    {
-        get => this.GetRequiredService<IAdapterEventDispatcher>();
-        private init => SetService(value);
-    }
-
-    protected IAttachmentCache AttachmentCache
-    {
-        get => this.GetRequiredService<IAttachmentCache>();
-        private init => SetService(value);
+        protected init => SetService<IChannelService>(new CommonChannelService(this, value));
     }
 }

@@ -15,7 +15,7 @@ public class AttachmentController : Controller
             Text = "hi",
             Attachments =
             {
-                OutAttachment.FromUrl(AttachmentType.Photo, "https://picsum.photos/512")
+                OutAttachment.FromUrl(AttachmentType.Photo, new Uri("https://picsum.photos/512"))
             }
         };
     }
@@ -29,7 +29,7 @@ public class AttachmentController : Controller
     [Command("photo")]
     public OutMessage GetPhoto()
     {
-        return OutAttachment.FromUrl(AttachmentType.Photo, "https://picsum.photos/512");
+        return OutAttachment.FromUrl(AttachmentType.Photo, new Uri("https://picsum.photos/512"));
     }
 
     [Command("upload photo")]

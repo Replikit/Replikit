@@ -5,5 +5,5 @@ namespace Replikit.Extensions.Views;
 
 public class ViewMessage : OutMessage
 {
-    public IViewActionMatrix Actions { get; set; } = new ViewActionMatrix();
+    public ViewActionMatrix Actions { get; set; } = new();
 }

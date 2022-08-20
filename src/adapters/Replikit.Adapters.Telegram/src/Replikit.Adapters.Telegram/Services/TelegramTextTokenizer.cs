@@ -1,4 +1,4 @@
-﻿using Replikit.Abstractions.Messages.Models;
+﻿using Replikit.Abstractions.Common.CustomData;
 using Replikit.Abstractions.Messages.Models.TextTokens;
 using Replikit.Abstractions.Messages.Services;
 using Replikit.Adapters.Telegram.Internal;
@@ -10,9 +10,9 @@ namespace Replikit.Adapters.Telegram.Services;
 
 internal class TelegramTextTokenizer : ITextTokenizer
 {
-    public IReadOnlyList<TextToken> TokenizeMessage(Message message)
+    public IReadOnlyList<TextToken> Tokenize(Message message)
     {
-        var original = message.GetOriginal<TelegramMessage>();
+        var original = message.GetCustomData<TelegramMessage>();
 
         if (original.Text is null) return Array.Empty<TextToken>();
 

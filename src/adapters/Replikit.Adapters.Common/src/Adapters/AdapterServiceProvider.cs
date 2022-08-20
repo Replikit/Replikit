@@ -1,8 +1,6 @@
-using Replikit.Abstractions.Adapters.Services;
-
 namespace Replikit.Adapters.Common.Adapters;
 
-internal class AdapterServiceProvider : IAdapterServiceProvider
+internal class AdapterServiceProvider : IServiceProvider
 {
     private readonly Dictionary<Type, object?> _services = new();
 

@@ -1,5 +1,5 @@
 using Replikit.Abstractions.Common.Features;
-using Replikit.Abstractions.Management.Services;
+using Replikit.Abstractions.Members.Services;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Core.Controllers;
 using Replikit.Core.Controllers.Patterns;

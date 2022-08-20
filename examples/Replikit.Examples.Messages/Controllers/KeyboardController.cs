@@ -22,6 +22,6 @@ public class KeyboardController : Controller
     public OutMessage RemoveKeyboard() => new()
     {
         Text = "Test keyboard removed",
-        Keyboard = MessageKeyboard.Removed
+        Keyboard = MessageKeyboard.Remove
     };
 }

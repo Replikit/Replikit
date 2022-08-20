@@ -1,84 +1,148 @@
 ﻿using Replikit.Abstractions.Common.Exceptions;
+using Replikit.Abstractions.Common.Utilities;
 
 namespace Replikit.Abstractions.Common.Models;
 
+/// <summary>
+/// The wrapper around primitive identifier.
+/// Can contain long, int, string or Guid as identifier value.
+/// </summary>
 public readonly record struct Identifier
 {
-    public object Value { get; }
+    private readonly object _value;
 
-    public Identifier(long value)
-    {
-        Value = value;
-    }
-
+    /// <summary>
+    /// Creates new identifier from int value.
+    /// </summary>
+    /// <param name="value">An identifier value.</param>
     public Identifier(int value)
     {
-        Value = value;
+        _value = value;
     }
 
+    /// <summary>
+    /// Creates new identifier from long value.
+    /// </summary>
+    /// <param name="value">An identifier value.</param>
+    public Identifier(long value)
+    {
+        _value = value;
+    }
+
+    /// <summary>
+    /// Creates new identifier from string value.
+    /// </summary>
+    /// <param name="value">An identifier value.</param>
     public Identifier(string value)
     {
-        Value = value;
+        _value = Check.NotNull(value);
     }
 
+    /// <summary>
+    /// Creates new identifier from Guid value.
+    /// </summary>
+    /// <param name="value">An identifier value.</param>
     public Identifier(Guid value)
     {
-        Value = value;
+        _value = value;
     }
 
-    public Identifier(object value)
-    {
-        if (value is not (long or int or string or Guid))
-        {
-            throw new ForbiddenIdentifierValue(value);
-        }
+    /// <summary>
+    /// Gets the underlying boxed value.
+    /// </summary>
+    /// <returns>The underlying value or null if the identifier is default.</returns>
+    public object? GetUnderlyingValue() => _value;
 
-        Value = value;
-    }
-
+    /// <summary>
+    /// Creates new identifier from int value.
+    /// </summary>
+    /// <param name="value">An identifier value.</param>
+    /// <returns>The <see cref="Identifier"/>.</returns>
     public static implicit operator Identifier(int value) => new(value);
+
+    /// <summary>
+    /// Creates new identifier from long value.
+    /// </summary>
+    /// <param name="value">An identifier value.</param>
+    /// <returns>The <see cref="Identifier"/>.</returns>
     public static implicit operator Identifier(long value) => new(value);
+
+    /// <summary>
+    /// Creates new identifier from string value.
+    /// </summary>
+    /// <param name="value">An identifier value.</param>
+    /// <returns>The <see cref="Identifier"/>.</returns>
     public static implicit operator Identifier(string value) => new(value);
+
+    /// <summary>
+    /// Creates new identifier from Guid value.
+    /// </summary>
+    /// <param name="value">An identifier value.</param>
+    /// <returns>The <see cref="Identifier"/>.</returns>
     public static implicit operator Identifier(Guid value) => new(value);
 
-    public static implicit operator string(Identifier identifier)
-    {
-        if (identifier.Value is not string value)
-        {
-            throw new InvalidIdentifierException(identifier, typeof(string));
-        }
-
-        return value;
-    }
-
-    public static implicit operator Guid(Identifier identifier)
-    {
-        if (identifier.Value is not Guid value)
-        {
-            throw new InvalidIdentifierException(identifier, typeof(Guid));
-        }
-
-        return value;
-    }
-
+    /// <summary>
+    /// Unwraps the identifier value as int.
+    /// </summary>
+    /// <param name="identifier">The identifier which value should be unwrapped.</param>
+    /// <returns>The int value.</returns>
+    /// <exception cref="InvalidIdentifierValueException">The identifier value is not int.</exception>
     public static implicit operator int(Identifier identifier)
     {
-        return identifier.Value switch
+        return identifier._value switch
         {
             int intValue => intValue,
             long longValue => (int) longValue,
-            _ => throw new InvalidIdentifierException(identifier, typeof(int))
+            _ => throw new InvalidIdentifierValueException(identifier, typeof(int))
         };
     }
 
+    /// <summary>
+    /// Unwraps the identifier value as long.
+    /// </summary>
+    /// <param name="identifier">The identifier which value should be unwrapped.</param>
+    /// <returns>The long value.</returns>
+    /// <exception cref="InvalidIdentifierValueException">The identifier value is not long.</exception>
     public static implicit operator long(Identifier identifier)
     {
-        return identifier.Value switch
+        return identifier._value switch
         {
             int intValue => intValue,
             long longValue => longValue,
-            _ => throw new InvalidIdentifierException(identifier, typeof(long))
+            _ => throw new InvalidIdentifierValueException(identifier, typeof(long))
         };
+    }
+
+    /// <summary>
+    /// Unwraps the identifier value as string.
+    /// </summary>
+    /// <param name="identifier">The identifier which value should be unwrapped.</param>
+    /// <returns>The string value.</returns>
+    /// <exception cref="InvalidIdentifierValueException">The identifier value is not a string.</exception>
+    public static implicit operator string(Identifier identifier)
+    {
+        if (identifier._value is not string value)
+        {
+            throw new InvalidIdentifierValueException(identifier, typeof(string));
+        }
+
+        return value;
+    }
+
+    /// <summary>
+    /// Unwraps the identifier value as Guid.
+    /// </summary>
+    /// <param name="identifier">The identifier which value should be unwrapped.</param>
+    /// <returns>The Guid value.</returns>
+    /// <exception cref="InvalidIdentifierValueException">The identifier value is not a Guid.</exception>
+    public static implicit operator Guid(Identifier identifier)
+    {
+        if (identifier._value is not Guid value)
+        {
+            throw new InvalidIdentifierValueException(identifier, typeof(Guid));
+        }
+
+        return value;
     }
 
     public bool Equals(Identifier other)
@@ -88,7 +152,7 @@ public readonly record struct Identifier
             return thisNumber == otherNumber;
         }
 
-        return Value == other.Value;
+        return _value == other._value;
     }
 
     public override int GetHashCode()
@@ -98,21 +162,25 @@ public readonly record struct Identifier
             return number.GetHashCode();
         }
 
-        return Value?.GetHashCode() ?? 0;
+        return _value?.GetHashCode() ?? 0;
+    }
+
+    /// <summary>
+    /// Returns a string representation of the identifier value.
+    /// </summary>
+    /// <returns>A string representation of the identifier value or null if the identifier is default.</returns>
+    public override string? ToString()
+    {
+        return GetUnderlyingValue()?.ToString();
     }
 
     private long? ExtractNumber()
     {
-        return Value switch
+        return _value switch
         {
             int intValue => intValue,
             long longValue => longValue,
             _ => null
         };
-    }
-
-    public override string ToString()
-    {
-        return Value?.ToString() ?? "null";
     }
 }

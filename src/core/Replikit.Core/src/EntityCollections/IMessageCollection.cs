@@ -1,7 +1,6 @@
 using Replikit.Abstractions.Common.Features;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Messages.Models;
-using Replikit.Abstractions.Messages.Models.Options;
 using Replikit.Abstractions.Messages.Services;
 
 namespace Replikit.Core.EntityCollections;
@@ -11,8 +10,7 @@ public interface IMessageCollection : IHasFeatures<MessageServiceFeatures>
     GlobalIdentifier ChannelId { get; }
 
     /// <inheritdoc cref="IMessageService.SendAsync"/>
-    Task<Message> SendAsync(OutMessage message, SendMessageOptions? options = null,
-        CancellationToken cancellationToken = default);
+    Task<Message> SendAsync(OutMessage message, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Edits message with specified identifier, replacing it's content with specified message.
@@ -33,19 +31,19 @@ public interface IMessageCollection : IHasFeatures<MessageServiceFeatures>
     /// Deletes message with specified identifier.
     /// Note, that depending on the adapter and specified message, it might delete multiple real messages.
     /// </summary>
-    /// <param name="messageId"></param>
+    /// <param name="messagePartId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task DeleteAsync(Identifier messageId, CancellationToken cancellationToken = default);
+    Task DeleteSingleAsync(Identifier messagePartId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes multiple messages with specified identifiers as quickly as possible.
     /// Note, that depending on the adapter and specified message, it might delete more real messages than ids specified.
     /// </summary>
-    /// <param name="messageIds"></param>
+    /// <param name="messagePartIds"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task DeleteManyAsync(IReadOnlyCollection<MessageIdentifier> messageIds,
+    Task DeleteManyAsync(IReadOnlyCollection<Identifier> messagePartIds,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -66,18 +64,6 @@ public interface IMessageCollection : IHasFeatures<MessageServiceFeatures>
     /// <returns></returns>
     Task<IReadOnlyList<Message>> GetManyAsync(IReadOnlyCollection<MessageIdentifier> messageIds,
         CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Finds multiple messages matching specified condition.
-    /// Returns as many messages as could find according to specified take and skip options.
-    /// </summary>
-    /// <param name="query"></param>
-    /// <param name="take"></param>
-    /// <param name="skip"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task<IReadOnlyList<Message>> FindAsync(string? query = null, int? take = null,
-        int? skip = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds a message with specified identifier to the list of pinned messages in a chat.

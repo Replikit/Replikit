@@ -9,9 +9,9 @@ namespace Replikit.Abstractions.Messages.Services;
 public interface ITextTokenizer
 {
     /// <summary>
-    /// Transforms message and it's text to token list.
+    /// Transforms the text of the message into the text token collection.
     /// </summary>
-    /// <param name="message"></param>
-    /// <returns></returns>
-    IReadOnlyList<TextToken> TokenizeMessage(Message message);
+    /// <param name="message">A message to parse.</param>
+    /// <returns>A collection of text tokens.</returns>
+    IReadOnlyList<TextToken> Tokenize(Message message);
 }

@@ -9,7 +9,7 @@ internal class IdentifierSerializer : SerializerBase<Identifier>
 {
     public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, Identifier value)
     {
-        BsonSerializer.Serialize(context.Writer, value.Value);
+        BsonSerializer.Serialize(context.Writer, value.GetUnderlyingValue());
     }
 
     public override Identifier Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)

@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Replikit.Abstractions.Messages.Models;
+using Replikit.Abstractions.Messages.Models.TextTokens;
 using Replikit.Core.Controllers;
 using Replikit.Core.Controllers.Patterns;
 
@@ -17,7 +18,7 @@ public class TestController : Controller
             WriteIndented = true
         });
 
-        return OutMessage.FromCode(message);
+        return TextToken.Code(message);
     }
 
     [Command("id")]
@@ -25,9 +26,9 @@ public class TestController : Controller
     {
         if (Message.Reply is not null)
         {
-            return OutMessage.FromText("Reply author id: " + Message.Reply.AccountId?.Value);
+            return "Reply author id: " + Message.Reply.AccountId?.Value;
         }
 
-        return OutMessage.FromText(Account.Id.Value);
+        return new TextToken(Account.Id.Value);
     }
 }

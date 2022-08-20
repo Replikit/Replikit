@@ -1,4 +1,5 @@
-using Replikit.Abstractions.Repositories.Events;
+using Replikit.Abstractions.Accounts.Events;
+using Replikit.Abstractions.Channels.Events;
 using Replikit.Core.Abstractions.State;
 using Replikit.Core.Routing.Context;
 using Replikit.Extensions.State.Exceptions;

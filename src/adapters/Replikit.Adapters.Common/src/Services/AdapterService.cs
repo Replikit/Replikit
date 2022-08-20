@@ -1,63 +1,19 @@
-using System.Runtime.CompilerServices;
+using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Messages.Models;
 
 namespace Replikit.Adapters.Common.Services;
 
 public abstract class AdapterService
 {
-    protected AdapterService(AdapterIdentifier adapterId)
+    protected AdapterService(IAdapter adapter)
     {
-        AdapterId = adapterId;
+        Adapter = adapter;
     }
 
-    protected AdapterIdentifier AdapterId { get; }
+    protected IAdapter Adapter { get; }
 
     protected GlobalIdentifier CreateGlobalIdentifier(Identifier identifier)
     {
-        return new GlobalIdentifier(AdapterId, identifier);
-    }
-
-    protected void CheckIdentifier(Identifier identifier,
-        [CallerArgumentExpression("identifier")]
-        string? paramName = null)
-    {
-        ArgumentNullException.ThrowIfNull(identifier.Value);
-    }
-
-    protected void CheckIdentifiers(IEnumerable<Identifier> identifiers,
-        [CallerArgumentExpression("identifiers")]
-        string? paramName = null)
-    {
-        ArgumentNullException.ThrowIfNull(identifiers, paramName);
-
-        foreach (var identifier in identifiers)
-        {
-            ArgumentNullException.ThrowIfNull(identifier.Value);
-        }
-    }
-
-    protected void CheckIdentifier(MessageIdentifier identifier,
-        [CallerArgumentExpression("identifier")]
-        string? paramName = null)
-    {
-        ArgumentNullException.ThrowIfNull(identifier.PartIdentifiers);
-    }
-
-    protected void CheckIdentifiers(IEnumerable<MessageIdentifier> identifiers,
-        [CallerArgumentExpression("identifiers")]
-        string? paramName = null)
-    {
-        ArgumentNullException.ThrowIfNull(identifiers, paramName);
-
-        foreach (var identifier in identifiers)
-        {
-            ArgumentNullException.ThrowIfNull(identifier.PartIdentifiers);
-
-            foreach (var messageId in identifier.PartIdentifiers)
-            {
-                ArgumentNullException.ThrowIfNull(messageId.Value);
-            }
-        }
+        return new GlobalIdentifier(Adapter.BotInfo.Id, identifier);
     }
 }

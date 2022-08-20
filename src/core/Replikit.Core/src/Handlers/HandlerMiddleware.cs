@@ -18,7 +18,7 @@ internal class HandlerMiddleware : IAdapterEventMiddleware
             .ToArray();
     }
 
-    public async Task HandleAsync(IAdapterEventContext<IAdapterEvent> context, AdapterEventDelegate next)
+    public async Task HandleAsync(IAdapterEventContext<IBotEvent> context, AdapterEventDelegate next)
     {
         var instanceInterceptors = context.ServiceProvider
             .GetRequiredService<IEnumerable<IHandlerInstanceInterceptor>>();

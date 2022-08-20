@@ -26,7 +26,7 @@ internal class ApplicationBuilder : IApplicationBuilder
         return _eventDelegate;
     }
 
-    private static Task DefaultEventDelegate(IAdapterEventContext<IAdapterEvent> context)
+    private static Task DefaultEventDelegate(IAdapterEventContext<IBotEvent> context)
     {
         return Task.CompletedTask;
     }

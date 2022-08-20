@@ -1,8 +1,11 @@
-﻿using System.Globalization;
+﻿using System.Collections.Immutable;
+using System.Globalization;
+using Replikit.Abstractions.Accounts.Models;
+using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Attachments.Models;
+using Replikit.Abstractions.Channels.Models;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Messages.Models;
-using Replikit.Abstractions.Repositories.Models;
 using Replikit.Adapters.Common.Exceptions;
 using Replikit.Adapters.Common.Services;
 using Telegram.Bot.Types;
@@ -16,28 +19,41 @@ namespace Replikit.Adapters.Telegram.Internal;
 
 internal class TelegramEntityFactory : AdapterService
 {
-    public TelegramEntityFactory(AdapterIdentifier adapterId) : base(adapterId) { }
+    public TelegramEntityFactory(IAdapter adapter) : base(adapter) { }
 
-    public AccountInfo CreateAccountInfo(Chat chat, PhotoAttachment? avatar)
+    public AccountInfo CreateAccountInfo(Chat chat)
     {
-        return new AccountInfo(
-            CreateGlobalIdentifier(chat.Id),
-            chat.Username,
-            chat.FirstName,
-            chat.LastName,
-            avatar
-        );
+        return new AccountInfo(CreateGlobalIdentifier(chat.Id))
+        {
+            Username = chat.Username,
+            FirstName = chat.FirstName,
+            LastName = chat.LastName,
+            CustomData = ImmutableArray.Create(chat)
+        };
     }
 
-    public AccountInfo CreateAccountInfo(User user, PhotoAttachment? avatar)
+    public AccountInfo CreateAccountInfo(User user)
     {
-        return new AccountInfo(
-            CreateGlobalIdentifier(user.Id),
-            user.Username,
-            user.FirstName,
-            user.LastName,
-            avatar,
-            user.LanguageCode is not null ? CultureInfo.GetCultureInfo(user.LanguageCode) : null);
+        return new AccountInfo(CreateGlobalIdentifier(user.Id))
+        {
+            Username = user.Username,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            CultureInfo = GetCultureInfo(user.LanguageCode),
+            CustomData = ImmutableArray.Create(user)
+        };
+    }
+
+    public AccountInfo CreateAccountInfo(User user, BotIdentifier botId)
+    {
+        return new AccountInfo(new GlobalIdentifier(botId, user.Id))
+        {
+            Username = user.Username,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            CultureInfo = GetCultureInfo(user.LanguageCode),
+            CustomData = ImmutableArray.Create(user)
+        };
     }
 
     public ChannelInfo CreateChannelInfo(Chat chat)
@@ -60,7 +76,11 @@ internal class TelegramEntityFactory : AdapterService
             _ => null
         };
 
-        return new ChannelInfo(CreateGlobalIdentifier(chat.Id), type, channelTitle);
+        return new ChannelInfo(CreateGlobalIdentifier(chat.Id), type)
+        {
+            Title = channelTitle,
+            CustomData = ImmutableArray.Create(chat)
+        };
     }
 
     public Attachment? ExtractAttachment(TelegramMessage message)
@@ -92,84 +112,102 @@ internal class TelegramEntityFactory : AdapterService
         var firstMessage = messages[0];
         var identifier = new GlobalMessageIdentifier(CreateGlobalIdentifier(firstMessage.Chat.Id), ids);
 
-        return new Message(identifier,
-            attachments,
-            messages,
-            CreateGlobalIdentifier(firstMessage.Chat.Id),
-            CreateGlobalIdentifier(firstMessage.From!.Id),
-            firstMessage.Text ?? firstMessage.Caption,
-            firstMessage.ReplyToMessage is not null ? CreateMessage(new[] { firstMessage.ReplyToMessage }) : null
-        );
+        return new Message(identifier)
+        {
+            Attachments = attachments,
+            CustomData = messages.ToImmutableArray(),
+            ChannelId = CreateGlobalIdentifier(firstMessage.Chat.Id),
+            AccountId = CreateGlobalIdentifier(firstMessage.From!.Id),
+            Text = firstMessage.Text ?? firstMessage.Caption,
+            ReplyId = firstMessage.ReplyToMessage?.MessageId,
+            Reply = firstMessage.ReplyToMessage is not null
+                ? CreateMessage(new[] { firstMessage.ReplyToMessage })
+                : null,
+        };
     }
 
     public PhotoAttachment CreatePhotoAttachment(IEnumerable<TelegramPhotoSize> photoSizes, string? caption = null)
     {
         var sizes = photoSizes
-            .Select(x => new PhotoSize(
-                CreateGlobalIdentifier(x.FileUniqueId),
-                caption,
-                Width: x.Width,
-                Height: x.Width,
-                Size: x.FileSize,
-                UploadId: x.FileId
-            ))
-            .ToList();
+            .Select(CreatePhotoSize)
+            .ToImmutableArray();
 
-        return new PhotoAttachment(sizes);
+        return new PhotoAttachment(sizes[0].Id, sizes) { Caption = caption };
+    }
+
+    private PhotoSize CreatePhotoSize(TelegramPhotoSize photoSize)
+    {
+        return new PhotoSize(CreateGlobalIdentifier(photoSize.FileUniqueId))
+        {
+            Width = photoSize.Width,
+            Height = photoSize.Height,
+            FileSize = photoSize.FileSize,
+            UploadId = photoSize.FileId,
+            CustomData = ImmutableArray.Create(photoSize)
+        };
     }
 
     private StickerAttachment CreateStickerAttachment(Sticker messageSticker, string? caption)
     {
-        return new StickerAttachment(
-            CreateGlobalIdentifier(messageSticker.FileUniqueId),
-            caption,
-            Size: messageSticker.FileSize,
-            UploadId: messageSticker.FileId
-        );
+        return new StickerAttachment(CreateGlobalIdentifier(messageSticker.FileUniqueId))
+        {
+            Caption = caption,
+            FileSize = messageSticker.FileSize,
+            UploadId = messageSticker.FileId,
+            CustomData = ImmutableArray.Create(messageSticker)
+        };
     }
 
     private AudioAttachment CreateAudioAttachment(Audio messageAudio, string? caption)
     {
-        return new AudioAttachment(
-            CreateGlobalIdentifier(messageAudio.FileUniqueId),
-            caption,
-            Title: messageAudio.Title,
-            Size: messageAudio.FileSize,
-            UploadId: messageAudio.FileId,
-            Duration: messageAudio.Duration
-        );
+        return new AudioAttachment(CreateGlobalIdentifier(messageAudio.FileUniqueId))
+        {
+            Caption = caption,
+            FileSize = messageAudio.FileSize,
+            UploadId = messageAudio.FileId,
+            Duration = messageAudio.Duration,
+            CustomData = ImmutableArray.Create(messageAudio)
+        };
     }
 
     private VoiceAttachment CreateVoiceAttachment(Voice messageVoice, string? caption)
     {
-        return new VoiceAttachment(
-            CreateGlobalIdentifier(messageVoice.FileUniqueId),
-            caption,
-            Size: messageVoice.FileSize,
-            UploadId: messageVoice.FileId,
-            Duration: messageVoice.Duration
-        );
+        return new VoiceAttachment(CreateGlobalIdentifier(messageVoice.FileUniqueId))
+        {
+            Caption = caption,
+            FileSize = messageVoice.FileSize,
+            UploadId = messageVoice.FileId,
+            Duration = messageVoice.Duration,
+            CustomData = ImmutableArray.Create(messageVoice)
+        };
     }
 
     private DocumentAttachment CreateDocumentAttachment(Document messageDocument, string? caption)
     {
-        return new DocumentAttachment(
-            CreateGlobalIdentifier(messageDocument.FileUniqueId),
-            caption,
-            FileName: messageDocument.FileName,
-            Size: messageDocument.FileSize,
-            UploadId: messageDocument.FileId
-        );
+        return new DocumentAttachment(CreateGlobalIdentifier(messageDocument.FileUniqueId))
+        {
+            Caption = caption,
+            FileSize = messageDocument.FileSize,
+            FileName = messageDocument.FileName,
+            UploadId = messageDocument.FileId,
+            CustomData = ImmutableArray.Create(messageDocument)
+        };
     }
 
     private VideoAttachment CreateVideoAttachment(Video video, string? caption)
     {
-        return new VideoAttachment(
-            CreateGlobalIdentifier(video.FileUniqueId),
-            caption,
-            Size: video.FileSize,
-            Duration: video.Duration,
-            UploadId: video.FileId
-        );
+        return new VideoAttachment(CreateGlobalIdentifier(video.FileUniqueId))
+        {
+            Caption = caption,
+            FileSize = video.FileSize,
+            UploadId = video.FileId,
+            Duration = video.Duration,
+            CustomData = ImmutableArray.Create(video)
+        };
+    }
+
+    private static CultureInfo? GetCultureInfo(string? languageCode)
+    {
+        return languageCode is null ? null : CultureInfo.GetCultureInfo(languageCode);
     }
 }

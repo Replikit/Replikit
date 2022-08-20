@@ -15,6 +15,7 @@ internal static class SerializationConfigurationInitializer
         BsonSerializer.RegisterSerializer(new GlobalIdentifierSerializer());
         BsonSerializer.RegisterSerializer(new MessageIdentifierSerializer());
         BsonSerializer.RegisterSerializer(new GlobalMessageIdentifierSerializer());
+        BsonSerializer.RegisterSerializer(new BotIdentifierSerializer());
         BsonSerializer.RegisterSerializer(ObjectSerializer.Instance);
 
         BsonClassMap.RegisterClassMap<StateKey>(map =>

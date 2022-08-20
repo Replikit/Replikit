@@ -5,5 +5,5 @@ namespace Replikit.Core.Routing.Middleware;
 
 public interface IAdapterEventMiddleware
 {
-    Task HandleAsync(IAdapterEventContext<IAdapterEvent> context, AdapterEventDelegate next);
+    Task HandleAsync(IAdapterEventContext<IBotEvent> context, AdapterEventDelegate next);
 }

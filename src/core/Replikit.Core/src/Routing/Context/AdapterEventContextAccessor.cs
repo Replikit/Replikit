@@ -4,5 +4,5 @@ namespace Replikit.Core.Routing.Context;
 
 internal class AdapterEventContextAccessor : IAdapterEventContextAccessor
 {
-    public IAdapterEventContext<IAdapterEvent>? CurrentContext { get; set; }
+    public IAdapterEventContext<IBotEvent>? CurrentContext { get; set; }
 }

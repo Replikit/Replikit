@@ -1,3 +1,6 @@
+using System.Diagnostics;
+using Replikit.Abstractions.Attachments.Models;
+using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Messages.Models.InlineButtons;
 using Replikit.Adapters.Common.Utils;
@@ -10,14 +13,17 @@ namespace Replikit.Adapters.Telegram.Internal;
 internal class TelegramMessageBuilder
 {
     private readonly TelegramEntityFactory _telegramEntityFactory;
-    private readonly SentMessageBuilder _messageBuilder = new();
+    private readonly SentMessageBuilder _messageBuilder;
 
-    public TelegramMessageBuilder(TelegramEntityFactory telegramEntityFactory, OutMessage message)
+    public TelegramMessageBuilder(BotIdentifier botId, Identifier channelId,
+        TelegramEntityFactory telegramEntityFactory, OutMessage message)
     {
         _telegramEntityFactory = telegramEntityFactory;
 
-        ReplyToMessageId = (int?) message.Reply?.Value ?? 0;
+        ReplyToMessageId = (int?) message.Reply ?? 0;
         ReplyMarkup = CreateReplyMarkup(message);
+
+        _messageBuilder = new SentMessageBuilder(botId, channelId);
     }
 
     public int ReplyToMessageId { get; private set; }
@@ -31,16 +37,18 @@ internal class TelegramMessageBuilder
         ReplyMarkup = null;
     }
 
-    public void ApplyResult(TelegramMessage telegramMessage)
+    public void ApplyResult(TelegramMessage telegramMessage, OutAttachment? outAttachment = null)
     {
         var attachment = _telegramEntityFactory.ExtractAttachment(telegramMessage);
 
-        _messageBuilder.AddIdentifier(telegramMessage.MessageId);
-        _messageBuilder.AddOriginal(telegramMessage);
+        _messageBuilder.AddPartIdentifier(telegramMessage.MessageId);
+        _messageBuilder.AddCustomData(telegramMessage);
 
         if (attachment is not null)
         {
-            _messageBuilder.AddAttachment(attachment);
+            Debug.Assert(outAttachment is not null);
+
+            _messageBuilder.AddAttachment(attachment, outAttachment);
         }
         else
         {

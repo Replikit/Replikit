@@ -5,7 +5,7 @@ namespace Replikit.Adapters.Common.Adapters.Internal;
 
 internal class DefaultAttachmentCache : IAttachmentCache
 {
-    public Task SaveAsync(IReadOnlyList<SentAttachment> attachments, CancellationToken cancellationToken)
+    public Task SaveAsync(IEnumerable<SentAttachment> attachments, CancellationToken cancellationToken = default)
     {
         return Task.CompletedTask;
     }

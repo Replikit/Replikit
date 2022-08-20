@@ -1,5 +1,5 @@
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Management.Services;
+using Replikit.Abstractions.Members.Services;
 using Telegram.Bot;
 
 namespace Replikit.Adapters.Telegram.Services;

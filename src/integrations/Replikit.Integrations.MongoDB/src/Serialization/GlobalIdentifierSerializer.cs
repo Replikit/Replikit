@@ -12,8 +12,8 @@ internal class GlobalIdentifierSerializer : SerializerBase<GlobalIdentifier>
     {
         context.Writer.WriteStartDocument();
 
-        context.Writer.WriteName(nameof(GlobalIdentifier.AdapterId));
-        BsonSerializer.Serialize(context.Writer, value.AdapterId);
+        context.Writer.WriteName(nameof(GlobalIdentifier.BotId));
+        BsonSerializer.Serialize(context.Writer, value.BotId);
 
         context.Writer.WriteName(nameof(GlobalIdentifier.Value));
         BsonSerializer.Serialize(context.Writer, value.Value);
@@ -25,17 +25,12 @@ internal class GlobalIdentifierSerializer : SerializerBase<GlobalIdentifier>
     {
         context.Reader.ReadStartDocument();
 
-        if (context.Reader.ReadName(Utf8NameDecoder.Instance) is not nameof(GlobalIdentifier.AdapterId))
+        if (context.Reader.ReadName(Utf8NameDecoder.Instance) is not nameof(GlobalIdentifier.BotId))
         {
             throw new BsonSerializationException($"Expected field '{nameof(GlobalIdentifier.Value)}'");
         }
 
-        var adapterId = BsonSerializer.Deserialize<AdapterIdentifier>(context.Reader);
-
-        if (adapterId is null)
-        {
-            throw new BsonSerializationException("Adapter id must not be null");
-        }
+        var botId = BsonSerializer.Deserialize<BotIdentifier>(context.Reader);
 
         if (context.Reader.ReadName(Utf8NameDecoder.Instance) is not nameof(GlobalIdentifier.Value))
         {
@@ -46,6 +41,6 @@ internal class GlobalIdentifierSerializer : SerializerBase<GlobalIdentifier>
 
         context.Reader.ReadEndDocument();
 
-        return new GlobalIdentifier(adapterId, identifier);
+        return new GlobalIdentifier(botId, identifier);
     }
 }

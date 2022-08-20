@@ -8,7 +8,7 @@ internal static class ServiceCollectionExtensions
     {
         services.AddSingleton<IGlobalMessageService, GlobalMessageService>();
         services.AddSingleton<IGlobalMemberService, GlobalMemberService>();
-        services.AddSingleton<IGlobalAdapterRepository, GlobalAdapterRepository>();
         services.AddSingleton<IGlobalChannelService, GlobalChannelService>();
+        services.AddSingleton<IGlobalAccountService, GlobalAccountService>();
     }
 }

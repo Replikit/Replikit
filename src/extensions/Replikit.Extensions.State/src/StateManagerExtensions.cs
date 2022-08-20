@@ -14,12 +14,12 @@ public static class StateManagerExtensions
     }
 
     public static Task<IState<TValue>> GetChannelStateAsync<TValue>(this IStateManager stateManager,
-        AdapterIdentifier adapterId, Identifier channelId, CancellationToken cancellationToken = default)
+        BotIdentifier botId, Identifier channelId, CancellationToken cancellationToken = default)
         where TValue : class, new()
     {
         var key = new StateKey(
             StateKind.ChannelState,
-            adapterId,
+            botId,
             channelId
         );
 
@@ -30,16 +30,16 @@ public static class StateManagerExtensions
         GlobalIdentifier channelId, CancellationToken cancellationToken = default)
         where TValue : class, new()
     {
-        return stateManager.GetChannelStateAsync<TValue>(channelId.AdapterId, channelId, cancellationToken);
+        return stateManager.GetChannelStateAsync<TValue>(channelId.BotId, channelId, cancellationToken);
     }
 
     public static Task<IState<TValue>> GetAccountStateAsync<TValue>(this IStateManager stateManager,
-        AdapterIdentifier adapterId, Identifier accountId, CancellationToken cancellationToken = default)
+        BotIdentifier botId, Identifier accountId, CancellationToken cancellationToken = default)
         where TValue : class, new()
     {
         var key = new StateKey(
             StateKind.AccountState,
-            adapterId,
+            botId,
             AccountId: accountId
         );
 
@@ -50,6 +50,6 @@ public static class StateManagerExtensions
         GlobalIdentifier accountId, CancellationToken cancellationToken = default)
         where TValue : class, new()
     {
-        return stateManager.GetAccountStateAsync<TValue>(accountId.AdapterId, accountId, cancellationToken);
+        return stateManager.GetAccountStateAsync<TValue>(accountId.BotId, accountId, cancellationToken);
     }
 }

@@ -1,7 +1,7 @@
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Management.Models;
-using Replikit.Abstractions.Management.Services;
+using Replikit.Abstractions.Members.Models;
+using Replikit.Abstractions.Members.Services;
 
 namespace Replikit.Core.GlobalServices;
 
@@ -14,9 +14,9 @@ internal class GlobalMemberService : IGlobalMemberService
         _adapterCollection = adapterCollection;
     }
 
-    public MemberServiceFeatures GetFeatures(AdapterIdentifier adapterId)
+    public MemberServiceFeatures GetFeatures(BotIdentifier botId)
     {
-        return _adapterCollection.ResolveRequired(adapterId).MemberService.Features;
+        return _adapterCollection.ResolveRequired(botId).MemberService.Features;
     }
 
     private IMemberService ResolveMemberService(GlobalIdentifier channelId)
@@ -31,12 +31,6 @@ internal class GlobalMemberService : IGlobalMemberService
         return ResolveMemberService(channelId).GetManyAsync(channelId, accountIds, cancellationToken);
     }
 
-    public Task<IReadOnlyList<MemberInfo>> ListManyAsync(GlobalIdentifier channelId, int? take = null, int? skip = null,
-        CancellationToken cancellationToken = default)
-    {
-        return ResolveMemberService(channelId).ListManyAsync(channelId, take, skip, cancellationToken);
-    }
-
     public Task AddAsync(GlobalIdentifier channelId, Identifier accountId,
         CancellationToken cancellationToken = default)
     {
@@ -47,18 +41,6 @@ internal class GlobalMemberService : IGlobalMemberService
         CancellationToken cancellationToken = default)
     {
         return ResolveMemberService(channelId).RemoveAsync(channelId, accountId, cancellationToken);
-    }
-
-    public Task BanAsync(GlobalIdentifier channelId, Identifier accountId,
-        CancellationToken cancellationToken = default)
-    {
-        return ResolveMemberService(channelId).BanAsync(channelId, accountId, cancellationToken);
-    }
-
-    public Task UnbanAsync(GlobalIdentifier channelId, Identifier accountId,
-        CancellationToken cancellationToken = default)
-    {
-        return ResolveMemberService(channelId).UnbanAsync(channelId, accountId, cancellationToken);
     }
 
     public Task<long> GetTotalCountAsync(GlobalIdentifier channelId, CancellationToken cancellationToken = default)

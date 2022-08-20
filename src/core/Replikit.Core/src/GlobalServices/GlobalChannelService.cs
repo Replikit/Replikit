@@ -1,7 +1,7 @@
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Attachments.Models;
+using Replikit.Abstractions.Channels.Services;
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Management.Services;
 
 namespace Replikit.Core.GlobalServices;
 
@@ -14,9 +14,9 @@ internal class GlobalChannelService : IGlobalChannelService
         _adapterCollection = adapterCollection;
     }
 
-    public ChannelServiceFeatures GetFeatures(AdapterIdentifier adapterId)
+    public ChannelServiceFeatures GetFeatures(BotIdentifier botId)
     {
-        return _adapterCollection.ResolveRequired(adapterId).ChannelService.Features;
+        return _adapterCollection.ResolveRequired(botId).ChannelService.Features;
     }
 
     private IChannelService ResolveChannelService(GlobalIdentifier channelId)
@@ -28,11 +28,5 @@ internal class GlobalChannelService : IGlobalChannelService
         CancellationToken cancellationToken = default)
     {
         return ResolveChannelService(channelId).ChangeTitleAsync(channelId, title, cancellationToken);
-    }
-
-    public Task ChangePhotoAsync(GlobalIdentifier channelId, OutAttachment photo,
-        CancellationToken cancellationToken = default)
-    {
-        return ResolveChannelService(channelId).ChangePhotoAsync(channelId, photo, cancellationToken);
     }
 }

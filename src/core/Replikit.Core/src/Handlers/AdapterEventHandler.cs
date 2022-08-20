@@ -5,14 +5,14 @@ namespace Replikit.Core.Handlers;
 
 public abstract class AdapterEventHandler
 {
-    public abstract Task HandleAsync(IAdapterEventContext<IAdapterEvent> context);
+    public abstract Task HandleAsync(IAdapterEventContext<IBotEvent> context);
 }
 
-public abstract class AdapterEventHandler<TEvent> : AdapterEventHandler where TEvent : IAdapterEvent
+public abstract class AdapterEventHandler<TEvent> : AdapterEventHandler where TEvent : IBotEvent
 {
     public abstract Task HandleAsync(IAdapterEventContext<TEvent> context);
 
-    public override Task HandleAsync(IAdapterEventContext<IAdapterEvent> context)
+    public override Task HandleAsync(IAdapterEventContext<IBotEvent> context)
     {
         if (context is IAdapterEventContext<TEvent> typedContext)
         {

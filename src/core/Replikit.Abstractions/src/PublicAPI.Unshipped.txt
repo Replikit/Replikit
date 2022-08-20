@@ -1,0 +1,464 @@
+override Replikit.Abstractions.Common.Models.Identifier.GetHashCode() -> int
+override Replikit.Abstractions.Common.Models.Identifier.ToString() -> string?
+override Replikit.Abstractions.Messages.Models.MessageIdentifier.GetHashCode() -> int
+Replikit.Abstractions.Accounts.Events.AccountEvent
+Replikit.Abstractions.Accounts.Events.AccountEvent.Account.get -> Replikit.Abstractions.Accounts.Models.AccountInfo!
+Replikit.Abstractions.Accounts.Events.AccountEvent.AccountEvent(Replikit.Abstractions.Common.Models.BotIdentifier botId, Replikit.Abstractions.Accounts.Models.AccountInfo! account) -> void
+Replikit.Abstractions.Accounts.Events.IAccountEvent
+Replikit.Abstractions.Accounts.Events.IAccountEvent.Account.get -> Replikit.Abstractions.Accounts.Models.AccountInfo!
+Replikit.Abstractions.Accounts.Models.AccountInfo
+Replikit.Abstractions.Accounts.Models.AccountInfo.AccountInfo(Replikit.Abstractions.Common.Models.GlobalIdentifier id) -> void
+Replikit.Abstractions.Accounts.Models.AccountInfo.Avatar.get -> Replikit.Abstractions.Attachments.Models.PhotoAttachment?
+Replikit.Abstractions.Accounts.Models.AccountInfo.Avatar.init -> void
+Replikit.Abstractions.Accounts.Models.AccountInfo.CultureInfo.get -> System.Globalization.CultureInfo?
+Replikit.Abstractions.Accounts.Models.AccountInfo.CultureInfo.init -> void
+Replikit.Abstractions.Accounts.Models.AccountInfo.CustomData.get -> System.Collections.Generic.IReadOnlyList<object!>!
+Replikit.Abstractions.Accounts.Models.AccountInfo.CustomData.init -> void
+Replikit.Abstractions.Accounts.Models.AccountInfo.FirstName.get -> string?
+Replikit.Abstractions.Accounts.Models.AccountInfo.FirstName.init -> void
+Replikit.Abstractions.Accounts.Models.AccountInfo.Id.get -> Replikit.Abstractions.Common.Models.GlobalIdentifier
+Replikit.Abstractions.Accounts.Models.AccountInfo.LastName.get -> string?
+Replikit.Abstractions.Accounts.Models.AccountInfo.LastName.init -> void
+Replikit.Abstractions.Accounts.Models.AccountInfo.Username.get -> string?
+Replikit.Abstractions.Accounts.Models.AccountInfo.Username.init -> void
+Replikit.Abstractions.Accounts.Services.AccountServiceFeatures
+Replikit.Abstractions.Accounts.Services.AccountServiceFeatures.All = -1 -> Replikit.Abstractions.Accounts.Services.AccountServiceFeatures
+Replikit.Abstractions.Accounts.Services.AccountServiceFeatures.Get = 1 -> Replikit.Abstractions.Accounts.Services.AccountServiceFeatures
+Replikit.Abstractions.Accounts.Services.AccountServiceFeatures.GetAvatar = 2 -> Replikit.Abstractions.Accounts.Services.AccountServiceFeatures
+Replikit.Abstractions.Accounts.Services.AccountServiceFeatures.None = 0 -> Replikit.Abstractions.Accounts.Services.AccountServiceFeatures
+Replikit.Abstractions.Accounts.Services.IAccountService
+Replikit.Abstractions.Accounts.Services.IAccountService.GetAsync(Replikit.Abstractions.Common.Models.Identifier accountId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Replikit.Abstractions.Accounts.Models.AccountInfo?>!
+Replikit.Abstractions.Accounts.Services.IAccountService.GetAvatarAsync(Replikit.Abstractions.Common.Models.Identifier accountId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Replikit.Abstractions.Attachments.Models.PhotoAttachment?>!
+Replikit.Abstractions.Adapters.AdapterBotInfo
+Replikit.Abstractions.Adapters.AdapterBotInfo.Account.get -> Replikit.Abstractions.Accounts.Models.AccountInfo!
+Replikit.Abstractions.Adapters.AdapterBotInfo.AdapterBotInfo(Replikit.Abstractions.Common.Models.BotIdentifier Id, Replikit.Abstractions.Accounts.Models.AccountInfo! Account) -> void
+Replikit.Abstractions.Adapters.AdapterBotInfo.Id.get -> Replikit.Abstractions.Common.Models.BotIdentifier
+Replikit.Abstractions.Adapters.AdapterCollectionExtensions
+Replikit.Abstractions.Adapters.AdapterExtensions
+Replikit.Abstractions.Adapters.AdapterInfo
+Replikit.Abstractions.Adapters.AdapterInfo.AdapterInfo(string! Type, string! DisplayName) -> void
+Replikit.Abstractions.Adapters.AdapterInfo.DisplayName.get -> string!
+Replikit.Abstractions.Adapters.AdapterInfo.Type.get -> string!
+Replikit.Abstractions.Adapters.Exceptions.AdapterNotFoundException
+Replikit.Abstractions.Adapters.Exceptions.AdapterNotFoundException.AdapterNotFoundException(Replikit.Abstractions.Common.Models.BotIdentifier botId) -> void
+Replikit.Abstractions.Adapters.Exceptions.AdapterServiceNotImplementedException
+Replikit.Abstractions.Adapters.Exceptions.AdapterServiceNotImplementedException.AdapterServiceNotImplementedException(Replikit.Abstractions.Adapters.IAdapter! adapter, System.Type! serviceType) -> void
+Replikit.Abstractions.Adapters.Factory.AdapterFactoryContext
+Replikit.Abstractions.Adapters.Factory.AdapterFactoryContext.AdapterFactoryContext(Replikit.Abstractions.Events.IAdapterEventDispatcher? eventDispatcher = null, Replikit.Abstractions.Attachments.Services.IAttachmentCache? attachmentCache = null) -> void
+Replikit.Abstractions.Adapters.Factory.AdapterFactoryContext.AttachmentCache.get -> Replikit.Abstractions.Attachments.Services.IAttachmentCache?
+Replikit.Abstractions.Adapters.Factory.AdapterFactoryContext.EventDispatcher.get -> Replikit.Abstractions.Events.IAdapterEventDispatcher?
+Replikit.Abstractions.Adapters.Factory.IAdapterFactory
+Replikit.Abstractions.Adapters.Factory.IAdapterFactory.CreateAsync(object! options, Replikit.Abstractions.Adapters.Factory.AdapterFactoryContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Replikit.Abstractions.Adapters.IAdapter!>!
+Replikit.Abstractions.Adapters.Factory.IAdapterFactory.OptionsType.get -> System.Type!
+Replikit.Abstractions.Adapters.IAdapter
+Replikit.Abstractions.Adapters.IAdapter.AccountService.get -> Replikit.Abstractions.Accounts.Services.IAccountService!
+Replikit.Abstractions.Adapters.IAdapter.AdapterEventSource.get -> Replikit.Abstractions.Events.IAdapterEventSource!
+Replikit.Abstractions.Adapters.IAdapter.AdapterInfo.get -> Replikit.Abstractions.Adapters.AdapterInfo!
+Replikit.Abstractions.Adapters.IAdapter.AdapterServices.get -> System.IServiceProvider!
+Replikit.Abstractions.Adapters.IAdapter.AttachmentService.get -> Replikit.Abstractions.Attachments.Services.IAttachmentService!
+Replikit.Abstractions.Adapters.IAdapter.BotInfo.get -> Replikit.Abstractions.Adapters.AdapterBotInfo!
+Replikit.Abstractions.Adapters.IAdapter.ChannelService.get -> Replikit.Abstractions.Channels.Services.IChannelService!
+Replikit.Abstractions.Adapters.IAdapter.MemberService.get -> Replikit.Abstractions.Members.Services.IMemberService!
+Replikit.Abstractions.Adapters.IAdapter.MessageService.get -> Replikit.Abstractions.Messages.Services.IMessageService!
+Replikit.Abstractions.Adapters.IAdapter.PlatformInfo.get -> Replikit.Abstractions.Adapters.PlatformInfo!
+Replikit.Abstractions.Adapters.IAdapter.TextFormatter.get -> Replikit.Abstractions.Messages.Services.ITextFormatter!
+Replikit.Abstractions.Adapters.IAdapter.TextTokenizer.get -> Replikit.Abstractions.Messages.Services.ITextTokenizer!
+Replikit.Abstractions.Adapters.IAdapterCollection
+Replikit.Abstractions.Adapters.IAdapterCollection.GetAdapters() -> System.Collections.Generic.IReadOnlyList<Replikit.Abstractions.Adapters.IAdapter!>!
+Replikit.Abstractions.Adapters.Loader.AdapterDescriptor
+Replikit.Abstractions.Adapters.Loader.AdapterDescriptor.AdapterDescriptor(string! type, object! options) -> void
+Replikit.Abstractions.Adapters.Loader.AdapterDescriptor.Options.get -> object!
+Replikit.Abstractions.Adapters.Loader.AdapterDescriptor.Type.get -> string!
+Replikit.Abstractions.Adapters.Loader.IAdapterLoaderOptions
+Replikit.Abstractions.Adapters.Loader.IAdapterLoaderOptions.AddDescriptor(Replikit.Abstractions.Adapters.Loader.AdapterDescriptor! descriptor) -> void
+Replikit.Abstractions.Adapters.Loader.IAdapterLoaderOptions.RegisterFactory(string! adapterType, Replikit.Abstractions.Adapters.Factory.IAdapterFactory! factory) -> void
+Replikit.Abstractions.Adapters.PlatformInfo
+Replikit.Abstractions.Adapters.PlatformInfo.DisplayName.get -> string!
+Replikit.Abstractions.Adapters.PlatformInfo.Id.get -> string!
+Replikit.Abstractions.Adapters.PlatformInfo.PlatformInfo(string! Id, string! DisplayName) -> void
+Replikit.Abstractions.Attachments.Models.Attachment
+Replikit.Abstractions.Attachments.Models.Attachment.Attachment(Replikit.Abstractions.Common.Models.GlobalIdentifier id, Replikit.Abstractions.Attachments.Models.AttachmentType type) -> void
+Replikit.Abstractions.Attachments.Models.Attachment.Caption.get -> string?
+Replikit.Abstractions.Attachments.Models.Attachment.Caption.init -> void
+Replikit.Abstractions.Attachments.Models.Attachment.CustomData.get -> System.Collections.Generic.IReadOnlyList<object!>!
+Replikit.Abstractions.Attachments.Models.Attachment.CustomData.init -> void
+Replikit.Abstractions.Attachments.Models.Attachment.FileName.get -> string?
+Replikit.Abstractions.Attachments.Models.Attachment.FileName.init -> void
+Replikit.Abstractions.Attachments.Models.Attachment.FileSize.get -> int?
+Replikit.Abstractions.Attachments.Models.Attachment.FileSize.init -> void
+Replikit.Abstractions.Attachments.Models.Attachment.Id.get -> Replikit.Abstractions.Common.Models.GlobalIdentifier
+Replikit.Abstractions.Attachments.Models.Attachment.Type.get -> Replikit.Abstractions.Attachments.Models.AttachmentType
+Replikit.Abstractions.Attachments.Models.Attachment.UploadId.get -> Replikit.Abstractions.Common.Models.Identifier?
+Replikit.Abstractions.Attachments.Models.Attachment.UploadId.init -> void
+Replikit.Abstractions.Attachments.Models.Attachment.Url.get -> System.Uri?
+Replikit.Abstractions.Attachments.Models.Attachment.Url.init -> void
+Replikit.Abstractions.Attachments.Models.AttachmentType
+Replikit.Abstractions.Attachments.Models.AttachmentType.Audio = 1 -> Replikit.Abstractions.Attachments.Models.AttachmentType
+Replikit.Abstractions.Attachments.Models.AttachmentType.Document = 2 -> Replikit.Abstractions.Attachments.Models.AttachmentType
+Replikit.Abstractions.Attachments.Models.AttachmentType.Photo = 3 -> Replikit.Abstractions.Attachments.Models.AttachmentType
+Replikit.Abstractions.Attachments.Models.AttachmentType.Sticker = 4 -> Replikit.Abstractions.Attachments.Models.AttachmentType
+Replikit.Abstractions.Attachments.Models.AttachmentType.Unknown = 0 -> Replikit.Abstractions.Attachments.Models.AttachmentType
+Replikit.Abstractions.Attachments.Models.AttachmentType.Video = 5 -> Replikit.Abstractions.Attachments.Models.AttachmentType
+Replikit.Abstractions.Attachments.Models.AttachmentType.Voice = 6 -> Replikit.Abstractions.Attachments.Models.AttachmentType
+Replikit.Abstractions.Attachments.Models.AudioAttachment
+Replikit.Abstractions.Attachments.Models.AudioAttachment.AudioAttachment(Replikit.Abstractions.Common.Models.GlobalIdentifier id) -> void
+Replikit.Abstractions.Attachments.Models.AudioAttachment.Duration.get -> int?
+Replikit.Abstractions.Attachments.Models.AudioAttachment.Duration.init -> void
+Replikit.Abstractions.Attachments.Models.DocumentAttachment
+Replikit.Abstractions.Attachments.Models.DocumentAttachment.DocumentAttachment(Replikit.Abstractions.Common.Models.GlobalIdentifier id) -> void
+Replikit.Abstractions.Attachments.Models.OutAttachment
+Replikit.Abstractions.Attachments.Models.OutAttachment.CacheKey.get -> string?
+Replikit.Abstractions.Attachments.Models.OutAttachment.Caption.get -> string?
+Replikit.Abstractions.Attachments.Models.OutAttachment.FileName.get -> string?
+Replikit.Abstractions.Attachments.Models.OutAttachment.Source.get -> object!
+Replikit.Abstractions.Attachments.Models.OutAttachment.Type.get -> Replikit.Abstractions.Attachments.Models.AttachmentType
+Replikit.Abstractions.Attachments.Models.PhotoAttachment
+Replikit.Abstractions.Attachments.Models.PhotoAttachment.Large.get -> Replikit.Abstractions.Attachments.Models.PhotoSize!
+Replikit.Abstractions.Attachments.Models.PhotoAttachment.PhotoAttachment(Replikit.Abstractions.Common.Models.GlobalIdentifier id, System.Collections.Generic.IReadOnlyList<Replikit.Abstractions.Attachments.Models.PhotoSize!>! sizes) -> void
+Replikit.Abstractions.Attachments.Models.PhotoAttachment.Sizes.get -> System.Collections.Generic.IReadOnlyList<Replikit.Abstractions.Attachments.Models.PhotoSize!>!
+Replikit.Abstractions.Attachments.Models.PhotoAttachment.Small.get -> Replikit.Abstractions.Attachments.Models.PhotoSize!
+Replikit.Abstractions.Attachments.Models.PhotoSize
+Replikit.Abstractions.Attachments.Models.PhotoSize.CustomData.get -> System.Collections.Generic.IReadOnlyList<object!>!
+Replikit.Abstractions.Attachments.Models.PhotoSize.CustomData.init -> void
+Replikit.Abstractions.Attachments.Models.PhotoSize.FileSize.get -> int?
+Replikit.Abstractions.Attachments.Models.PhotoSize.FileSize.init -> void
+Replikit.Abstractions.Attachments.Models.PhotoSize.Height.get -> int?
+Replikit.Abstractions.Attachments.Models.PhotoSize.Height.init -> void
+Replikit.Abstractions.Attachments.Models.PhotoSize.Id.get -> Replikit.Abstractions.Common.Models.GlobalIdentifier
+Replikit.Abstractions.Attachments.Models.PhotoSize.PhotoSize(Replikit.Abstractions.Common.Models.GlobalIdentifier id) -> void
+Replikit.Abstractions.Attachments.Models.PhotoSize.UploadId.get -> Replikit.Abstractions.Common.Models.Identifier?
+Replikit.Abstractions.Attachments.Models.PhotoSize.UploadId.init -> void
+Replikit.Abstractions.Attachments.Models.PhotoSize.Url.get -> System.Uri?
+Replikit.Abstractions.Attachments.Models.PhotoSize.Url.init -> void
+Replikit.Abstractions.Attachments.Models.PhotoSize.Width.get -> int?
+Replikit.Abstractions.Attachments.Models.PhotoSize.Width.init -> void
+Replikit.Abstractions.Attachments.Models.SentAttachment
+Replikit.Abstractions.Attachments.Models.SentAttachment.Attachment.get -> Replikit.Abstractions.Attachments.Models.Attachment!
+Replikit.Abstractions.Attachments.Models.SentAttachment.OutAttachment.get -> Replikit.Abstractions.Attachments.Models.OutAttachment!
+Replikit.Abstractions.Attachments.Models.SentAttachment.SentAttachment(Replikit.Abstractions.Attachments.Models.Attachment! Attachment, Replikit.Abstractions.Attachments.Models.OutAttachment! OutAttachment) -> void
+Replikit.Abstractions.Attachments.Models.StickerAttachment
+Replikit.Abstractions.Attachments.Models.StickerAttachment.StickerAttachment(Replikit.Abstractions.Common.Models.GlobalIdentifier id) -> void
+Replikit.Abstractions.Attachments.Models.VideoAttachment
+Replikit.Abstractions.Attachments.Models.VideoAttachment.Duration.get -> int?
+Replikit.Abstractions.Attachments.Models.VideoAttachment.Duration.init -> void
+Replikit.Abstractions.Attachments.Models.VideoAttachment.VideoAttachment(Replikit.Abstractions.Common.Models.GlobalIdentifier id) -> void
+Replikit.Abstractions.Attachments.Models.VoiceAttachment
+Replikit.Abstractions.Attachments.Models.VoiceAttachment.Duration.get -> int?
+Replikit.Abstractions.Attachments.Models.VoiceAttachment.Duration.init -> void
+Replikit.Abstractions.Attachments.Models.VoiceAttachment.VoiceAttachment(Replikit.Abstractions.Common.Models.GlobalIdentifier id) -> void
+Replikit.Abstractions.Attachments.Services.AttachmentServiceFeatures
+Replikit.Abstractions.Attachments.Services.AttachmentServiceFeatures.All = -1 -> Replikit.Abstractions.Attachments.Services.AttachmentServiceFeatures
+Replikit.Abstractions.Attachments.Services.AttachmentServiceFeatures.Get = 1 -> Replikit.Abstractions.Attachments.Services.AttachmentServiceFeatures
+Replikit.Abstractions.Attachments.Services.AttachmentServiceFeatures.GetContent = 2 -> Replikit.Abstractions.Attachments.Services.AttachmentServiceFeatures
+Replikit.Abstractions.Attachments.Services.AttachmentServiceFeatures.GetUrl = 4 -> Replikit.Abstractions.Attachments.Services.AttachmentServiceFeatures
+Replikit.Abstractions.Attachments.Services.AttachmentServiceFeatures.None = 0 -> Replikit.Abstractions.Attachments.Services.AttachmentServiceFeatures
+Replikit.Abstractions.Attachments.Services.IAttachmentCache
+Replikit.Abstractions.Attachments.Services.IAttachmentCache.ResolveAsync(System.Collections.Generic.IEnumerable<Replikit.Abstractions.Attachments.Models.OutAttachment!>! attachments, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Replikit.Abstractions.Attachments.Models.OutAttachment!>!>!
+Replikit.Abstractions.Attachments.Services.IAttachmentCache.SaveAsync(System.Collections.Generic.IEnumerable<Replikit.Abstractions.Attachments.Models.SentAttachment!>! attachments, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Replikit.Abstractions.Attachments.Services.IAttachmentService
+Replikit.Abstractions.Attachments.Services.IAttachmentService.GetAsync(Replikit.Abstractions.Common.Models.Identifier attachmentId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Replikit.Abstractions.Attachments.Models.Attachment?>!
+Replikit.Abstractions.Attachments.Services.IAttachmentService.GetContentAsync(Replikit.Abstractions.Common.Models.Identifier attachmentId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IO.Stream?>!
+Replikit.Abstractions.Attachments.Services.IAttachmentService.GetUrlAsync(Replikit.Abstractions.Common.Models.Identifier attachmentId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Uri?>!
+Replikit.Abstractions.Channels.Events.ChannelAndAccountEvent
+Replikit.Abstractions.Channels.Events.ChannelAndAccountEvent.Account.get -> Replikit.Abstractions.Accounts.Models.AccountInfo!
+Replikit.Abstractions.Channels.Events.ChannelAndAccountEvent.ChannelAndAccountEvent(Replikit.Abstractions.Common.Models.BotIdentifier botId, Replikit.Abstractions.Channels.Models.ChannelInfo! channel, Replikit.Abstractions.Accounts.Models.AccountInfo! account) -> void
+Replikit.Abstractions.Channels.Events.ChannelEvent
+Replikit.Abstractions.Channels.Events.ChannelEvent.Channel.get -> Replikit.Abstractions.Channels.Models.ChannelInfo!
+Replikit.Abstractions.Channels.Events.ChannelEvent.ChannelEvent(Replikit.Abstractions.Common.Models.BotIdentifier botId, Replikit.Abstractions.Channels.Models.ChannelInfo! channel) -> void
+Replikit.Abstractions.Channels.Events.IChannelEvent
+Replikit.Abstractions.Channels.Events.IChannelEvent.Channel.get -> Replikit.Abstractions.Channels.Models.ChannelInfo!
+Replikit.Abstractions.Channels.Models.ChannelInfo
+Replikit.Abstractions.Channels.Models.ChannelInfo.ChannelInfo(Replikit.Abstractions.Common.Models.GlobalIdentifier id, Replikit.Abstractions.Channels.Models.ChannelType type) -> void
+Replikit.Abstractions.Channels.Models.ChannelInfo.CustomData.get -> System.Collections.Generic.IReadOnlyList<object!>!
+Replikit.Abstractions.Channels.Models.ChannelInfo.CustomData.init -> void
+Replikit.Abstractions.Channels.Models.ChannelInfo.Id.get -> Replikit.Abstractions.Common.Models.GlobalIdentifier
+Replikit.Abstractions.Channels.Models.ChannelInfo.ParentId.get -> Replikit.Abstractions.Common.Models.GlobalIdentifier?
+Replikit.Abstractions.Channels.Models.ChannelInfo.ParentId.init -> void
+Replikit.Abstractions.Channels.Models.ChannelInfo.Title.get -> string?
+Replikit.Abstractions.Channels.Models.ChannelInfo.Title.init -> void
+Replikit.Abstractions.Channels.Models.ChannelInfo.Type.get -> Replikit.Abstractions.Channels.Models.ChannelType
+Replikit.Abstractions.Channels.Models.ChannelType
+Replikit.Abstractions.Channels.Models.ChannelType.ChannelGroup = 4 -> Replikit.Abstractions.Channels.Models.ChannelType
+Replikit.Abstractions.Channels.Models.ChannelType.Direct = 1 -> Replikit.Abstractions.Channels.Models.ChannelType
+Replikit.Abstractions.Channels.Models.ChannelType.Group = 2 -> Replikit.Abstractions.Channels.Models.ChannelType
+Replikit.Abstractions.Channels.Models.ChannelType.PostChannel = 3 -> Replikit.Abstractions.Channels.Models.ChannelType
+Replikit.Abstractions.Channels.Models.ChannelType.Unknown = 0 -> Replikit.Abstractions.Channels.Models.ChannelType
+Replikit.Abstractions.Channels.Services.ChannelServiceFeatures
+Replikit.Abstractions.Channels.Services.ChannelServiceFeatures.All = -1 -> Replikit.Abstractions.Channels.Services.ChannelServiceFeatures
+Replikit.Abstractions.Channels.Services.ChannelServiceFeatures.ChangeTitle = 4 -> Replikit.Abstractions.Channels.Services.ChannelServiceFeatures
+Replikit.Abstractions.Channels.Services.ChannelServiceFeatures.Get = 2 -> Replikit.Abstractions.Channels.Services.ChannelServiceFeatures
+Replikit.Abstractions.Channels.Services.ChannelServiceFeatures.None = 0 -> Replikit.Abstractions.Channels.Services.ChannelServiceFeatures
+Replikit.Abstractions.Channels.Services.IChannelService
+Replikit.Abstractions.Channels.Services.IChannelService.ChangeTitleAsync(Replikit.Abstractions.Common.Models.Identifier channelId, string! title, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Replikit.Abstractions.Channels.Services.IChannelService.GetAsync(Replikit.Abstractions.Common.Models.Identifier channelId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Replikit.Abstractions.Channels.Models.ChannelInfo?>!
+Replikit.Abstractions.Common.CustomData.HasCustomDataExtensions
+Replikit.Abstractions.Common.CustomData.IHasCustomData
+Replikit.Abstractions.Common.CustomData.IHasCustomData.CustomData.get -> System.Collections.Generic.IReadOnlyList<object!>!
+Replikit.Abstractions.Common.Exceptions.CustomDataNotFoundException
+Replikit.Abstractions.Common.Exceptions.CustomDataNotFoundException.CustomDataNotFoundException(System.Type! dataType) -> void
+Replikit.Abstractions.Common.Exceptions.InvalidIdentifierValueException
+Replikit.Abstractions.Common.Exceptions.InvalidIdentifierValueException.InvalidIdentifierValueException(Replikit.Abstractions.Common.Models.Identifier identifier, System.Type! expectedType) -> void
+Replikit.Abstractions.Common.Exceptions.ReplikitException
+Replikit.Abstractions.Common.Exceptions.ReplikitException.ReplikitException(string! message) -> void
+Replikit.Abstractions.Common.Exceptions.ReplikitException.ReplikitException(string! message, System.Exception? innerException) -> void
+Replikit.Abstractions.Common.Exceptions.UnexpectedlyUnsupportedFeatureException
+Replikit.Abstractions.Common.Exceptions.UnexpectedlyUnsupportedFeatureException.UnexpectedlyUnsupportedFeatureException(object! instance, System.Enum! feature) -> void
+Replikit.Abstractions.Common.Exceptions.UnsupportedFeatureException
+Replikit.Abstractions.Common.Exceptions.UnsupportedFeatureException.UnsupportedFeatureException(object! instance, System.Enum! feature) -> void
+Replikit.Abstractions.Common.Features.HasFeaturesExtensions
+Replikit.Abstractions.Common.Features.IHasFeatures<TFeatures>
+Replikit.Abstractions.Common.Features.IHasFeatures<TFeatures>.Features.get -> TFeatures
+Replikit.Abstractions.Common.Models.BotIdentifier
+Replikit.Abstractions.Common.Models.BotIdentifier.BotIdentifier() -> void
+Replikit.Abstractions.Common.Models.BotIdentifier.BotIdentifier(string! PlatformId, Replikit.Abstractions.Common.Models.Identifier Value) -> void
+Replikit.Abstractions.Common.Models.BotIdentifier.PlatformId.get -> string!
+Replikit.Abstractions.Common.Models.BotIdentifier.Value.get -> Replikit.Abstractions.Common.Models.Identifier
+Replikit.Abstractions.Common.Models.GlobalIdentifier
+Replikit.Abstractions.Common.Models.GlobalIdentifier.BotId.get -> Replikit.Abstractions.Common.Models.BotIdentifier
+Replikit.Abstractions.Common.Models.GlobalIdentifier.GlobalIdentifier() -> void
+Replikit.Abstractions.Common.Models.GlobalIdentifier.GlobalIdentifier(Replikit.Abstractions.Common.Models.BotIdentifier BotId, Replikit.Abstractions.Common.Models.Identifier Value) -> void
+Replikit.Abstractions.Common.Models.GlobalIdentifier.Value.get -> Replikit.Abstractions.Common.Models.Identifier
+Replikit.Abstractions.Common.Models.Identifier
+Replikit.Abstractions.Common.Models.Identifier.Equals(Replikit.Abstractions.Common.Models.Identifier other) -> bool
+Replikit.Abstractions.Common.Models.Identifier.GetUnderlyingValue() -> object?
+Replikit.Abstractions.Common.Models.Identifier.Identifier() -> void
+Replikit.Abstractions.Common.Models.Identifier.Identifier(int value) -> void
+Replikit.Abstractions.Common.Models.Identifier.Identifier(long value) -> void
+Replikit.Abstractions.Common.Models.Identifier.Identifier(string! value) -> void
+Replikit.Abstractions.Common.Models.Identifier.Identifier(System.Guid value) -> void
+Replikit.Abstractions.Events.BotEvent
+Replikit.Abstractions.Events.BotEvent.BotEvent(Replikit.Abstractions.Common.Models.BotIdentifier botId) -> void
+Replikit.Abstractions.Events.BotEvent.BotId.get -> Replikit.Abstractions.Common.Models.BotIdentifier
+Replikit.Abstractions.Events.BotEvent.CustomData.get -> System.Collections.Generic.IReadOnlyList<object!>!
+Replikit.Abstractions.Events.BotEvent.CustomData.init -> void
+Replikit.Abstractions.Events.IAdapterEventDispatcher
+Replikit.Abstractions.Events.IAdapterEventDispatcher.DispatchAsync(Replikit.Abstractions.Events.IBotEvent! event, Replikit.Abstractions.Adapters.IAdapter! adapter, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Replikit.Abstractions.Events.IAdapterEventSource
+Replikit.Abstractions.Events.IAdapterEventSource.StartListeningAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Replikit.Abstractions.Events.IAdapterEventSource.StopListeningAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Replikit.Abstractions.Events.IBotEvent
+Replikit.Abstractions.Events.IBotEvent.BotId.get -> Replikit.Abstractions.Common.Models.BotIdentifier
+Replikit.Abstractions.Events.UnknownBotEvent
+Replikit.Abstractions.Events.UnknownBotEvent.UnknownBotEvent(Replikit.Abstractions.Common.Models.BotIdentifier botId) -> void
+Replikit.Abstractions.Members.Models.MemberInfo
+Replikit.Abstractions.Members.Models.MemberInfo.Account.get -> Replikit.Abstractions.Accounts.Models.AccountInfo!
+Replikit.Abstractions.Members.Models.MemberInfo.ChannelId.get -> Replikit.Abstractions.Common.Models.GlobalIdentifier
+Replikit.Abstractions.Members.Models.MemberInfo.CustomData.get -> System.Collections.Generic.IReadOnlyList<object!>!
+Replikit.Abstractions.Members.Models.MemberInfo.CustomData.init -> void
+Replikit.Abstractions.Members.Models.MemberInfo.MemberInfo(Replikit.Abstractions.Common.Models.GlobalIdentifier channelId, Replikit.Abstractions.Accounts.Models.AccountInfo! account) -> void
+Replikit.Abstractions.Members.Models.MemberInfo.Permissions.get -> Replikit.Abstractions.Members.Models.MemberPermissions
+Replikit.Abstractions.Members.Models.MemberInfo.Permissions.init -> void
+Replikit.Abstractions.Members.Models.MemberPermissions
+Replikit.Abstractions.Members.Models.MemberPermissions.AddUsers = 64 -> Replikit.Abstractions.Members.Models.MemberPermissions
+Replikit.Abstractions.Members.Models.MemberPermissions.All = -1 -> Replikit.Abstractions.Members.Models.MemberPermissions
+Replikit.Abstractions.Members.Models.MemberPermissions.ChangeChannelTitle = 32 -> Replikit.Abstractions.Members.Models.MemberPermissions
+Replikit.Abstractions.Members.Models.MemberPermissions.DeleteAnyMessages = 8 -> Replikit.Abstractions.Members.Models.MemberPermissions
+Replikit.Abstractions.Members.Models.MemberPermissions.DeleteMessages = 4 -> Replikit.Abstractions.Members.Models.MemberPermissions
+Replikit.Abstractions.Members.Models.MemberPermissions.EditMessages = 2 -> Replikit.Abstractions.Members.Models.MemberPermissions
+Replikit.Abstractions.Members.Models.MemberPermissions.ManagePermissions = 16 -> Replikit.Abstractions.Members.Models.MemberPermissions
+Replikit.Abstractions.Members.Models.MemberPermissions.None = 0 -> Replikit.Abstractions.Members.Models.MemberPermissions
+Replikit.Abstractions.Members.Models.MemberPermissions.RemoveUsers = 128 -> Replikit.Abstractions.Members.Models.MemberPermissions
+Replikit.Abstractions.Members.Models.MemberPermissions.SendMessages = 1 -> Replikit.Abstractions.Members.Models.MemberPermissions
+Replikit.Abstractions.Members.Services.IMemberService
+Replikit.Abstractions.Members.Services.IMemberService.AddAsync(Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Common.Models.Identifier accountId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Replikit.Abstractions.Members.Models.MemberInfo?>!
+Replikit.Abstractions.Members.Services.IMemberService.GetAsync(Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Common.Models.Identifier accountId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Replikit.Abstractions.Members.Models.MemberInfo?>!
+Replikit.Abstractions.Members.Services.IMemberService.GetManyAsync(Replikit.Abstractions.Common.Models.Identifier channelId, System.Collections.Generic.IReadOnlyCollection<Replikit.Abstractions.Common.Models.Identifier>! accountIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Replikit.Abstractions.Members.Models.MemberInfo!>!>!
+Replikit.Abstractions.Members.Services.IMemberService.GetTotalCountAsync(Replikit.Abstractions.Common.Models.Identifier channelId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<long>!
+Replikit.Abstractions.Members.Services.IMemberService.RemoveAsync(Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Common.Models.Identifier accountId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Replikit.Abstractions.Members.Services.MemberServiceFeatures
+Replikit.Abstractions.Members.Services.MemberServiceFeatures.Add = 4 -> Replikit.Abstractions.Members.Services.MemberServiceFeatures
+Replikit.Abstractions.Members.Services.MemberServiceFeatures.All = -1 -> Replikit.Abstractions.Members.Services.MemberServiceFeatures
+Replikit.Abstractions.Members.Services.MemberServiceFeatures.Get = 1 -> Replikit.Abstractions.Members.Services.MemberServiceFeatures
+Replikit.Abstractions.Members.Services.MemberServiceFeatures.GetMany = 2 -> Replikit.Abstractions.Members.Services.MemberServiceFeatures
+Replikit.Abstractions.Members.Services.MemberServiceFeatures.GetTotalCount = 16 -> Replikit.Abstractions.Members.Services.MemberServiceFeatures
+Replikit.Abstractions.Members.Services.MemberServiceFeatures.None = 0 -> Replikit.Abstractions.Members.Services.MemberServiceFeatures
+Replikit.Abstractions.Members.Services.MemberServiceFeatures.Remove = 8 -> Replikit.Abstractions.Members.Services.MemberServiceFeatures
+Replikit.Abstractions.Messages.Events.ButtonPressedEvent
+Replikit.Abstractions.Messages.Events.ButtonPressedEvent.ButtonPressedEvent(Replikit.Abstractions.Common.Models.BotIdentifier botId, Replikit.Abstractions.Accounts.Models.AccountInfo! account) -> void
+Replikit.Abstractions.Messages.Events.ButtonPressedEvent.Message.get -> Replikit.Abstractions.Messages.Models.Message?
+Replikit.Abstractions.Messages.Events.ButtonPressedEvent.Message.init -> void
+Replikit.Abstractions.Messages.Events.ButtonPressedEvent.Payload.get -> string?
+Replikit.Abstractions.Messages.Events.ButtonPressedEvent.Payload.init -> void
+Replikit.Abstractions.Messages.Events.ButtonPressedEvent.RequestId.get -> Replikit.Abstractions.Common.Models.Identifier?
+Replikit.Abstractions.Messages.Events.ButtonPressedEvent.RequestId.init -> void
+Replikit.Abstractions.Messages.Events.MessageDeletedEvent
+Replikit.Abstractions.Messages.Events.MessageDeletedEvent.Message.get -> Replikit.Abstractions.Messages.Models.Message?
+Replikit.Abstractions.Messages.Events.MessageDeletedEvent.Message.init -> void
+Replikit.Abstractions.Messages.Events.MessageDeletedEvent.MessageDeletedEvent(Replikit.Abstractions.Common.Models.BotIdentifier botId, Replikit.Abstractions.Channels.Models.ChannelInfo! channel, Replikit.Abstractions.Accounts.Models.AccountInfo! account) -> void
+Replikit.Abstractions.Messages.Events.MessageEditedEvent
+Replikit.Abstractions.Messages.Events.MessageEditedEvent.MessageEditedEvent(Replikit.Abstractions.Common.Models.BotIdentifier botId, Replikit.Abstractions.Messages.Models.Message! message, Replikit.Abstractions.Channels.Models.ChannelInfo! channel, Replikit.Abstractions.Accounts.Models.AccountInfo! account) -> void
+Replikit.Abstractions.Messages.Events.MessageEditedEvent.OldMessage.get -> Replikit.Abstractions.Messages.Models.Message?
+Replikit.Abstractions.Messages.Events.MessageEditedEvent.OldMessage.init -> void
+Replikit.Abstractions.Messages.Events.MessageEvent
+Replikit.Abstractions.Messages.Events.MessageEvent.Message.get -> Replikit.Abstractions.Messages.Models.Message!
+Replikit.Abstractions.Messages.Events.MessageEvent.MessageEvent(Replikit.Abstractions.Common.Models.BotIdentifier botId, Replikit.Abstractions.Messages.Models.Message! message, Replikit.Abstractions.Channels.Models.ChannelInfo! channel, Replikit.Abstractions.Accounts.Models.AccountInfo! account) -> void
+Replikit.Abstractions.Messages.Events.MessageReceivedEvent
+Replikit.Abstractions.Messages.Events.MessageReceivedEvent.MessageReceivedEvent(Replikit.Abstractions.Common.Models.BotIdentifier botId, Replikit.Abstractions.Messages.Models.Message! message, Replikit.Abstractions.Channels.Models.ChannelInfo! channel, Replikit.Abstractions.Accounts.Models.AccountInfo! account) -> void
+Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<TButton>
+Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<TButton>.Add(params TButton[]! buttonRow) -> void
+Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<TButton>.Add(TButton button) -> void
+Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<TButton>.ButtonMatrix() -> void
+Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<TButton>.this[int row, int column].get -> TButton
+Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<TButton>.this[int row, int column].set -> void
+Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier
+Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.ChannelId.get -> Replikit.Abstractions.Common.Models.Identifier
+Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.ChannelMessageIdentifier() -> void
+Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.ChannelMessageIdentifier(Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Common.Models.Identifier partIdentifier) -> void
+Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.ChannelMessageIdentifier(Replikit.Abstractions.Common.Models.Identifier ChannelId, Replikit.Abstractions.Messages.Models.MessageIdentifier Value) -> void
+Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.ChannelMessageIdentifier(Replikit.Abstractions.Common.Models.Identifier channelId, System.Collections.Generic.IEnumerable<Replikit.Abstractions.Common.Models.Identifier>! partIdentifiers) -> void
+Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.Value.get -> Replikit.Abstractions.Messages.Models.MessageIdentifier
+Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier
+Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.ChannelId.get -> Replikit.Abstractions.Common.Models.GlobalIdentifier
+Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.GlobalMessageIdentifier() -> void
+Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.GlobalMessageIdentifier(Replikit.Abstractions.Common.Models.GlobalIdentifier channelId, Replikit.Abstractions.Common.Models.Identifier partIdentifier) -> void
+Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.GlobalMessageIdentifier(Replikit.Abstractions.Common.Models.GlobalIdentifier ChannelId, Replikit.Abstractions.Messages.Models.MessageIdentifier Value) -> void
+Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.GlobalMessageIdentifier(Replikit.Abstractions.Common.Models.GlobalIdentifier channelId, System.Collections.Generic.IEnumerable<Replikit.Abstractions.Common.Models.Identifier>! partIdentifiers) -> void
+Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.Value.get -> Replikit.Abstractions.Messages.Models.MessageIdentifier
+Replikit.Abstractions.Messages.Models.InlineButtons.CallbackInlineButton
+Replikit.Abstractions.Messages.Models.InlineButtons.CallbackInlineButton.CallbackInlineButton(string! Text, string! Payload) -> void
+Replikit.Abstractions.Messages.Models.InlineButtons.CallbackInlineButton.Payload.get -> string!
+Replikit.Abstractions.Messages.Models.InlineButtons.CallbackInlineButton.Text.get -> string!
+Replikit.Abstractions.Messages.Models.InlineButtons.IInlineButton
+Replikit.Abstractions.Messages.Models.InlineButtons.IInlineButton.Text.get -> string!
+Replikit.Abstractions.Messages.Models.InlineButtons.LinkInlineButton
+Replikit.Abstractions.Messages.Models.InlineButtons.LinkInlineButton.LinkInlineButton(string! Text, System.Uri! Url) -> void
+Replikit.Abstractions.Messages.Models.InlineButtons.LinkInlineButton.Text.get -> string!
+Replikit.Abstractions.Messages.Models.InlineButtons.LinkInlineButton.Url.get -> System.Uri!
+Replikit.Abstractions.Messages.Models.Keyboard.KeyboardButton
+Replikit.Abstractions.Messages.Models.Keyboard.KeyboardButton.KeyboardButton(string! Text) -> void
+Replikit.Abstractions.Messages.Models.Keyboard.KeyboardButton.Text.get -> string!
+Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard
+Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard.MessageKeyboard() -> void
+Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard.RemoveKeyboard.get -> bool
+Replikit.Abstractions.Messages.Models.Message
+Replikit.Abstractions.Messages.Models.Message.AccountId.get -> Replikit.Abstractions.Common.Models.GlobalIdentifier?
+Replikit.Abstractions.Messages.Models.Message.AccountId.init -> void
+Replikit.Abstractions.Messages.Models.Message.Attachments.get -> System.Collections.Generic.IReadOnlyList<Replikit.Abstractions.Attachments.Models.Attachment!>!
+Replikit.Abstractions.Messages.Models.Message.Attachments.init -> void
+Replikit.Abstractions.Messages.Models.Message.ChannelId.get -> Replikit.Abstractions.Common.Models.GlobalIdentifier?
+Replikit.Abstractions.Messages.Models.Message.ChannelId.init -> void
+Replikit.Abstractions.Messages.Models.Message.CustomData.get -> System.Collections.Generic.IReadOnlyList<object!>!
+Replikit.Abstractions.Messages.Models.Message.CustomData.init -> void
+Replikit.Abstractions.Messages.Models.Message.Id.get -> Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier
+Replikit.Abstractions.Messages.Models.Message.Id.init -> void
+Replikit.Abstractions.Messages.Models.Message.Message(Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier id) -> void
+Replikit.Abstractions.Messages.Models.Message.Reply.get -> Replikit.Abstractions.Messages.Models.Message?
+Replikit.Abstractions.Messages.Models.Message.Reply.init -> void
+Replikit.Abstractions.Messages.Models.Message.ReplyId.get -> Replikit.Abstractions.Common.Models.Identifier?
+Replikit.Abstractions.Messages.Models.Message.ReplyId.init -> void
+Replikit.Abstractions.Messages.Models.Message.Text.get -> string?
+Replikit.Abstractions.Messages.Models.Message.Text.init -> void
+Replikit.Abstractions.Messages.Models.MessageIdentifier
+Replikit.Abstractions.Messages.Models.MessageIdentifier.Equals(Replikit.Abstractions.Messages.Models.MessageIdentifier other) -> bool
+Replikit.Abstractions.Messages.Models.MessageIdentifier.MessageIdentifier() -> void
+Replikit.Abstractions.Messages.Models.MessageIdentifier.MessageIdentifier(Replikit.Abstractions.Common.Models.Identifier partIdentifier) -> void
+Replikit.Abstractions.Messages.Models.MessageIdentifier.MessageIdentifier(System.Collections.Generic.IEnumerable<Replikit.Abstractions.Common.Models.Identifier>! partIdentifiers) -> void
+Replikit.Abstractions.Messages.Models.MessageIdentifier.PartIdentifiers.get -> System.Collections.Generic.IReadOnlyList<Replikit.Abstractions.Common.Models.Identifier>!
+Replikit.Abstractions.Messages.Models.OutMessage
+Replikit.Abstractions.Messages.Models.OutMessage.Attachments.get -> System.Collections.Generic.IList<Replikit.Abstractions.Attachments.Models.OutAttachment!>!
+Replikit.Abstractions.Messages.Models.OutMessage.Attachments.set -> void
+Replikit.Abstractions.Messages.Models.OutMessage.ForwardedMessages.get -> System.Collections.Generic.IList<Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier>!
+Replikit.Abstractions.Messages.Models.OutMessage.ForwardedMessages.set -> void
+Replikit.Abstractions.Messages.Models.OutMessage.InlineButtons.get -> Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<Replikit.Abstractions.Messages.Models.InlineButtons.IInlineButton!>!
+Replikit.Abstractions.Messages.Models.OutMessage.InlineButtons.set -> void
+Replikit.Abstractions.Messages.Models.OutMessage.Keyboard.get -> Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard!
+Replikit.Abstractions.Messages.Models.OutMessage.Keyboard.set -> void
+Replikit.Abstractions.Messages.Models.OutMessage.OutMessage() -> void
+Replikit.Abstractions.Messages.Models.OutMessage.Reply.get -> Replikit.Abstractions.Common.Models.Identifier?
+Replikit.Abstractions.Messages.Models.OutMessage.Reply.set -> void
+Replikit.Abstractions.Messages.Models.OutMessage.Text.get -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList!
+Replikit.Abstractions.Messages.Models.OutMessage.Text.set -> void
+Replikit.Abstractions.Messages.Models.TextTokens.LinkTextToken
+Replikit.Abstractions.Messages.Models.TextTokens.LinkTextToken.LinkTextToken(string! Text, System.Uri? Url = null, Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers Modifiers = Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.None) -> void
+Replikit.Abstractions.Messages.Models.TextTokens.LinkTextToken.Url.get -> System.Uri?
+Replikit.Abstractions.Messages.Models.TextTokens.MentionTextToken
+Replikit.Abstractions.Messages.Models.TextTokens.MentionTextToken.AccountId.get -> Replikit.Abstractions.Common.Models.Identifier?
+Replikit.Abstractions.Messages.Models.TextTokens.MentionTextToken.MentionTextToken(string! Text, string? Username = null, Replikit.Abstractions.Common.Models.Identifier? AccountId = null, Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers Modifiers = Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.None) -> void
+Replikit.Abstractions.Messages.Models.TextTokens.MentionTextToken.Username.get -> string?
+Replikit.Abstractions.Messages.Models.TextTokens.TextToken
+Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Modifiers.get -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
+Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Text.get -> string!
+Replikit.Abstractions.Messages.Models.TextTokens.TextToken.TextToken(string! Text, Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers Modifiers = Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.None) -> void
+Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList
+Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList.TextTokenList() -> void
+Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList.TextTokenList(int capacity) -> void
+Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList.TextTokenList(System.Collections.Generic.IEnumerable<Replikit.Abstractions.Messages.Models.TextTokens.TextToken!>! collection) -> void
+Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
+Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.Bold = 1 -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
+Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.Code = 16 -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
+Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.InlineCode = 32 -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
+Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.Italic = 2 -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
+Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.None = 0 -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
+Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.Spoiler = 64 -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
+Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.Strike = 8 -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
+Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.Underline = 4 -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
+Replikit.Abstractions.Messages.Services.IMessageService
+Replikit.Abstractions.Messages.Services.IMessageService.DeleteManyAsync(Replikit.Abstractions.Common.Models.Identifier channelId, System.Collections.Generic.IReadOnlyCollection<Replikit.Abstractions.Common.Models.Identifier>! messagePartIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Replikit.Abstractions.Messages.Services.IMessageService.DeleteSingleAsync(Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Common.Models.Identifier messagePartId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Replikit.Abstractions.Messages.Services.IMessageService.EditAsync(Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Messages.Models.MessageIdentifier messageId, Replikit.Abstractions.Messages.Models.OutMessage! message, Replikit.Abstractions.Messages.Models.OutMessage? oldMessage = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Replikit.Abstractions.Messages.Models.Message!>!
+Replikit.Abstractions.Messages.Services.IMessageService.GetAsync(Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Messages.Models.MessageIdentifier messageId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Replikit.Abstractions.Messages.Models.Message?>!
+Replikit.Abstractions.Messages.Services.IMessageService.GetManyAsync(Replikit.Abstractions.Common.Models.Identifier channelId, System.Collections.Generic.IReadOnlyCollection<Replikit.Abstractions.Messages.Models.MessageIdentifier>! messageIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Replikit.Abstractions.Messages.Models.Message!>!>!
+Replikit.Abstractions.Messages.Services.IMessageService.PinAsync(Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Messages.Models.MessageIdentifier messageId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Replikit.Abstractions.Messages.Services.IMessageService.SendAsync(Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Messages.Models.OutMessage! message, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Replikit.Abstractions.Messages.Models.Message!>!
+Replikit.Abstractions.Messages.Services.IMessageService.UnpinAsync(Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Messages.Models.MessageIdentifier messageId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Replikit.Abstractions.Messages.Services.ITextFormatter
+Replikit.Abstractions.Messages.Services.ITextFormatter.FormatTextAsync(System.Collections.Generic.IReadOnlyCollection<Replikit.Abstractions.Messages.Models.TextTokens.TextToken!>! textTokens, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string!>
+Replikit.Abstractions.Messages.Services.ITextTokenizer
+Replikit.Abstractions.Messages.Services.ITextTokenizer.Tokenize(Replikit.Abstractions.Messages.Models.Message! message) -> System.Collections.Generic.IReadOnlyList<Replikit.Abstractions.Messages.Models.TextTokens.TextToken!>!
+Replikit.Abstractions.Messages.Services.MessageServiceExtensions
+Replikit.Abstractions.Messages.Services.MessageServiceFeatures
+Replikit.Abstractions.Messages.Services.MessageServiceFeatures.All = -1 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
+Replikit.Abstractions.Messages.Services.MessageServiceFeatures.DeleteMany = 8 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
+Replikit.Abstractions.Messages.Services.MessageServiceFeatures.DeleteSingle = 4 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
+Replikit.Abstractions.Messages.Services.MessageServiceFeatures.Edit = 2 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
+Replikit.Abstractions.Messages.Services.MessageServiceFeatures.Get = 16 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
+Replikit.Abstractions.Messages.Services.MessageServiceFeatures.GetMany = 32 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
+Replikit.Abstractions.Messages.Services.MessageServiceFeatures.None = 0 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
+Replikit.Abstractions.Messages.Services.MessageServiceFeatures.Pin = 64 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
+Replikit.Abstractions.Messages.Services.MessageServiceFeatures.Send = 1 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
+Replikit.Abstractions.Messages.Services.MessageServiceFeatures.Unpin = 128 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
+static Replikit.Abstractions.Adapters.AdapterCollectionExtensions.Resolve(this Replikit.Abstractions.Adapters.IAdapterCollection! adapterCollection, Replikit.Abstractions.Common.Models.BotIdentifier botId) -> Replikit.Abstractions.Adapters.IAdapter?
+static Replikit.Abstractions.Adapters.AdapterCollectionExtensions.Resolve(this Replikit.Abstractions.Adapters.IAdapterCollection! adapterCollection, Replikit.Abstractions.Common.Models.GlobalIdentifier entityId) -> Replikit.Abstractions.Adapters.IAdapter?
+static Replikit.Abstractions.Adapters.AdapterCollectionExtensions.ResolveRequired(this Replikit.Abstractions.Adapters.IAdapterCollection! adapterCollection, Replikit.Abstractions.Common.Models.BotIdentifier botId) -> Replikit.Abstractions.Adapters.IAdapter!
+static Replikit.Abstractions.Adapters.AdapterCollectionExtensions.ResolveRequired(this Replikit.Abstractions.Adapters.IAdapterCollection! adapterCollection, Replikit.Abstractions.Common.Models.GlobalIdentifier entityId) -> Replikit.Abstractions.Adapters.IAdapter!
+static Replikit.Abstractions.Adapters.AdapterExtensions.GetRequiredService<TService>(this Replikit.Abstractions.Adapters.IAdapter! adapter) -> TService
+static Replikit.Abstractions.Adapters.AdapterExtensions.Supports<TService>(this Replikit.Abstractions.Adapters.IAdapter! adapter) -> bool
+static Replikit.Abstractions.Adapters.AdapterExtensions.TryGetService<TService>(this Replikit.Abstractions.Adapters.IAdapter! adapter, out TService? service) -> bool
+static Replikit.Abstractions.Attachments.Models.OutAttachment.FromContent(Replikit.Abstractions.Attachments.Models.AttachmentType type, System.IO.Stream! content, string? caption = null, string? fileName = null, string? cacheKey = null) -> Replikit.Abstractions.Attachments.Models.OutAttachment!
+static Replikit.Abstractions.Attachments.Models.OutAttachment.FromFile(Replikit.Abstractions.Attachments.Models.AttachmentType type, string! filePath, string? caption = null, string? fileName = null, string? cacheKey = null) -> Replikit.Abstractions.Attachments.Models.OutAttachment!
+static Replikit.Abstractions.Attachments.Models.OutAttachment.FromUploadId(Replikit.Abstractions.Attachments.Models.AttachmentType type, Replikit.Abstractions.Common.Models.Identifier uploadId, string? caption = null, string? fileName = null) -> Replikit.Abstractions.Attachments.Models.OutAttachment!
+static Replikit.Abstractions.Attachments.Models.OutAttachment.FromUrl(Replikit.Abstractions.Attachments.Models.AttachmentType type, System.Uri! url, string? caption = null, string? fileName = null, string? cacheKey = null) -> Replikit.Abstractions.Attachments.Models.OutAttachment!
+static Replikit.Abstractions.Common.CustomData.HasCustomDataExtensions.GetCustomData<TData>(this Replikit.Abstractions.Common.CustomData.IHasCustomData! hasCustomData) -> TData
+static Replikit.Abstractions.Common.CustomData.HasCustomDataExtensions.GetCustomDataOrDefault<TData>(this Replikit.Abstractions.Common.CustomData.IHasCustomData! hasCustomData) -> TData?
+static Replikit.Abstractions.Common.Features.HasFeaturesExtensions.Supports<TFeatures>(this Replikit.Abstractions.Common.Features.IHasFeatures<TFeatures>! hasFeatures, TFeatures features) -> bool
+static Replikit.Abstractions.Common.Models.GlobalIdentifier.implicit operator Replikit.Abstractions.Common.Models.Identifier(Replikit.Abstractions.Common.Models.GlobalIdentifier identifier) -> Replikit.Abstractions.Common.Models.Identifier
+static Replikit.Abstractions.Common.Models.Identifier.implicit operator int(Replikit.Abstractions.Common.Models.Identifier identifier) -> int
+static Replikit.Abstractions.Common.Models.Identifier.implicit operator long(Replikit.Abstractions.Common.Models.Identifier identifier) -> long
+static Replikit.Abstractions.Common.Models.Identifier.implicit operator Replikit.Abstractions.Common.Models.Identifier(int value) -> Replikit.Abstractions.Common.Models.Identifier
+static Replikit.Abstractions.Common.Models.Identifier.implicit operator Replikit.Abstractions.Common.Models.Identifier(long value) -> Replikit.Abstractions.Common.Models.Identifier
+static Replikit.Abstractions.Common.Models.Identifier.implicit operator Replikit.Abstractions.Common.Models.Identifier(string! value) -> Replikit.Abstractions.Common.Models.Identifier
+static Replikit.Abstractions.Common.Models.Identifier.implicit operator Replikit.Abstractions.Common.Models.Identifier(System.Guid value) -> Replikit.Abstractions.Common.Models.Identifier
+static Replikit.Abstractions.Common.Models.Identifier.implicit operator string!(Replikit.Abstractions.Common.Models.Identifier identifier) -> string!
+static Replikit.Abstractions.Common.Models.Identifier.implicit operator System.Guid(Replikit.Abstractions.Common.Models.Identifier identifier) -> System.Guid
+static Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.implicit operator Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier(Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier identifier) -> Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier
+static Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.implicit operator Replikit.Abstractions.Messages.Models.MessageIdentifier(Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier identifier) -> Replikit.Abstractions.Messages.Models.MessageIdentifier
+static Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.implicit operator Replikit.Abstractions.Messages.Models.MessageIdentifier(Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier identifier) -> Replikit.Abstractions.Messages.Models.MessageIdentifier
+static Replikit.Abstractions.Messages.Models.Keyboard.KeyboardButton.implicit operator Replikit.Abstractions.Messages.Models.Keyboard.KeyboardButton!(string! text) -> Replikit.Abstractions.Messages.Models.Keyboard.KeyboardButton!
+static Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard.Remove.get -> Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard!
+static Replikit.Abstractions.Messages.Models.MessageIdentifier.implicit operator Replikit.Abstractions.Messages.Models.MessageIdentifier(Replikit.Abstractions.Common.Models.Identifier partIdentifier) -> Replikit.Abstractions.Messages.Models.MessageIdentifier
+static Replikit.Abstractions.Messages.Models.OutMessage.implicit operator Replikit.Abstractions.Messages.Models.OutMessage!(Replikit.Abstractions.Attachments.Models.OutAttachment! attachment) -> Replikit.Abstractions.Messages.Models.OutMessage!
+static Replikit.Abstractions.Messages.Models.OutMessage.implicit operator Replikit.Abstractions.Messages.Models.OutMessage!(Replikit.Abstractions.Messages.Models.TextTokens.TextToken! textToken) -> Replikit.Abstractions.Messages.Models.OutMessage!
+static Replikit.Abstractions.Messages.Models.OutMessage.implicit operator Replikit.Abstractions.Messages.Models.OutMessage!(string! text) -> Replikit.Abstractions.Messages.Models.OutMessage!
+static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Bold(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
+static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Code(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
+static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.implicit operator Replikit.Abstractions.Messages.Models.TextTokens.TextToken!(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
+static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.InlineCode(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
+static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Italic(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
+static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Line(string! text, Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers modifiers = Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.None) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
+static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Spoiler(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
+static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Strike(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
+static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Underline(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
+static Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList.implicit operator Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList!(Replikit.Abstractions.Messages.Models.TextTokens.TextToken! token) -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList!
+static Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList.implicit operator Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList!(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList!
+static Replikit.Abstractions.Messages.Services.MessageServiceExtensions.DeleteAsync(this Replikit.Abstractions.Messages.Services.IMessageService! messageService, Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Messages.Models.MessageIdentifier messageId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static Replikit.Abstractions.Messages.Services.MessageServiceExtensions.DeleteMany(this Replikit.Abstractions.Messages.Services.IMessageService! messageService, Replikit.Abstractions.Common.Models.Identifier channelId, System.Collections.Generic.IReadOnlyCollection<Replikit.Abstractions.Messages.Models.MessageIdentifier>! messageIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!

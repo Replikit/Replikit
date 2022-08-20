@@ -41,7 +41,7 @@ internal class AdapterEventDispatcher : IAdapterEventDispatcher
         _eventDelegate = applicationBuilder.Build();
     }
 
-    public async Task DispatchAsync(IAdapterEvent @event, IAdapter adapter,
+    public async Task DispatchAsync(IBotEvent @event, IAdapter adapter,
         CancellationToken cancellationToken = default)
     {
         var stopwatch = Stopwatch.StartNew();

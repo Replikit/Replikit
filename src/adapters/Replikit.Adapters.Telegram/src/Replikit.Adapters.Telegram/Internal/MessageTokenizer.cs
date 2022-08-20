@@ -69,7 +69,9 @@ internal class MessageTokenizer
         {
             case MessageEntityType.TextLink:
             {
-                var linkToken = new LinkTextToken(GetTokenText(), _currentEntity.Url, _modifiers);
+                var url = _currentEntity.Url is not null ? new Uri(_currentEntity.Url) : null;
+
+                var linkToken = new LinkTextToken(GetTokenText(), url, _modifiers);
                 _tokens.Add(linkToken);
 
                 ResetEntity();

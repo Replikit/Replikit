@@ -9,7 +9,7 @@ public class EditController : Controller
     [Command("edit")]
     public async Task<OutMessage?> Edit(string text)
     {
-        if (Message.Reply is null || Message.Reply.AccountId != Adapter.Id.BotId)
+        if (Message.Reply is null || Message.Reply.AccountId != Adapter.BotInfo.Account.Id)
         {
             return "You should reply to a bot message";
         }

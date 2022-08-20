@@ -7,10 +7,10 @@ namespace Replikit.Extensions.State.Exceptions;
 
 public class InvalidStateTypeException : ReplikitException
 {
-    public InvalidStateTypeException(StateKind stateKind, IAdapterEventContext<IAdapterEvent>? context) :
+    public InvalidStateTypeException(StateKind stateKind, IAdapterEventContext<IBotEvent>? context) :
         base(CreateMessage(stateKind, context)) { }
 
-    private static string CreateMessage(StateKind stateKind, IAdapterEventContext<IAdapterEvent>? context)
+    private static string CreateMessage(StateKind stateKind, IAdapterEventContext<IBotEvent>? context)
     {
         return context is not null
             ? $"{stateKind} cannot be used in context of {context.Event.GetType().Name} event"

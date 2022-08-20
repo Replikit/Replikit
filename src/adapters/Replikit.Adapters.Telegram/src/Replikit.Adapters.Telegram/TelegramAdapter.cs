@@ -1,5 +1,5 @@
 ﻿using Replikit.Abstractions.Adapters;
-using Replikit.Abstractions.Adapters.Services;
+using Replikit.Abstractions.Adapters.Factory;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Adapters.Common.Adapters;
 using Replikit.Adapters.Telegram.Abstractions;
@@ -11,27 +11,41 @@ namespace Replikit.Adapters.Telegram;
 
 internal class TelegramAdapter : Adapter, ITelegramAdapter
 {
-    public TelegramAdapter(AdapterIdentifier id, AdapterFactoryContext context,
+    public const string Type = "telegram";
+
+    private readonly TelegramEntityFactory _entityFactory;
+
+    public TelegramAdapter(AdapterInfo adapterInfo, PlatformInfo platformInfo, AdapterFactoryContext context,
         ITelegramBotClient backend, TelegramAdapterOptions options) :
-        base(id, context)
+        base(adapterInfo, platformInfo, context)
     {
         Backend = backend;
 
         TextFormatter = new TelegramTextFormatter();
         TextTokenizer = new TelegramTextTokenizer();
 
-        var entityFactory = new TelegramEntityFactory(id);
+        _entityFactory = new TelegramEntityFactory(this);
 
-        var repository = new TelegramAdapterRepository(options, Backend, entityFactory);
-        Repository = repository;
+        var messageResolver = new TelegramMessageResolver(TextFormatter, AttachmentCache);
 
-        var messageResolver = new TelegramMessageResolver(Id, TextFormatter, repository, AttachmentCache);
+        AdapterEventSource = new TelegramEventSource(this, EventDispatcher, Backend, _entityFactory);
+        MessageService = new TelegramMessageService(this, Backend, messageResolver, _entityFactory);
 
-        EventSource = new TelegramEventSource(this, EventDispatcher, Backend, repository, entityFactory);
-        MessageService = new TelegramMessageService(Backend, messageResolver, entityFactory);
-
+        AccountService = new TelegramAccountService(Backend, _entityFactory);
+        ChannelService = new TelegramChannelService(Backend, _entityFactory);
         MemberService = new TelegramMemberService(Backend);
-        ChannelService = new TelegramChannelService(Backend, messageResolver);
+
+        AttachmentService = new TelegramAttachmentService(Backend, options.Token);
+    }
+
+    protected override async Task<AdapterBotInfo> InitializeAsync(CancellationToken cancellationToken)
+    {
+        var bot = await Backend.GetMeAsync(cancellationToken);
+        var botId = new BotIdentifier(PlatformInfo.Id, bot.Id);
+
+        var account = _entityFactory.CreateAccountInfo(bot, botId);
+
+        return new AdapterBotInfo(botId, account);
     }
 
     public ITelegramBotClient Backend

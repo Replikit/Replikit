@@ -20,10 +20,9 @@ public class IdentifierConverter : JsonConverter<Identifier>
 
     public override void Write(Utf8JsonWriter writer, Identifier value, JsonSerializerOptions options)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (value.Value is not null)
+        if (value.GetUnderlyingValue() is { } underlyingValue)
         {
-            JsonSerializer.Serialize(writer, value.Value, options);
+            JsonSerializer.Serialize(writer, underlyingValue, options);
         }
         else
         {

@@ -1,3 +1,4 @@
+using Replikit.Abstractions.Common.CustomData;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Adapters.Telegram.Abstractions;
@@ -13,7 +14,7 @@ public class DiceHandler : AdapterEventHandler<MessageReceivedEvent>
     {
         if (context.Adapter is ITelegramAdapter)
         {
-            var telegramMessage = context.Event.Message.GetOriginal<TelegramMessage>();
+            var telegramMessage = context.Event.Message.GetCustomData<TelegramMessage>();
 
             if (telegramMessage.Dice is { } dice)
             {

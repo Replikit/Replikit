@@ -8,7 +8,7 @@ namespace Replikit.Extensions.State.Implementation;
 
 internal class SaveStateMiddleware : IAdapterEventMiddleware
 {
-    public async Task HandleAsync(IAdapterEventContext<IAdapterEvent> context, AdapterEventDelegate next)
+    public async Task HandleAsync(IAdapterEventContext<IBotEvent> context, AdapterEventDelegate next)
     {
         await next(context);
 

@@ -3,7 +3,7 @@ using Kantaiko.ConsoleFormatting;
 using Kantaiko.Modularity.Introspection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Replikit.Abstractions.Adapters;
+using Replikit.Abstractions.Adapters.Factory;
 using Replikit.Abstractions.Events;
 using Replikit.Core.Hosting.Adapters;
 

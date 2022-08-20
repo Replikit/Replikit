@@ -24,7 +24,7 @@ internal class InternalViewContext
         Debug.Assert(ViewState.Key is not null);
 
         ViewMessageId = new GlobalMessageIdentifier(
-            new GlobalIdentifier(ViewState.Key.AdapterId!, ViewState.Key.ChannelId!.Value),
+            new GlobalIdentifier(ViewState.Key.BotId!.Value, ViewState.Key.ChannelId!.Value),
             ViewState.Key.MessagePartId!.Value
         );
     }
@@ -54,7 +54,7 @@ internal class InternalViewContext
         if (ViewState.Key is not null)
         {
             ViewMessageId = new GlobalMessageIdentifier(
-                new GlobalIdentifier(ViewState.Key.AdapterId!, ViewState.Key.ChannelId!.Value),
+                new GlobalIdentifier(ViewState.Key.BotId!.Value, ViewState.Key.ChannelId!.Value),
                 ViewState.Key.MessagePartId!.Value
             );
         }

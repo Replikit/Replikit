@@ -1,14 +1,16 @@
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Common.Exceptions;
 using Replikit.Abstractions.Events;
+using Replikit.Adapters.Common.Resources;
 
 namespace Replikit.Adapters.Common.Services;
 
-public abstract class PollingEventSource<TUpdate> : EventSource
+public abstract class PollingEventSource<TUpdate> : AdapterEventSource
 {
     private CancellationTokenSource? _pollingCancellationTokenSource;
 
-    protected PollingEventSource(IAdapter adapter, IAdapterEventDispatcher eventDispatcher) : base(adapter, eventDispatcher) { }
+    protected PollingEventSource(IAdapter adapter, IAdapterEventDispatcher eventDispatcher) : base(adapter,
+        eventDispatcher) { }
 
     protected abstract Task<IEnumerable<TUpdate>?> FetchUpdatesAsync(CancellationToken cancellationToken);
     protected abstract bool ShouldRetryAfterException(Exception exception);
@@ -44,11 +46,11 @@ public abstract class PollingEventSource<TUpdate> : EventSource
         }
     }
 
-    public override Task StartAsync(CancellationToken cancellationToken)
+    public override Task StartListeningAsync(CancellationToken cancellationToken)
     {
         if (_pollingCancellationTokenSource is not null)
         {
-            throw new ReplikitException("Event source is already started");
+            throw new ReplikitException(Strings.EventSourceAlreadyStarted);
         }
 
         _pollingCancellationTokenSource = new CancellationTokenSource();
@@ -58,11 +60,11 @@ public abstract class PollingEventSource<TUpdate> : EventSource
         return Task.CompletedTask;
     }
 
-    public override Task StopAsync(CancellationToken cancellationToken)
+    public override Task StopListeningAsync(CancellationToken cancellationToken)
     {
         if (_pollingCancellationTokenSource is null)
         {
-            throw new ReplikitException("Event source is not started");
+            throw new ReplikitException(Strings.EventSourceNotStarted);
         }
 
         _pollingCancellationTokenSource.Cancel();

@@ -1,13 +1,10 @@
-using Microsoft.Extensions.DependencyInjection;
 using Replikit.Abstractions.Adapters;
-using Replikit.Abstractions.Adapters.Services;
+using Replikit.Abstractions.Channels.Events;
 using Replikit.Abstractions.Common.Exceptions;
 using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Events;
 using Replikit.Abstractions.Messages.Models;
-using Replikit.Abstractions.Messages.Models.Options;
 using Replikit.Abstractions.Messages.Services;
-using Replikit.Abstractions.Repositories.Events;
 using Replikit.Core.Routing.Context;
 
 namespace Replikit.Core.EntityCollections;
@@ -26,10 +23,9 @@ public class MessageCollection : IMessageCollection
 
     public MessageServiceFeatures Features => _messageService.Features;
 
-    public Task<Message> SendAsync(OutMessage message, SendMessageOptions? options = null,
-        CancellationToken cancellationToken = default)
+    public Task<Message> SendAsync(OutMessage message, CancellationToken cancellationToken = default)
     {
-        return _messageService.SendAsync(ChannelId.Value, message, options, cancellationToken);
+        return _messageService.SendAsync(ChannelId.Value, message, cancellationToken);
     }
 
     public Task<Message> EditAsync(MessageIdentifier messageId, OutMessage message, OutMessage? oldMessage = null,
@@ -38,15 +34,15 @@ public class MessageCollection : IMessageCollection
         return _messageService.EditAsync(ChannelId.Value, messageId, message, oldMessage, cancellationToken);
     }
 
-    public Task DeleteAsync(Identifier messageId, CancellationToken cancellationToken = default)
+    public Task DeleteSingleAsync(Identifier messagePartId, CancellationToken cancellationToken = default)
     {
-        return _messageService.DeleteAsync(ChannelId.Value, messageId, cancellationToken);
+        return _messageService.DeleteAsync(ChannelId.Value, messagePartId, cancellationToken);
     }
 
-    public Task DeleteManyAsync(IReadOnlyCollection<MessageIdentifier> messageIds,
+    public Task DeleteManyAsync(IReadOnlyCollection<Identifier> messagePartIds,
         CancellationToken cancellationToken = default)
     {
-        return _messageService.DeleteManyAsync(ChannelId.Value, messageIds, cancellationToken);
+        return _messageService.DeleteManyAsync(ChannelId.Value, messagePartIds, cancellationToken);
     }
 
     public Task<Message?> GetAsync(MessageIdentifier messageId, CancellationToken cancellationToken = default)
@@ -60,12 +56,6 @@ public class MessageCollection : IMessageCollection
         return _messageService.GetManyAsync(ChannelId.Value, messageIds, cancellationToken);
     }
 
-    public Task<IReadOnlyList<Message>> FindAsync(string? query = null, int? take = null, int? skip = null,
-        CancellationToken cancellationToken = default)
-    {
-        return _messageService.FindAsync(ChannelId.Value, query, take, skip, cancellationToken);
-    }
-
     public Task PinAsync(MessageIdentifier messageId, CancellationToken cancellationToken = default)
     {
         return _messageService.PinAsync(ChannelId.Value, messageId, cancellationToken);
@@ -76,15 +66,7 @@ public class MessageCollection : IMessageCollection
         return _messageService.UnpinAsync(ChannelId.Value, messageId, cancellationToken);
     }
 
-    public static IMessageCollection Create(GlobalIdentifier channelId, IServiceProvider serviceProvider)
-    {
-        var adapterCollection = serviceProvider.GetRequiredService<IAdapterCollection>();
-        var adapter = adapterCollection.ResolveRequired(channelId);
-
-        return new MessageCollection(channelId, adapter.MessageService);
-    }
-
-    internal static MessageCollection Create(IAdapterEventContext<IAdapterEvent>? context)
+    internal static MessageCollection Create(IAdapterEventContext<IBotEvent>? context)
     {
         if (context is null)
         {

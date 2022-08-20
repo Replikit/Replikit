@@ -95,7 +95,7 @@ internal class UpdateViewAndSaveStateHandler : IControllerExecutionHandler<Inter
                 throw new InvalidOperationException("View message id is null");
             }
 
-            var channelId = new GlobalIdentifier(stateKey.AdapterId!, stateKey.ChannelId!.Value);
+            var channelId = new GlobalIdentifier(stateKey.BotId!.Value, stateKey.ChannelId!.Value);
 
             await _messageService.EditAsync(
                 channelId,
@@ -107,7 +107,7 @@ internal class UpdateViewAndSaveStateHandler : IControllerExecutionHandler<Inter
             _logger.LogDebug("View message updated");
 
             return new GlobalMessageIdentifier(
-                new GlobalIdentifier(stateKey.AdapterId!, stateKey.ChannelId!.Value),
+                new GlobalIdentifier(stateKey.BotId!.Value, stateKey.ChannelId!.Value),
                 stateKey.MessagePartId!.Value
             );
         }

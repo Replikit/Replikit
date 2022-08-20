@@ -1,28 +1,60 @@
 ﻿using Replikit.Abstractions.Adapters.Exceptions;
 using Replikit.Abstractions.Common.Models;
+using Replikit.Abstractions.Common.Utilities;
 
 namespace Replikit.Abstractions.Adapters;
 
+/// <summary>
+/// The extensions for <see cref="IAdapterCollection"/>.
+/// </summary>
 public static class AdapterCollectionExtensions
 {
-    public static IAdapter ResolveRequired(this IAdapterCollection adapterCollection, string name)
+    /// <summary>
+    /// Resolves an adapter for the specified bot.
+    /// </summary>
+    /// <param name="adapterCollection">The adapter collection.</param>
+    /// <param name="botId">An identifier of the bot to resolve the adapter for.</param>
+    /// <returns>A resolved adapter or <c>null</c> if no adapter was found.</returns>
+    public static IAdapter? Resolve(this IAdapterCollection adapterCollection, BotIdentifier botId)
     {
-        ArgumentNullException.ThrowIfNull(adapterCollection);
+        Check.NotNull(adapterCollection);
+        Check.NotDefault(botId);
 
-        return adapterCollection.Resolve(name) ?? throw new AdapterNotFoundException(name);
+        return adapterCollection.GetAdapters().FirstOrDefault(x => x.BotInfo.Id == botId);
     }
 
-    public static IAdapter ResolveRequired(this IAdapterCollection adapterCollection, AdapterIdentifier identifier)
+    /// <summary>
+    /// Resolves an adapter for the specified bot.
+    /// </summary>
+    /// <param name="adapterCollection">The adapter collection.</param>
+    /// <param name="botId">An identifier of the bot to resolve the adapter for.</param>
+    /// <returns>A resolved adapter.</returns>
+    /// <exception cref="AdapterNotFoundException">The requested adapter was not found.</exception>
+    public static IAdapter ResolveRequired(this IAdapterCollection adapterCollection, BotIdentifier botId)
     {
-        ArgumentNullException.ThrowIfNull(adapterCollection);
-
-        return adapterCollection.Resolve(identifier) ?? throw new AdapterNotFoundException(identifier);
+        return adapterCollection.Resolve(botId) ?? throw new AdapterNotFoundException(botId);
     }
 
-    public static IAdapter ResolveRequired(this IAdapterCollection adapterCollection, GlobalIdentifier identifier)
+    /// <summary>
+    /// Resolves an adapter to work with the specified entity.
+    /// </summary>
+    /// <param name="adapterCollection">The adapter collection.</param>
+    /// <param name="entityId">An identifier of the entity to resolve the adapter for.</param>
+    /// <returns>A resolved adapter or <c>null</c> if no adapter was found.</returns>
+    public static IAdapter? Resolve(this IAdapterCollection adapterCollection, GlobalIdentifier entityId)
     {
-        ArgumentNullException.ThrowIfNull(identifier);
+        return Resolve(adapterCollection, entityId.BotId);
+    }
 
-        return adapterCollection.ResolveRequired(identifier.AdapterId);
+    /// <summary>
+    /// Resolves an adapter to work with the specified entity.
+    /// </summary>
+    /// <param name="adapterCollection">The adapter collection.</param>
+    /// <param name="entityId">An identifier of the entity to resolve the adapter for.</param>
+    /// <returns>A resolved adapter.</returns>
+    /// <exception cref="AdapterNotFoundException">The requested adapter was not found.</exception>
+    public static IAdapter ResolveRequired(this IAdapterCollection adapterCollection, GlobalIdentifier entityId)
+    {
+        return ResolveRequired(adapterCollection, entityId.BotId);
     }
 }

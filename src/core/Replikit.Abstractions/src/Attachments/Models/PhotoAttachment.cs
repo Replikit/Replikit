@@ -1,17 +1,34 @@
-﻿using Replikit.Abstractions.Attachments.Exceptions;
+﻿using Replikit.Abstractions.Common.Models;
 
 namespace Replikit.Abstractions.Attachments.Models;
 
-public record PhotoAttachment(IReadOnlyList<PhotoSize> Sizes) :
-    Attachment(
-        Sizes.Count > 0 ? Sizes[0].Id : throw new InvalidPhotoAttachmentException(),
-        Sizes[0].Caption,
-        Sizes[0].Url,
-        Sizes[0].FileName,
-        Sizes[0].Content,
-        Sizes[0].UploadId
-    )
+/// <summary>
+/// The photo attachment.
+/// </summary>
+public class PhotoAttachment : Attachment
 {
+    /// <summary>
+    /// Creates a new instance of <see cref="PhotoAttachment"/>.
+    /// </summary>
+    /// <param name="id">An identifier of the attachment.</param>
+    /// <param name="sizes">A collection of photo sizes.</param>
+    public PhotoAttachment(GlobalIdentifier id, IReadOnlyList<PhotoSize> sizes) : base(id, AttachmentType.Photo)
+    {
+        Sizes = sizes;
+    }
+
+    /// <summary>
+    /// The available photo sizes.
+    /// </summary>
+    public IReadOnlyList<PhotoSize> Sizes { get; }
+
+    /// <summary>
+    /// The largest available photo size.
+    /// </summary>
     public PhotoSize Large => Sizes[^1];
+
+    /// <summary>
+    /// The smallest available photo size.
+    /// </summary>
     public PhotoSize Small => Sizes[0];
 }

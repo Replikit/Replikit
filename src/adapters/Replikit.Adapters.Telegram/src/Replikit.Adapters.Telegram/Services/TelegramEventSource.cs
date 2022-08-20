@@ -13,16 +13,14 @@ namespace Replikit.Adapters.Telegram.Services;
 internal class TelegramEventSource : PollingEventSource<Update>
 {
     private readonly ITelegramBotClient _backend;
-    private readonly TelegramAdapterRepository _repository;
     private readonly TelegramEntityFactory _entityFactory;
     private DateTime _startDate;
     private int _nextUpdateId = -1;
 
     public TelegramEventSource(IAdapter adapter, IAdapterEventDispatcher eventDispatcher, ITelegramBotClient backend,
-        TelegramAdapterRepository repository, TelegramEntityFactory entityFactory) : base(adapter, eventDispatcher)
+        TelegramEntityFactory entityFactory) : base(adapter, eventDispatcher)
     {
         _backend = backend;
-        _repository = repository;
         _entityFactory = entityFactory;
     }
 
@@ -48,7 +46,7 @@ internal class TelegramEventSource : PollingEventSource<Update>
         return exception is RequestException { Message: "Request timed out" };
     }
 
-    protected override async Task HandleUpdatesAsync(IEnumerable<Update> updates, CancellationToken cancellationToken)
+    protected override Task HandleUpdatesAsync(IEnumerable<Update> updates, CancellationToken cancellationToken)
     {
         var receivedMessages = new List<Message>();
         var editedMessages = new List<Message>();
@@ -83,7 +81,7 @@ internal class TelegramEventSource : PollingEventSource<Update>
                 {
                     Debug.Assert(update.CallbackQuery is not null);
 
-                    var accountInfo = await _repository.UpdateAccountInfo(update.CallbackQuery.From, cancellationToken);
+                    var accountInfo = _entityFactory.CreateAccountInfo(update.CallbackQuery.From);
 
                     var message = update.CallbackQuery.Message is not null
                         ? _entityFactory.CreateMessage(new[] { update.CallbackQuery.Message })
@@ -97,16 +95,18 @@ internal class TelegramEventSource : PollingEventSource<Update>
 
         HandleMessages(receivedMessages, false);
         HandleMessages(editedMessages, true);
+
+        return Task.CompletedTask;
     }
 
-    private async void HandleMediaGroup(IReadOnlyList<Message> messages, bool edited)
+    private void HandleMediaGroup(IReadOnlyList<Message> messages, bool edited)
     {
         var primary = messages[0];
 
         Debug.Assert(primary.From is not null);
 
-        var channelInfo = _repository.UpdateChannelInfo(primary.Chat);
-        var accountInfo = await _repository.UpdateAccountInfo(primary.From);
+        var channelInfo = _entityFactory.CreateChannelInfo(primary.Chat);
+        var accountInfo = _entityFactory.CreateAccountInfo(primary.From);
 
         var message = _entityFactory.CreateMessage(messages);
 
@@ -134,9 +134,9 @@ internal class TelegramEventSource : PollingEventSource<Update>
         }
     }
 
-    public override async Task StartAsync(CancellationToken cancellationToken)
+    public override async Task StartListeningAsync(CancellationToken cancellationToken)
     {
-        await base.StartAsync(cancellationToken);
+        await base.StartListeningAsync(cancellationToken);
 
         _startDate = DateTime.UtcNow;
     }
