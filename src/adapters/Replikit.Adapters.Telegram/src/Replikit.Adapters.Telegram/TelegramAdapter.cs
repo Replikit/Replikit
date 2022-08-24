@@ -15,9 +15,8 @@ internal class TelegramAdapter : Adapter, ITelegramAdapter
 
     private readonly TelegramEntityFactory _entityFactory;
 
-    public TelegramAdapter(AdapterInfo adapterInfo, PlatformInfo platformInfo, AdapterFactoryContext context,
-        ITelegramBotClient backend, TelegramAdapterOptions options) :
-        base(adapterInfo, platformInfo, context)
+    public TelegramAdapter(AdapterFactoryContext context, ITelegramBotClient backend, TelegramAdapterOptions options) :
+        base(context)
     {
         Backend = backend;
 
@@ -37,6 +36,9 @@ internal class TelegramAdapter : Adapter, ITelegramAdapter
 
         AttachmentService = new TelegramAttachmentService(Backend, options.Token);
     }
+
+    public override AdapterInfo AdapterInfo { get; } = new(Type, "Telegram Bot API");
+    public override PlatformInfo PlatformInfo { get; } = new("telegram", "Telegram");
 
     protected override async Task<AdapterBotInfo> InitializeAsync(CancellationToken cancellationToken)
     {

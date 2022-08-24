@@ -1,0 +1,195 @@
+﻿{
+  AccountId: {
+    BotId: {
+      PlatformId: telegram,
+      Value: 1
+    },
+    Value: 1
+  },
+  Attachments: [
+    {
+      CustomData: [],
+      Id: {
+        BotId: {
+          PlatformId: telegram,
+          Value: 1
+        },
+        Value: AttachmentId
+      },
+      Large: {
+        CustomData: [
+          {
+            FileId: AttachmentUploadId,
+            FileUniqueId: AttachmentId
+          }
+        ],
+        Height: 0,
+        Id: {
+          BotId: {
+            PlatformId: telegram,
+            Value: 1
+          },
+          Value: AttachmentId
+        },
+        UploadId: AttachmentUploadId,
+        Width: 0
+      },
+      Sizes: [
+        {
+          CustomData: [
+            {
+              FileId: AttachmentUploadId,
+              FileUniqueId: AttachmentId
+            }
+          ],
+          Height: 0,
+          Id: {
+            BotId: {
+              PlatformId: telegram,
+              Value: 1
+            },
+            Value: AttachmentId
+          },
+          UploadId: AttachmentUploadId,
+          Width: 0
+        }
+      ],
+      Small: {
+        CustomData: [
+          {
+            FileId: AttachmentUploadId,
+            FileUniqueId: AttachmentId
+          }
+        ],
+        Height: 0,
+        Id: {
+          BotId: {
+            PlatformId: telegram,
+            Value: 1
+          },
+          Value: AttachmentId
+        },
+        UploadId: AttachmentUploadId,
+        Width: 0
+      },
+      Type: 3
+    }
+  ],
+  ChannelId: {
+    BotId: {
+      PlatformId: telegram,
+      Value: 1
+    },
+    Value: 12
+  },
+  CustomData: [
+    {
+      Chat: {
+        Id: 12
+      },
+      From: {
+        FirstName: Test Bot,
+        Id: 1,
+        IsBot: true
+      },
+      MessageId: 42,
+      Photo: [
+        {
+          FileId: AttachmentUploadId,
+          FileUniqueId: AttachmentId
+        }
+      ],
+      Type: 2
+    },
+    {
+      SentAttachments: [
+        {
+          Attachment: {
+            CustomData: [],
+            Id: {
+              BotId: {
+                PlatformId: telegram,
+                Value: 1
+              },
+              Value: AttachmentId
+            },
+            Large: {
+              CustomData: [
+                {
+                  FileId: AttachmentUploadId,
+                  FileUniqueId: AttachmentId
+                }
+              ],
+              Height: 0,
+              Id: {
+                BotId: {
+                  PlatformId: telegram,
+                  Value: 1
+                },
+                Value: AttachmentId
+              },
+              UploadId: AttachmentUploadId,
+              Width: 0
+            },
+            Sizes: [
+              {
+                CustomData: [
+                  {
+                    FileId: AttachmentUploadId,
+                    FileUniqueId: AttachmentId
+                  }
+                ],
+                Height: 0,
+                Id: {
+                  BotId: {
+                    PlatformId: telegram,
+                    Value: 1
+                  },
+                  Value: AttachmentId
+                },
+                UploadId: AttachmentUploadId,
+                Width: 0
+              }
+            ],
+            Small: {
+              CustomData: [
+                {
+                  FileId: AttachmentUploadId,
+                  FileUniqueId: AttachmentId
+                }
+              ],
+              Height: 0,
+              Id: {
+                BotId: {
+                  PlatformId: telegram,
+                  Value: 1
+                },
+                Value: AttachmentId
+              },
+              UploadId: AttachmentUploadId,
+              Width: 0
+            },
+            Type: 3
+          },
+          OutAttachment: {
+            Caption: Caption,
+            Source: https://example.com/image.jpg,
+            Type: 3
+          }
+        }
+      ]
+    }
+  ],
+  Id: {
+    ChannelId: {
+      BotId: {
+        PlatformId: telegram,
+        Value: 1
+      },
+      Value: 12
+    },
+    Value: [
+      42
+    ]
+  }
+}

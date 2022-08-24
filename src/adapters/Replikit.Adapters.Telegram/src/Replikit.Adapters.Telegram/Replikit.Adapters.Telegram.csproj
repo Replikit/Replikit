@@ -10,4 +10,10 @@
     <ProjectReference Include="..\Replikit.Adapters.Telegram.Abstractions\Replikit.Adapters.Telegram.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Replikit.Adapters.Telegram.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
 </Project>

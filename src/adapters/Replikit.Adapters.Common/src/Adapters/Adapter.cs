@@ -3,13 +3,10 @@ using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Adapters.Factory;
 using Replikit.Abstractions.Attachments.Services;
 using Replikit.Abstractions.Channels.Services;
-using Replikit.Abstractions.Common.Exceptions;
-using Replikit.Abstractions.Common.Models;
 using Replikit.Abstractions.Events;
 using Replikit.Abstractions.Members.Services;
 using Replikit.Abstractions.Messages.Services;
 using Replikit.Adapters.Common.Adapters.Internal;
-using Replikit.Adapters.Common.Resources;
 using Replikit.Adapters.Common.Services.Internal;
 
 namespace Replikit.Adapters.Common.Adapters;
@@ -18,11 +15,8 @@ public abstract class Adapter : IAdapter
 {
     private readonly AdapterServiceProvider _serviceProvider = new();
 
-    protected Adapter(AdapterInfo adapterInfo, PlatformInfo platformInfo, AdapterFactoryContext context)
+    protected Adapter(AdapterFactoryContext context)
     {
-        AdapterInfo = adapterInfo;
-        PlatformInfo = platformInfo;
-
         AttachmentCache = context.AttachmentCache ?? DefaultAttachmentCache.Instance;
         EventDispatcher = context.EventDispatcher ?? DefaultEventDispatcher.Instance;
     }
@@ -34,13 +28,13 @@ public abstract class Adapter : IAdapter
         _serviceProvider.SetService(service);
     }
 
-    public AdapterInfo AdapterInfo { get; }
-    public PlatformInfo PlatformInfo { get; }
+    public abstract AdapterInfo AdapterInfo { get; }
+    public abstract PlatformInfo PlatformInfo { get; }
     public AdapterBotInfo BotInfo { get; private set; } = default!;
 
     protected abstract Task<AdapterBotInfo> InitializeAsync(CancellationToken cancellationToken);
 
-    internal async Task InitializeCoreAsync(CancellationToken cancellationToken)
+    public async Task InitializeCoreAsync(CancellationToken cancellationToken)
     {
         BotInfo = await InitializeAsync(cancellationToken);
     }

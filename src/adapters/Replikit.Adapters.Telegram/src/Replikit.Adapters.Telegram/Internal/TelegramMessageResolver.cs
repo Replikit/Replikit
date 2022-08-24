@@ -17,7 +17,7 @@ internal class TelegramMessageResolver : MessageResolver<InputMedia>
     {
         var source = attachment.Source switch
         {
-            string url => new InputMedia(url),
+            Uri url => new InputMedia(url.ToString()),
             Identifier uploadId => new InputMedia(uploadId),
             Stream content => new InputMedia(content, attachment.FileName ?? "file"),
             FileInfo file => new InputMedia(file.OpenRead(), file.Name),

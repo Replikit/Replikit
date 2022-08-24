@@ -60,17 +60,18 @@ internal class TelegramMessageService : AdapterService, IMessageService
             messageBuilder.ApplyResult(result);
         }
 
-        var mediaAttachments = new List<IAlbumInputMedia>(MaxAttachmentCount);
+        var mediaAttachments = new List<(IAlbumInputMedia, OutAttachment)>(MaxAttachmentCount);
 
         async Task SendMediaAttachments()
         {
-            var results = await _backend.SendMediaGroupAsync(chatId, mediaAttachments,
+            var results = await _backend.SendMediaGroupAsync(chatId,
+                media: mediaAttachments.Select(x => x.Item1),
                 replyToMessageId: messageBuilder.ReplyToMessageId,
                 cancellationToken: cancellationToken);
 
-            foreach (var result in results)
+            for (var index = 0; index < results.Length; index++)
             {
-                messageBuilder.ApplyResult(result);
+                messageBuilder.ApplyResult(results[index], mediaAttachments[index].Item2);
             }
         }
 
@@ -85,7 +86,7 @@ internal class TelegramMessageService : AdapterService, IMessageService
 
             if (inputMedia is not null)
             {
-                mediaAttachments.Add(inputMedia);
+                mediaAttachments.Add((inputMedia, original));
             }
 
             if (mediaAttachments.Count == MaxAttachmentCount)
@@ -128,7 +129,7 @@ internal class TelegramMessageService : AdapterService, IMessageService
 
             if (result is not null)
             {
-                messageBuilder.ApplyResult(result);
+                messageBuilder.ApplyResult(result, attachment);
             }
         }
 

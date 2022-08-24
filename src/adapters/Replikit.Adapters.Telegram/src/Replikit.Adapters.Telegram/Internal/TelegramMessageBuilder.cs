@@ -44,6 +44,11 @@ internal class TelegramMessageBuilder
         _messageBuilder.AddPartIdentifier(telegramMessage.MessageId);
         _messageBuilder.AddCustomData(telegramMessage);
 
+        if (telegramMessage.ReplyToMessage is not null)
+        {
+            _messageBuilder.SetReplyId(telegramMessage.ReplyToMessage.MessageId);
+        }
+
         if (attachment is not null)
         {
             Debug.Assert(outAttachment is not null);

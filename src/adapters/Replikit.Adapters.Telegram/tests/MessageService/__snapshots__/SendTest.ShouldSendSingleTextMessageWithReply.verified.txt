@@ -1,0 +1,55 @@
+﻿{
+  AccountId: {
+    BotId: {
+      PlatformId: telegram,
+      Value: 1
+    },
+    Value: 1
+  },
+  Attachments: [],
+  ChannelId: {
+    BotId: {
+      PlatformId: telegram,
+      Value: 1
+    },
+    Value: 12
+  },
+  CustomData: [
+    {
+      Chat: {
+        Id: 12
+      },
+      From: {
+        FirstName: Test Bot,
+        Id: 1,
+        IsBot: true
+      },
+      MessageId: 42,
+      ReplyToMessage: {
+        Chat: {
+          Id: 12
+        },
+        MessageId: 41
+      },
+      Text: Hello World!,
+      Type: 1
+    },
+    {
+      SentAttachments: []
+    }
+  ],
+  Id: {
+    ChannelId: {
+      BotId: {
+        PlatformId: telegram,
+        Value: 1
+      },
+      Value: 12
+    },
+    Value: [
+      42
+    ]
+  },
+  ReplyId: 41,
+  Text: Hello World!
+}
