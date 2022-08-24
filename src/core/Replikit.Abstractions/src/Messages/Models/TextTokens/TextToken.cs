@@ -74,8 +74,18 @@ public record TextToken(string Text, TextTokenModifiers Modifiers = TextTokenMod
     /// <param name="text">A text of the token.</param>
     /// <param name="modifiers">A union of <see cref="TextTokenModifiers"/> flags.</param>
     /// <returns>The created <see cref="TextToken"/>.</returns>
-    public static TextToken Line(string text, TextTokenModifiers modifiers = TextTokenModifiers.None) =>
+    public static TextToken Line(string? text = null, TextTokenModifiers modifiers = TextTokenModifiers.None) =>
         new(text + "\n", modifiers);
+
+    /// <summary>
+    /// Creates a new <see cref="LinkTextToken"/>
+    /// </summary>
+    /// <param name="text">A text of the link.</param>
+    /// <param name="url"></param>
+    /// <param name="modifiers">A union of <see cref="TextTokenModifiers"/> flags.</param>
+    /// <returns>The created <see cref="LinkTextToken"/></returns>
+    public static TextToken Link(string text, Uri? url = null, TextTokenModifiers modifiers = TextTokenModifiers.None) =>
+        new LinkTextToken(text, url, modifiers);
 
     /// <summary>
     /// Creates a new <see cref="TextToken"/> from the plain text.
