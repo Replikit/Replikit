@@ -455,6 +455,7 @@ static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.implicit opera
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.InlineCode(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Italic(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Line(string! text, Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers modifiers = Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.None) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
+static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Link(string! text, System.Uri? url = null, Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers modifiers = Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.None) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Spoiler(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Strike(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Underline(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!

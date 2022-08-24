@@ -78,6 +78,16 @@ public record TextToken(string Text, TextTokenModifiers Modifiers = TextTokenMod
         new(text + "\n", modifiers);
 
     /// <summary>
+    /// Creates a new <see cref="LinkTextToken"/>
+    /// </summary>
+    /// <param name="text">A text of the link.</param>
+    /// <param name="url"></param>
+    /// <param name="modifiers">A union of <see cref="TextTokenModifiers"/> flags.</param>
+    /// <returns>The created <see cref="LinkTextToken"/></returns>
+    public static TextToken Link(string text, Uri? url = null, TextTokenModifiers modifiers = TextTokenModifiers.None) =>
+        new LinkTextToken(text, url, modifiers);
+
+    /// <summary>
     /// Creates a new <see cref="TextToken"/> from the plain text.
     /// </summary>
     /// <param name="text">A plain text.</param>
