@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.
 
+<a name="1.0.0-alpha.5"></a>
+## [1.0.0-alpha.5](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.5) (2022-8-24)
+
+### Features
+
+* Add TextToken.Link ([efb94af](https://www.github.com/Replikit/Replikit/commit/efb94af29f9e192ccc32cee879e2c94e6b9ab831))
+* Add type casts for ViewMessage ([1f03df6](https://www.github.com/Replikit/Replikit/commit/1f03df6b8294326afa05c0e4d2caf3974a205309))
+
+### Bug Fixes
+
+* Add ability to create TextToken.Line without passing text ([de11903](https://www.github.com/Replikit/Replikit/commit/de11903c0fb1adf1a7c6bf4a4ab92b6bd823aca9))
+
 <a name="1.0.0-alpha.4"></a>
 ## [1.0.0-alpha.4](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.4) (2022-8-24)
 
