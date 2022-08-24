@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.
 
+<a name="1.0.0-alpha.4"></a>
+## [1.0.0-alpha.4](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.4) (2022-8-24)
+
+### Features
+
+* **Abstractions:** Stabilize the API ([274627f](https://www.github.com/Replikit/Replikit/commit/274627f9771825a61a50b9c19a8ff28aac97d261))
+
+### Bug Fixes
+
+* **Core:** Rename IAdapterEventContext to IBotEventContext ([39ce803](https://www.github.com/Replikit/Replikit/commit/39ce8035bb6ed2fc9f1445c58490c5af8b429ec6))
+
 <a name="1.0.0-alpha.3"></a>
 ## [1.0.0-alpha.3](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.3) (2022-8-15)
 
