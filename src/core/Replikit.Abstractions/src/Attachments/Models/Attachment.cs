@@ -55,7 +55,7 @@ public abstract class Attachment : IHasCustomData
     /// <br/>
     /// May be null if the platform does not expose an attachment size or it is not accessible to the bot.
     /// </summary>
-    public int? FileSize { get; init; }
+    public long? FileSize { get; init; }
 
     /// <summary>
     /// The special identifier that on some platforms should be used to send the attachment from the bot.

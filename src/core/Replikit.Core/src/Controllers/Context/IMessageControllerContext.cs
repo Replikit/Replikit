@@ -3,4 +3,4 @@ using Replikit.Core.Routing.Context;
 
 namespace Replikit.Core.Controllers.Context;
 
-public interface IMessageControllerContext : IAdapterEventContext<MessageReceivedEvent> { }
+public interface IMessageControllerContext : IBotEventContext<MessageReceivedEvent> { }

@@ -15,7 +15,7 @@ internal class AdapterEventDispatcher : IAdapterEventDispatcher
     private readonly ILogger<AdapterEventDispatcher> _logger;
     private readonly IHostApplicationLifetime _applicationLifetime;
     private readonly EventContextFactory _eventContextFactory;
-    private readonly AdapterEventDelegate _eventDelegate;
+    private readonly BotEventDelegate _eventDelegate;
 
     public AdapterEventDispatcher(IServiceProvider serviceProvider, ILogger<AdapterEventDispatcher> logger,
         IHostApplicationLifetime applicationLifetime, EventContextFactory eventContextFactory,
@@ -63,7 +63,7 @@ internal class AdapterEventDispatcher : IAdapterEventDispatcher
             cancellationTokenSource.Token
         );
 
-        var contextAccessor = scope.ServiceProvider.GetRequiredService<AdapterEventContextAccessor>();
+        var contextAccessor = scope.ServiceProvider.GetRequiredService<BotEventContextAccessor>();
         contextAccessor.CurrentContext = context;
 
         try

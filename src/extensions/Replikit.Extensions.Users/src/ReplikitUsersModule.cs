@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Replikit.Core.Abstractions.Users;
 using Replikit.Core.Common;
 using Replikit.Core.Modularity;
-using Replikit.Core.Routing;
 using Replikit.Extensions.Users.Parameters;
 
 namespace Replikit.Extensions.Users;

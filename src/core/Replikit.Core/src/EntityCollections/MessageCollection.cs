@@ -2,7 +2,6 @@ using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Channels.Events;
 using Replikit.Abstractions.Common.Exceptions;
 using Replikit.Abstractions.Common.Models;
-using Replikit.Abstractions.Events;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Messages.Services;
 using Replikit.Core.Routing.Context;
@@ -66,7 +65,7 @@ public class MessageCollection : IMessageCollection
         return _messageService.UnpinAsync(ChannelId.Value, messageId, cancellationToken);
     }
 
-    internal static MessageCollection Create(IAdapterEventContext<IBotEvent>? context)
+    internal static MessageCollection Create(IBotEventContext? context)
     {
         if (context is null)
         {

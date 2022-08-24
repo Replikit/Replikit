@@ -4,9 +4,10 @@ using Replikit.Core.EntityCollections;
 
 namespace Replikit.Core.Routing.Context;
 
-public interface IAdapterEventContext<out TEvent> where TEvent : IBotEvent
+public interface IBotEventContext
 {
-    TEvent Event { get; }
+    IBotEvent Event { get; }
+
     IServiceProvider ServiceProvider { get; }
     CancellationToken CancellationToken { get; }
 
@@ -15,4 +16,11 @@ public interface IAdapterEventContext<out TEvent> where TEvent : IBotEvent
     IMessageCollection MessageCollection { get; }
 
     bool IsHandled { get; set; }
+}
+
+public interface IBotEventContext<out TEvent> : IBotEventContext where TEvent : IBotEvent
+{
+    new TEvent Event { get; }
+
+    IBotEvent IBotEventContext.Event => Event;
 }

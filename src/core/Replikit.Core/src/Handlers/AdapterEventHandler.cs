@@ -3,18 +3,18 @@ using Replikit.Core.Routing.Context;
 
 namespace Replikit.Core.Handlers;
 
-public abstract class AdapterEventHandler
+public abstract class BotEventHandler
 {
-    public abstract Task HandleAsync(IAdapterEventContext<IBotEvent> context);
+    public abstract Task HandleAsync(IBotEventContext context);
 }
 
-public abstract class AdapterEventHandler<TEvent> : AdapterEventHandler where TEvent : IBotEvent
+public abstract class BotEventHandler<TEvent> : BotEventHandler where TEvent : IBotEvent
 {
-    public abstract Task HandleAsync(IAdapterEventContext<TEvent> context);
+    public abstract Task HandleAsync(IBotEventContext<TEvent> context);
 
-    public override Task HandleAsync(IAdapterEventContext<IBotEvent> context)
+    public override Task HandleAsync(IBotEventContext context)
     {
-        if (context is IAdapterEventContext<TEvent> typedContext)
+        if (context is IBotEventContext<TEvent> typedContext)
         {
             return HandleAsync(typedContext);
         }

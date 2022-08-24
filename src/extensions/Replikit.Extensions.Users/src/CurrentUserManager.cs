@@ -9,10 +9,10 @@ internal class CurrentUserManager<TUser, TUserId> : ICurrentUserManager<TUser, T
     where TUser : ReplikitUser<TUserId>, new()
 {
     private readonly UserManager<TUser, TUserId> _userManager;
-    private readonly IAdapterEventContextAccessor _contextAccessor;
+    private readonly IBotEventContextAccessor _contextAccessor;
 
     public CurrentUserManager(UserManager<TUser, TUserId> userManager,
-        IAdapterEventContextAccessor contextAccessor)
+        IBotEventContextAccessor contextAccessor)
     {
         _userManager = userManager;
         _contextAccessor = contextAccessor;
@@ -20,7 +20,7 @@ internal class CurrentUserManager<TUser, TUserId> : ICurrentUserManager<TUser, T
 
     public Task<TUser?> GetCurrentUserOrDefaultAsync(CancellationToken cancellationToken = default)
     {
-        if (_contextAccessor.CurrentContext is not IAdapterEventContext<IAccountEvent> context)
+        if (_contextAccessor.CurrentContext is not IBotEventContext<IAccountEvent> context)
         {
             throw new ReplikitException("Current user cannot be retrieved outside of an account event context.");
         }
@@ -30,7 +30,7 @@ internal class CurrentUserManager<TUser, TUserId> : ICurrentUserManager<TUser, T
 
     public Task<TUser> EnsureCurrentUserCreatedAsync(CancellationToken cancellationToken = default)
     {
-        if (_contextAccessor.CurrentContext is not IAdapterEventContext<IAccountEvent> context)
+        if (_contextAccessor.CurrentContext is not IBotEventContext<IAccountEvent> context)
         {
             throw new ReplikitException("Current user cannot be retrieved outside of an account event context.");
         }

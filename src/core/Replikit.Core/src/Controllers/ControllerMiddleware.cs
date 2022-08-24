@@ -9,7 +9,6 @@ using Kantaiko.Controllers.Result;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Replikit.Abstractions.Events;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Abstractions.Messages.Models;
 using Replikit.Abstractions.Messages.Models.TextTokens;
@@ -24,7 +23,7 @@ using Replikit.Core.Routing.Middleware;
 
 namespace Replikit.Core.Controllers;
 
-internal class ControllerMiddleware : IAdapterEventMiddleware
+internal class ControllerMiddleware : IBotEventMiddleware
 {
     private readonly IControllerHandler<IMessageControllerContext> _controllerHandler;
     private readonly ILogger<ControllerMiddleware> _logger;
@@ -69,9 +68,9 @@ internal class ControllerMiddleware : IAdapterEventMiddleware
         _logger = serviceProvider.GetRequiredService<ILogger<ControllerMiddleware>>();
     }
 
-    public async Task HandleAsync(IAdapterEventContext<IBotEvent> context, AdapterEventDelegate next)
+    public async Task HandleAsync(IBotEventContext context, BotEventDelegate next)
     {
-        if (context is not IAdapterEventContext<MessageReceivedEvent> eventContext)
+        if (context is not IBotEventContext<MessageReceivedEvent> eventContext)
         {
             await next(context);
             return;

@@ -12,7 +12,7 @@ internal class StateManager : IStateManager, IStateTracker, IStateLoader, IState
     private IStateKeyFactory _stateKeyFactory;
     private readonly IStateStore _store;
 
-    public StateManager(IStateStore store, IAdapterEventContextAccessor eventContextAccessor)
+    public StateManager(IStateStore store, IBotEventContextAccessor eventContextAccessor)
     {
         _store = store;
 

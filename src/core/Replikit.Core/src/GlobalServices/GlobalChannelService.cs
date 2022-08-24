@@ -1,5 +1,4 @@
 using Replikit.Abstractions.Adapters;
-using Replikit.Abstractions.Attachments.Models;
 using Replikit.Abstractions.Channels.Services;
 using Replikit.Abstractions.Common.Models;
 

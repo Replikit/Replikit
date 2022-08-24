@@ -8,9 +8,9 @@ namespace Replikit.Extensions.State.Implementation;
 
 public class DefaultStateKeyFactory : IStateKeyFactory
 {
-    private readonly IAdapterEventContextAccessor _eventContextAccessor;
+    private readonly IBotEventContextAccessor _eventContextAccessor;
 
-    public DefaultStateKeyFactory(IAdapterEventContextAccessor eventContextAccessor)
+    public DefaultStateKeyFactory(IBotEventContextAccessor eventContextAccessor)
     {
         _eventContextAccessor = eventContextAccessor;
     }
@@ -30,7 +30,7 @@ public class DefaultStateKeyFactory : IStateKeyFactory
 
     private StateKey CreateChannelStateKey()
     {
-        if (_eventContextAccessor.CurrentContext is not IAdapterEventContext<IChannelEvent> { Event: var channelEvent })
+        if (_eventContextAccessor.CurrentContext is not IBotEventContext<IChannelEvent> { Event: var channelEvent })
         {
             throw new InvalidStateTypeException(StateKind.ChannelState, _eventContextAccessor.CurrentContext);
         }
@@ -40,7 +40,7 @@ public class DefaultStateKeyFactory : IStateKeyFactory
 
     private StateKey CreateAccountStateKey()
     {
-        if (_eventContextAccessor.CurrentContext is not IAdapterEventContext<IAccountEvent> { Event: var accountEvent })
+        if (_eventContextAccessor.CurrentContext is not IBotEventContext<IAccountEvent> { Event: var accountEvent })
         {
             throw new InvalidStateTypeException(StateKind.AccountState, _eventContextAccessor.CurrentContext);
         }

@@ -36,7 +36,7 @@ public class PhotoSize : IHasCustomData
     /// <br/>
     /// May be null if the platform does not expose an attachment size or it is not accessible to the bot.
     /// </summary>
-    public int? FileSize { get; init; }
+    public long? FileSize { get; init; }
 
     /// <summary>
     /// The width of the photo size in pixels.

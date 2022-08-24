@@ -1,7 +1,6 @@
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Replikit.Abstractions.Events;
 using Replikit.Abstractions.Messages.Events;
 using Replikit.Core.Routing;
 using Replikit.Core.Routing.Context;
@@ -13,7 +12,7 @@ using Replikit.Extensions.Views.Models;
 
 namespace Replikit.Extensions.Views.Internal;
 
-internal class ViewMiddleware : IAdapterEventMiddleware
+internal class ViewMiddleware : IBotEventMiddleware
 {
     private readonly ILogger<ViewMiddleware> _logger;
     private readonly ViewManager _viewManager;
@@ -24,9 +23,9 @@ internal class ViewMiddleware : IAdapterEventMiddleware
         _viewManager = viewManager;
     }
 
-    public async Task HandleAsync(IAdapterEventContext<IBotEvent> context, AdapterEventDelegate next)
+    public async Task HandleAsync(IBotEventContext context, BotEventDelegate next)
     {
-        if (context is not IAdapterEventContext<ButtonPressedEvent> buttonContext)
+        if (context is not IBotEventContext<ButtonPressedEvent> buttonContext)
         {
             await next(context);
             return;

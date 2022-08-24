@@ -1,14 +1,13 @@
 using Microsoft.Extensions.DependencyInjection;
-using Replikit.Abstractions.Events;
 using Replikit.Core.Routing;
 using Replikit.Core.Routing.Context;
 using Replikit.Core.Routing.Middleware;
 
 namespace Replikit.Extensions.State.Implementation;
 
-internal class SaveStateMiddleware : IAdapterEventMiddleware
+internal class SaveStateMiddleware : IBotEventMiddleware
 {
-    public async Task HandleAsync(IAdapterEventContext<IBotEvent> context, AdapterEventDelegate next)
+    public async Task HandleAsync(IBotEventContext context, BotEventDelegate next)
     {
         await next(context);
 

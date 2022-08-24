@@ -8,5 +8,5 @@ public interface IApplicationBuilder
 
     IPropertyCollection Properties { get; }
 
-    void Use(Func<AdapterEventDelegate, AdapterEventDelegate> middleware);
+    void Use(Func<BotEventDelegate, BotEventDelegate> middleware);
 }

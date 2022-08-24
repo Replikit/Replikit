@@ -7,9 +7,9 @@ namespace Replikit.Extensions.Views.Actions;
 
 internal class ViewActionContext : IViewActionContext
 {
-    private readonly IAdapterEventContext<ButtonPressedEvent> _eventContext;
+    private readonly IBotEventContext<ButtonPressedEvent> _eventContext;
 
-    public ViewActionContext(IAdapterEventContext<ButtonPressedEvent> eventContext)
+    public ViewActionContext(IBotEventContext<ButtonPressedEvent> eventContext)
     {
         _eventContext = eventContext;
     }

@@ -4,7 +4,7 @@ namespace Replikit.Core.Routing;
 
 public static class ApplicationBuilderExtensions
 {
-    public static void Use(this IApplicationBuilder app, AdapterEventMiddlewareDelegate middlewareDelegate)
+    public static void Use(this IApplicationBuilder app, BotEventMiddlewareDelegate middlewareDelegate)
     {
         ArgumentNullException.ThrowIfNull(app);
         ArgumentNullException.ThrowIfNull(middlewareDelegate);
@@ -13,7 +13,7 @@ public static class ApplicationBuilderExtensions
     }
 
     public static void UseMiddleware<TMiddleware>(this IApplicationBuilder app)
-        where TMiddleware : IAdapterEventMiddleware
+        where TMiddleware : IBotEventMiddleware
     {
         ArgumentNullException.ThrowIfNull(app);
 
@@ -22,7 +22,7 @@ public static class ApplicationBuilderExtensions
         app.Use(next => context => middleware.HandleAsync(context, next));
     }
 
-    public static void UseMiddleware(this IApplicationBuilder app, IAdapterEventMiddleware middleware)
+    public static void UseMiddleware(this IApplicationBuilder app, IBotEventMiddleware middleware)
     {
         ArgumentNullException.ThrowIfNull(app);
         ArgumentNullException.ThrowIfNull(middleware);

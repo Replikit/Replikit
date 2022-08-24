@@ -9,7 +9,7 @@ internal static class ServiceCollectionExtensions
     {
         services.AddScoped<IMessageCollection>(sp =>
         {
-            var contextAccessor = sp.GetRequiredService<IAdapterEventContextAccessor>();
+            var contextAccessor = sp.GetRequiredService<IBotEventContextAccessor>();
 
             return MessageCollection.Create(contextAccessor.CurrentContext);
         });

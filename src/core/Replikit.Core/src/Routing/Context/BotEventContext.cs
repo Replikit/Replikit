@@ -5,10 +5,10 @@ using Replikit.Core.EntityCollections;
 
 namespace Replikit.Core.Routing.Context;
 
-internal class AdapterEventContext<TEvent> : IAdapterEventContext<TEvent>
+internal class BotEventContext<TEvent> : IBotEventContext<TEvent>
     where TEvent : IBotEvent
 {
-    public AdapterEventContext(TEvent @event, IAdapter adapter, IServiceProvider serviceProvider,
+    public BotEventContext(TEvent @event, IAdapter adapter, IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         Event = @event;

@@ -1,13 +1,12 @@
 using System.Globalization;
 using Replikit.Abstractions.Accounts.Events;
-using Replikit.Abstractions.Events;
 using Replikit.Core.Routing.Context;
 
 namespace Replikit.Core.Routing.Middleware;
 
-internal class ThreadLocalizationMiddleware : IAdapterEventMiddleware
+internal class ThreadLocalizationMiddleware : IBotEventMiddleware
 {
-    public Task HandleAsync(IAdapterEventContext<IBotEvent> context, AdapterEventDelegate next)
+    public Task HandleAsync(IBotEventContext context, BotEventDelegate next)
     {
         Thread.CurrentThread.CurrentUICulture = context.Event is IAccountEvent accountEvent
             ? accountEvent.Account.CultureInfo ?? CultureInfo.InvariantCulture

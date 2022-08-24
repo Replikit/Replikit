@@ -3,7 +3,7 @@ using Replikit.Core.Routing.Context;
 
 namespace Replikit.Extensions.Views.Actions;
 
-public interface IViewActionContext : IAdapterEventContext<ButtonPressedEvent>
+public interface IViewActionContext : IBotEventContext<ButtonPressedEvent>
 {
     void SuppressAutoUpdate();
     void Update();

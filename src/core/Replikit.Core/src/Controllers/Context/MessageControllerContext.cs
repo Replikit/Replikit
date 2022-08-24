@@ -7,9 +7,9 @@ namespace Replikit.Core.Controllers.Context;
 
 internal class MessageControllerContext : IMessageControllerContext
 {
-    private readonly IAdapterEventContext<MessageReceivedEvent> _eventContext;
+    private readonly IBotEventContext<MessageReceivedEvent> _eventContext;
 
-    public MessageControllerContext(IAdapterEventContext<MessageReceivedEvent> eventContext)
+    public MessageControllerContext(IBotEventContext<MessageReceivedEvent> eventContext)
     {
         _eventContext = eventContext;
     }
