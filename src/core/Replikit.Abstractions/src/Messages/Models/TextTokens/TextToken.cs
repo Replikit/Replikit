@@ -74,7 +74,7 @@ public record TextToken(string Text, TextTokenModifiers Modifiers = TextTokenMod
     /// <param name="text">A text of the token.</param>
     /// <param name="modifiers">A union of <see cref="TextTokenModifiers"/> flags.</param>
     /// <returns>The created <see cref="TextToken"/>.</returns>
-    public static TextToken Line(string text, TextTokenModifiers modifiers = TextTokenModifiers.None) =>
+    public static TextToken Line(string? text = null, TextTokenModifiers modifiers = TextTokenModifiers.None) =>
         new(text + "\n", modifiers);
 
     /// <summary>
