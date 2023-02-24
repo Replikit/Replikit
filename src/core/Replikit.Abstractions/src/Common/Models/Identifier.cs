@@ -1,4 +1,4 @@
-﻿using Replikit.Abstractions.Common.Exceptions;
+using Replikit.Abstractions.Common.Exceptions;
 using Replikit.Abstractions.Common.Utilities;
 
 namespace Replikit.Abstractions.Common.Models;
@@ -172,6 +172,42 @@ public readonly record struct Identifier
     public override string? ToString()
     {
         return GetUnderlyingValue()?.ToString();
+    }
+
+    /// <summary>
+    /// Tries to parse the identifier from string.
+    /// </summary>
+    /// <param name="value">The string value.</param>
+    /// <param name="identifier">The parsed identifier.</param>
+    /// <returns>True if the identifier was parsed successfully.</returns>
+    public static bool TryParse(string? value, out Identifier identifier)
+    {
+        if (value is null)
+        {
+            identifier = default;
+            return false;
+        }
+
+        if (int.TryParse(value, out var intValue))
+        {
+            identifier = intValue;
+            return true;
+        }
+
+        if (long.TryParse(value, out var longValue))
+        {
+            identifier = longValue;
+            return true;
+        }
+
+        if (Guid.TryParse(value, out var guidValue))
+        {
+            identifier = guidValue;
+            return true;
+        }
+
+        identifier = value;
+        return true;
     }
 
     private long? ExtractNumber()

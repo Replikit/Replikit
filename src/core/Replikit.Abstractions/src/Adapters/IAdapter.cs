@@ -1,4 +1,4 @@
-﻿using Replikit.Abstractions.Accounts.Services;
+using Replikit.Abstractions.Accounts.Services;
 using Replikit.Abstractions.Adapters.Exceptions;
 using Replikit.Abstractions.Attachments.Services;
 using Replikit.Abstractions.Channels.Services;
@@ -8,6 +8,13 @@ using Replikit.Abstractions.Messages.Services;
 
 namespace Replikit.Abstractions.Adapters;
 
+/// <summary>
+/// Defines a unified contract for any platform or social network.
+/// <br/>
+/// The adapter consists of services that provide access to the platform's API.
+/// <br/>
+/// Multiple adapters even of the same type can be registered in the bot.
+/// </summary>
 public interface IAdapter
 {
     /// <summary>

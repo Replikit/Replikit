@@ -1,3 +1,5 @@
+override Replikit.Abstractions.Common.Models.BotIdentifier.ToString() -> string!
+override Replikit.Abstractions.Common.Models.GlobalIdentifier.ToString() -> string!
 override Replikit.Abstractions.Common.Models.Identifier.GetHashCode() -> int
 override Replikit.Abstractions.Common.Models.Identifier.ToString() -> string?
 override Replikit.Abstractions.Messages.Models.MessageIdentifier.GetHashCode() -> int
@@ -214,9 +216,13 @@ Replikit.Abstractions.Common.Models.BotIdentifier.BotIdentifier(string! Platform
 Replikit.Abstractions.Common.Models.BotIdentifier.PlatformId.get -> string!
 Replikit.Abstractions.Common.Models.BotIdentifier.Value.get -> Replikit.Abstractions.Common.Models.Identifier
 Replikit.Abstractions.Common.Models.GlobalIdentifier
-Replikit.Abstractions.Common.Models.GlobalIdentifier.BotId.get -> Replikit.Abstractions.Common.Models.BotIdentifier
+Replikit.Abstractions.Common.Models.GlobalIdentifier.BotId.get -> Replikit.Abstractions.Common.Models.BotIdentifier?
 Replikit.Abstractions.Common.Models.GlobalIdentifier.GlobalIdentifier() -> void
-Replikit.Abstractions.Common.Models.GlobalIdentifier.GlobalIdentifier(Replikit.Abstractions.Common.Models.BotIdentifier BotId, Replikit.Abstractions.Common.Models.Identifier Value) -> void
+Replikit.Abstractions.Common.Models.GlobalIdentifier.GlobalIdentifier(Replikit.Abstractions.Common.Models.BotIdentifier botId, Replikit.Abstractions.Common.Models.Identifier value) -> void
+Replikit.Abstractions.Common.Models.GlobalIdentifier.GlobalIdentifier(Replikit.Abstractions.Common.Models.Identifier value) -> void
+Replikit.Abstractions.Common.Models.GlobalIdentifier.GlobalIdentifier(string! platformId, Replikit.Abstractions.Common.Models.Identifier value) -> void
+Replikit.Abstractions.Common.Models.GlobalIdentifier.PlatformId.get -> string?
+Replikit.Abstractions.Common.Models.GlobalIdentifier.ToString(Replikit.Abstractions.Common.Models.IdentifierPersistenceMode persistenceMode) -> string!
 Replikit.Abstractions.Common.Models.GlobalIdentifier.Value.get -> Replikit.Abstractions.Common.Models.Identifier
 Replikit.Abstractions.Common.Models.Identifier
 Replikit.Abstractions.Common.Models.Identifier.Equals(Replikit.Abstractions.Common.Models.Identifier other) -> bool
@@ -226,6 +232,10 @@ Replikit.Abstractions.Common.Models.Identifier.Identifier(int value) -> void
 Replikit.Abstractions.Common.Models.Identifier.Identifier(long value) -> void
 Replikit.Abstractions.Common.Models.Identifier.Identifier(string! value) -> void
 Replikit.Abstractions.Common.Models.Identifier.Identifier(System.Guid value) -> void
+Replikit.Abstractions.Common.Models.IdentifierPersistenceMode
+Replikit.Abstractions.Common.Models.IdentifierPersistenceMode.MultiBot = 2 -> Replikit.Abstractions.Common.Models.IdentifierPersistenceMode
+Replikit.Abstractions.Common.Models.IdentifierPersistenceMode.MultiPlatform = 1 -> Replikit.Abstractions.Common.Models.IdentifierPersistenceMode
+Replikit.Abstractions.Common.Models.IdentifierPersistenceMode.Single = 0 -> Replikit.Abstractions.Common.Models.IdentifierPersistenceMode
 Replikit.Abstractions.Events.BotEvent
 Replikit.Abstractions.Events.BotEvent.BotEvent(Replikit.Abstractions.Common.Models.BotIdentifier botId) -> void
 Replikit.Abstractions.Events.BotEvent.BotId.get -> Replikit.Abstractions.Common.Models.BotIdentifier
@@ -298,6 +308,7 @@ Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<TButton>
 Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<TButton>.Add(params TButton[]! buttonRow) -> void
 Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<TButton>.Add(TButton button) -> void
 Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<TButton>.ButtonMatrix() -> void
+Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<TButton>.ButtonMatrix(int capacity) -> void
 Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<TButton>.this[int row, int column].get -> TButton
 Replikit.Abstractions.Messages.Models.Buttons.ButtonMatrix<TButton>.this[int row, int column].set -> void
 Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier
@@ -329,6 +340,7 @@ Replikit.Abstractions.Messages.Models.Keyboard.KeyboardButton.KeyboardButton(str
 Replikit.Abstractions.Messages.Models.Keyboard.KeyboardButton.Text.get -> string!
 Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard
 Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard.MessageKeyboard() -> void
+Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard.MessageKeyboard(int capacity) -> void
 Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard.RemoveKeyboard.get -> bool
 Replikit.Abstractions.Messages.Models.Message
 Replikit.Abstractions.Messages.Models.Message.AccountId.get -> Replikit.Abstractions.Common.Models.GlobalIdentifier?
@@ -366,8 +378,15 @@ Replikit.Abstractions.Messages.Models.OutMessage.Keyboard.set -> void
 Replikit.Abstractions.Messages.Models.OutMessage.OutMessage() -> void
 Replikit.Abstractions.Messages.Models.OutMessage.Reply.get -> Replikit.Abstractions.Common.Models.Identifier?
 Replikit.Abstractions.Messages.Models.OutMessage.Reply.set -> void
-Replikit.Abstractions.Messages.Models.OutMessage.Text.get -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList!
+Replikit.Abstractions.Messages.Models.OutMessage.Text.get -> Replikit.Abstractions.Messages.Models.OutMessageText!
 Replikit.Abstractions.Messages.Models.OutMessage.Text.set -> void
+Replikit.Abstractions.Messages.Models.OutMessageText
+Replikit.Abstractions.Messages.Models.OutMessageText.Add(System.Collections.Generic.IEnumerable<Replikit.Abstractions.Messages.Models.OutMessageText!>! texts) -> void
+Replikit.Abstractions.Messages.Models.OutMessageText.Add(System.Collections.Generic.IEnumerable<Replikit.Abstractions.Messages.Models.TextTokens.TextToken!>! tokens) -> void
+Replikit.Abstractions.Messages.Models.OutMessageText.OutMessageText() -> void
+Replikit.Abstractions.Messages.Models.OutMessageText.OutMessageText(int capacity) -> void
+Replikit.Abstractions.Messages.Models.OutMessageText.OutMessageText(Replikit.Abstractions.Messages.Models.TextTokens.TextToken! first, Replikit.Abstractions.Messages.Models.TextTokens.TextToken! second) -> void
+Replikit.Abstractions.Messages.Models.OutMessageText.OutMessageText(System.Collections.Generic.IEnumerable<Replikit.Abstractions.Messages.Models.TextTokens.TextToken!>! collection) -> void
 Replikit.Abstractions.Messages.Models.TextTokens.LinkTextToken
 Replikit.Abstractions.Messages.Models.TextTokens.LinkTextToken.LinkTextToken(string! Text, System.Uri? Url = null, Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers Modifiers = Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.None) -> void
 Replikit.Abstractions.Messages.Models.TextTokens.LinkTextToken.Url.get -> System.Uri?
@@ -419,8 +438,12 @@ Replikit.Abstractions.Messages.Services.MessageServiceFeatures.Send = 1 -> Repli
 Replikit.Abstractions.Messages.Services.MessageServiceFeatures.Unpin = 128 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
 static Replikit.Abstractions.Adapters.AdapterCollectionExtensions.Resolve(this Replikit.Abstractions.Adapters.IAdapterCollection! adapterCollection, Replikit.Abstractions.Common.Models.BotIdentifier botId) -> Replikit.Abstractions.Adapters.IAdapter?
 static Replikit.Abstractions.Adapters.AdapterCollectionExtensions.Resolve(this Replikit.Abstractions.Adapters.IAdapterCollection! adapterCollection, Replikit.Abstractions.Common.Models.GlobalIdentifier entityId) -> Replikit.Abstractions.Adapters.IAdapter?
+static Replikit.Abstractions.Adapters.AdapterCollectionExtensions.Resolve(this Replikit.Abstractions.Adapters.IAdapterCollection! adapterCollection, string! platformId) -> Replikit.Abstractions.Adapters.IAdapter?
+static Replikit.Abstractions.Adapters.AdapterCollectionExtensions.Resolve(this Replikit.Abstractions.Adapters.IAdapterCollection! collection) -> Replikit.Abstractions.Adapters.IAdapter?
 static Replikit.Abstractions.Adapters.AdapterCollectionExtensions.ResolveRequired(this Replikit.Abstractions.Adapters.IAdapterCollection! adapterCollection, Replikit.Abstractions.Common.Models.BotIdentifier botId) -> Replikit.Abstractions.Adapters.IAdapter!
 static Replikit.Abstractions.Adapters.AdapterCollectionExtensions.ResolveRequired(this Replikit.Abstractions.Adapters.IAdapterCollection! adapterCollection, Replikit.Abstractions.Common.Models.GlobalIdentifier entityId) -> Replikit.Abstractions.Adapters.IAdapter!
+static Replikit.Abstractions.Adapters.AdapterCollectionExtensions.ResolveRequired(this Replikit.Abstractions.Adapters.IAdapterCollection! adapterCollection, string! platformId) -> Replikit.Abstractions.Adapters.IAdapter!
+static Replikit.Abstractions.Adapters.AdapterCollectionExtensions.ResolveRequired(this Replikit.Abstractions.Adapters.IAdapterCollection! collection) -> Replikit.Abstractions.Adapters.IAdapter!
 static Replikit.Abstractions.Adapters.AdapterExtensions.GetRequiredService<TService>(this Replikit.Abstractions.Adapters.IAdapter! adapter) -> TService
 static Replikit.Abstractions.Adapters.AdapterExtensions.Supports<TService>(this Replikit.Abstractions.Adapters.IAdapter! adapter) -> bool
 static Replikit.Abstractions.Adapters.AdapterExtensions.TryGetService<TService>(this Replikit.Abstractions.Adapters.IAdapter! adapter, out TService? service) -> bool
@@ -431,7 +454,10 @@ static Replikit.Abstractions.Attachments.Models.OutAttachment.FromUrl(Replikit.A
 static Replikit.Abstractions.Common.CustomData.HasCustomDataExtensions.GetCustomData<TData>(this Replikit.Abstractions.Common.CustomData.IHasCustomData! hasCustomData) -> TData
 static Replikit.Abstractions.Common.CustomData.HasCustomDataExtensions.GetCustomDataOrDefault<TData>(this Replikit.Abstractions.Common.CustomData.IHasCustomData! hasCustomData) -> TData?
 static Replikit.Abstractions.Common.Features.HasFeaturesExtensions.Supports<TFeatures>(this Replikit.Abstractions.Common.Features.IHasFeatures<TFeatures>! hasFeatures, TFeatures features) -> bool
+static Replikit.Abstractions.Common.Models.BotIdentifier.TryParse(string? value, out Replikit.Abstractions.Common.Models.BotIdentifier result) -> bool
 static Replikit.Abstractions.Common.Models.GlobalIdentifier.implicit operator Replikit.Abstractions.Common.Models.Identifier(Replikit.Abstractions.Common.Models.GlobalIdentifier identifier) -> Replikit.Abstractions.Common.Models.Identifier
+static Replikit.Abstractions.Common.Models.GlobalIdentifier.Parse(string? value) -> Replikit.Abstractions.Common.Models.GlobalIdentifier
+static Replikit.Abstractions.Common.Models.GlobalIdentifier.TryParse(string? value, out Replikit.Abstractions.Common.Models.GlobalIdentifier result) -> bool
 static Replikit.Abstractions.Common.Models.Identifier.implicit operator int(Replikit.Abstractions.Common.Models.Identifier identifier) -> int
 static Replikit.Abstractions.Common.Models.Identifier.implicit operator long(Replikit.Abstractions.Common.Models.Identifier identifier) -> long
 static Replikit.Abstractions.Common.Models.Identifier.implicit operator Replikit.Abstractions.Common.Models.Identifier(int value) -> Replikit.Abstractions.Common.Models.Identifier
@@ -440,6 +466,7 @@ static Replikit.Abstractions.Common.Models.Identifier.implicit operator Replikit
 static Replikit.Abstractions.Common.Models.Identifier.implicit operator Replikit.Abstractions.Common.Models.Identifier(System.Guid value) -> Replikit.Abstractions.Common.Models.Identifier
 static Replikit.Abstractions.Common.Models.Identifier.implicit operator string!(Replikit.Abstractions.Common.Models.Identifier identifier) -> string!
 static Replikit.Abstractions.Common.Models.Identifier.implicit operator System.Guid(Replikit.Abstractions.Common.Models.Identifier identifier) -> System.Guid
+static Replikit.Abstractions.Common.Models.Identifier.TryParse(string? value, out Replikit.Abstractions.Common.Models.Identifier identifier) -> bool
 static Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.implicit operator Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier(Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier identifier) -> Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier
 static Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.implicit operator Replikit.Abstractions.Messages.Models.MessageIdentifier(Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier identifier) -> Replikit.Abstractions.Messages.Models.MessageIdentifier
 static Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.implicit operator Replikit.Abstractions.Messages.Models.MessageIdentifier(Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier identifier) -> Replikit.Abstractions.Messages.Models.MessageIdentifier
@@ -447,8 +474,11 @@ static Replikit.Abstractions.Messages.Models.Keyboard.KeyboardButton.implicit op
 static Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard.Remove.get -> Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard!
 static Replikit.Abstractions.Messages.Models.MessageIdentifier.implicit operator Replikit.Abstractions.Messages.Models.MessageIdentifier(Replikit.Abstractions.Common.Models.Identifier partIdentifier) -> Replikit.Abstractions.Messages.Models.MessageIdentifier
 static Replikit.Abstractions.Messages.Models.OutMessage.implicit operator Replikit.Abstractions.Messages.Models.OutMessage!(Replikit.Abstractions.Attachments.Models.OutAttachment! attachment) -> Replikit.Abstractions.Messages.Models.OutMessage!
+static Replikit.Abstractions.Messages.Models.OutMessage.implicit operator Replikit.Abstractions.Messages.Models.OutMessage!(Replikit.Abstractions.Messages.Models.OutMessageText! text) -> Replikit.Abstractions.Messages.Models.OutMessage!
 static Replikit.Abstractions.Messages.Models.OutMessage.implicit operator Replikit.Abstractions.Messages.Models.OutMessage!(Replikit.Abstractions.Messages.Models.TextTokens.TextToken! textToken) -> Replikit.Abstractions.Messages.Models.OutMessage!
 static Replikit.Abstractions.Messages.Models.OutMessage.implicit operator Replikit.Abstractions.Messages.Models.OutMessage!(string! text) -> Replikit.Abstractions.Messages.Models.OutMessage!
+static Replikit.Abstractions.Messages.Models.OutMessageText.implicit operator Replikit.Abstractions.Messages.Models.OutMessageText!(Replikit.Abstractions.Messages.Models.TextTokens.TextToken! token) -> Replikit.Abstractions.Messages.Models.OutMessageText!
+static Replikit.Abstractions.Messages.Models.OutMessageText.implicit operator Replikit.Abstractions.Messages.Models.OutMessageText!(string! text) -> Replikit.Abstractions.Messages.Models.OutMessageText!
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Bold(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Code(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.implicit operator Replikit.Abstractions.Messages.Models.TextTokens.TextToken!(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!

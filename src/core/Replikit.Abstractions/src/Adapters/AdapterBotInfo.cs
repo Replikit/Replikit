@@ -7,8 +7,8 @@ namespace Replikit.Abstractions.Adapters;
 /// <summary>
 /// Represents an information about the bot authenticated by the adapter.
 /// </summary>
-/// <param name="Id">An identifier of the bot.</param>
-/// <param name="Account">An account of the bot.</param>
+/// <param name="Id">The identifier of the bot.</param>
+/// <param name="Account">The account of the bot.</param>
 public record AdapterBotInfo(BotIdentifier Id, AccountInfo Account)
 {
     /// <summary>
