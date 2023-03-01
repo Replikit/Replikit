@@ -9,7 +9,11 @@ namespace Replikit.Core.Sessions.Internal;
 
 internal class SessionManager : ISessionManager
 {
-    private readonly AsyncKeyedLocker<string> _locker = new();
+    private readonly AsyncKeyedLocker<string> _locker = new AsyncKeyedLocker<string>(o =>
+    {
+        o.PoolSize = 20;
+        o.PoolInitialFill = 1;
+    });
     private readonly IMemoryCache _sessionCache = new MemoryCache(new MemoryCacheOptions());
 
     private readonly ISessionStorage _sessionStorage;
