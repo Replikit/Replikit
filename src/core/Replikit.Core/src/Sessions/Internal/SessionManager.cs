@@ -25,7 +25,7 @@ internal class SessionManager : ISessionManager
         _options = options;
     }
 
-    public async Task<ISessionLock> AcquireSessionAsync(string key, CancellationToken cancellationToken = default)
+    public async ValueTask<SessionLock> AcquireSessionAsync(string key, CancellationToken cancellationToken = default)
     {
         Check.NotNullOrWhiteSpace(key);
 
@@ -39,13 +39,7 @@ internal class SessionManager : ISessionManager
             CacheSession(key, session);
         }
 
-        async ValueTask Unlock()
-        {
-            await UpdateSessionAsync(key, session!, cancellationToken);
-            sessionLock.Dispose();
-        }
-
-        return new SessionLock(session!, Unlock);
+        return new SessionLock(key, session!, this, sessionLock, cancellationToken);
     }
 
     public async Task ApplySessionAsync(string key, Session session, CancellationToken cancellationToken = default)
@@ -86,7 +80,7 @@ internal class SessionManager : ISessionManager
         await _sessionStorage.SetSessionDataAsync(key, storedSession.Data, cancellationToken);
     }
 
-    private async Task UpdateSessionAsync(string key, Session value, CancellationToken cancellationToken = default)
+    public async Task UpdateSessionAsync(string key, Session value, CancellationToken cancellationToken = default)
     {
         if (value.Data.Count == 0)
         {

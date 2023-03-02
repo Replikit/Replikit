@@ -16,13 +16,19 @@ public interface ISessionManager
     /// Note: do not acquire session lock inside another session lock. It will always lead to deadlock.
     /// The same goes for acquiring the same session inside an event handler which implicitly locks the session.
     /// </summary>
+    /// <example>
+    /// <code>
+    /// await using var sessionLock = await sessionManager.LockAsync(key);
+    /// // do something with sessionLock.Session
+    /// </code>
+    /// </example>
     /// <param name="key">The key of the session.</param>
     /// <param name="cancellationToken">The cancellation token that can be used to cancel the operation.</param>
     /// <returns>
     /// A task that represents the asynchronous operation.
     /// The task result contains the lock object which can be used to access the session.
     /// </returns>
-    Task<ISessionLock> AcquireSessionAsync(string key, CancellationToken cancellationToken = default);
+    ValueTask<SessionLock> AcquireSessionAsync(string key, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Merges the specified session with the session with the same key.
