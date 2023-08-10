@@ -239,7 +239,7 @@ internal class TelegramMessageService : AdapterService, IMessageService
             cancellationToken: cancellationToken);
     }
 
-    public Task DeleteAsync(Identifier channelId, Identifier messageId, CancellationToken cancellationToken = default)
+    public Task DeleteSingleAsync(Identifier channelId, Identifier messageId, CancellationToken cancellationToken = default)
     {
         return _backend.DeleteMessageAsync((long) channelId, messageId, cancellationToken);
     }
