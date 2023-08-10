@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.
 
+<a name="1.0.0-alpha.6"></a>
+## [1.0.0-alpha.6](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.6) (2023-8-10)
+
+### Bug Fixes
+
+* **Abstractions:** Add implicit conversion from MessageIdentifier ([e992fdd](https://www.github.com/Replikit/Replikit/commit/e992fdd6f4c47bb62efa48a70789c811a51669d0))
+* **telegram:** Fix DeleteSingle method ([860a7c8](https://www.github.com/Replikit/Replikit/commit/860a7c87d0f9a8f2589e6b6dcfd7b7590bd44e0c))
+
 <a name="1.0.0-alpha.5"></a>
 ## [1.0.0-alpha.5](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.5) (2022-8-24)
 
