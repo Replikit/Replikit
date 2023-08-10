@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.
 
+<a name="1.0.0-alpha.6"></a>
+## [1.0.0-alpha.6](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.6) (2023-8-10)
+
+### Features
+
+* Improve GlobalIdentifier abstraction ([6b34a36](https://www.github.com/Replikit/Replikit/commit/6b34a3602c94f536c86c3b44639cc65ff5e485f5))
+* Make session locking allocation free ([ba7ec3e](https://www.github.com/Replikit/Replikit/commit/ba7ec3e19b11095164c72b0e0c00c233ffb700b0))
+* **Core:** Add built-in session mechanism ([09a919c](https://www.github.com/Replikit/Replikit/commit/09a919c3bce31cf52417eaecd180f314f0ea324d))
+
+### Bug Fixes
+
+* **Abstractions:** Add implicit conversion from MessageIdentifier ([9847f27](https://www.github.com/Replikit/Replikit/commit/9847f27b3e6fa1f7e1eab666af6fe67f363a366c))
+* **telegram:** Fix DeleteSingle method ([5a45286](https://www.github.com/Replikit/Replikit/commit/5a452860225fc1465f2ba3e0f7e57575ecae1eda))
+
 <a name="1.0.0-alpha.5"></a>
 ## [1.0.0-alpha.5](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.5) (2022-8-24)
 
