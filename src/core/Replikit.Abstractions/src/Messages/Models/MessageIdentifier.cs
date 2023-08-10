@@ -66,4 +66,11 @@ public readonly record struct MessageIdentifier
     /// <param name="partIdentifier">An identifier of the message part.</param>
     /// <returns>A new instance of <see cref="MessageIdentifier"/>.</returns>
     public static implicit operator MessageIdentifier(Identifier partIdentifier) => new(partIdentifier);
+
+    /// <summary>
+    /// Extracts the single part identifier from the compound identifier.
+    /// </summary>
+    /// <param name="identifier">The compound identifier.</param>
+    /// <returns>The identifier of the single part.</returns>
+    public static implicit operator Identifier(MessageIdentifier identifier) => identifier.PartIdentifiers[0];
 }
