@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.
 
+<a name="1.0.0-alpha.7"></a>
+## [1.0.0-alpha.7](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.7) (2023-8-10)
+
+### Features
+
+* **Telegram:** Emit unknown events ([54b0168](https://www.github.com/Replikit/Replikit/commit/54b01685d94afb731c97ea3c17e872fa5f6989d4))
+
 <a name="1.0.0-alpha.6"></a>
 ## [1.0.0-alpha.6](https://www.github.com/Replikit/Replikit/releases/tag/v1.0.0-alpha.6) (2023-8-10)
 
