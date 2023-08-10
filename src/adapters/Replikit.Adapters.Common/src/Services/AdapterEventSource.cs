@@ -1,4 +1,5 @@
-﻿using Replikit.Abstractions.Accounts.Models;
+﻿using System.Collections.Immutable;
+using Replikit.Abstractions.Accounts.Models;
 using Replikit.Abstractions.Adapters;
 using Replikit.Abstractions.Channels.Models;
 using Replikit.Abstractions.Common.Models;
@@ -56,6 +57,16 @@ public abstract class AdapterEventSource : AdapterService, IAdapterEventSource
         };
 
         _eventDispatcher.DispatchAsync(buttonPressedEvent, Adapter);
+    }
+
+    protected void HandleUnknownEvent(object eventData)
+    {
+        var unknownEvent = new UnknownBotEvent(Adapter.BotInfo.Id)
+        {
+            CustomData = ImmutableArray.Create(eventData)
+        };
+
+        _eventDispatcher.DispatchAsync(unknownEvent, Adapter);
     }
 
     public abstract Task StartListeningAsync(CancellationToken cancellationToken);

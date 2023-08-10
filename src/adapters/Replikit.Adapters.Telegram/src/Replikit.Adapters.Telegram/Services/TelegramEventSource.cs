@@ -50,6 +50,7 @@ internal class TelegramEventSource : PollingEventSource<Update>
     {
         var receivedMessages = new List<Message>();
         var editedMessages = new List<Message>();
+        var unknownUpdates = new List<Update>();
 
         foreach (var update in updates)
         {
@@ -90,11 +91,17 @@ internal class TelegramEventSource : PollingEventSource<Update>
                     HandleButtonPressed(accountInfo, update.CallbackQuery.Data, message, update.CallbackQuery.Id);
                     break;
                 }
+                default:
+                {
+                    unknownUpdates.Add(update);
+                    break;
+                }
             }
         }
 
         HandleMessages(receivedMessages, false);
         HandleMessages(editedMessages, true);
+        HandleUnknownUpdates(unknownUpdates);
 
         return Task.CompletedTask;
     }
@@ -131,6 +138,14 @@ internal class TelegramEventSource : PollingEventSource<Update>
             }
 
             HandleMediaGroup(mediaGroup.ToArray(), edited);
+        }
+    }
+
+    private void HandleUnknownUpdates(IEnumerable<Update> updates)
+    {
+        foreach (var update in updates)
+        {
+            HandleUnknownEvent(update);
         }
     }
 
