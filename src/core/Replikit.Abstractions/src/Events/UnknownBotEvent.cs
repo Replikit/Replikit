@@ -3,7 +3,7 @@ using Replikit.Abstractions.Common.Models;
 namespace Replikit.Abstractions.Events;
 
 /// <summary>
-/// Represents a bot event that is not described by any Replikit event.
+/// Represents a bot event not described by any Replikit event.
 /// A client code can access the original event by <see cref="BotEvent.CustomData"/> property.
 /// </summary>
 public class UnknownBotEvent : BotEvent

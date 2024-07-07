@@ -13,7 +13,7 @@ public interface IMessageService : IHasFeatures<MessageServiceFeatures>
     /// <summary>
     /// Sends a message.
     /// <br/>
-    /// Note, that depending on the adapter and specified message, it might be split into multiple real messages.
+    /// Note that depending on the adapter and specified message, it might be split into multiple real messages.
     /// </summary>
     /// <param name="channelId">An identifier of the channel to send the message to.</param>
     /// <param name="message">A message to send.</param>
@@ -31,14 +31,14 @@ public interface IMessageService : IHasFeatures<MessageServiceFeatures>
     }
 
     /// <summary>
-    /// Edits message with specified identifier, replacing it's content with specified message.
+    /// Edits message with specified identifier, replacing its content with the specified message.
     /// <br/>
-    /// Note, that depending on the adapter and specified message, it might be partially edited.
+    /// Note that depending on the adapter and specified message, it might be partially edited.
     /// <br/>
     /// You can pass an <paramref name="oldMessage"/> parameter to help adapter decide which real messages should be edited.
     /// Otherwise, it will have to try to edit all messages or additionally fetch messages.
     /// <br/>
-    /// Also note, that in some adapters message attachments can't be replaced with attachments of another type.
+    /// Also note that in some adapters message attachments can't be replaced with attachments of another type.
     /// </summary>
     /// <param name="channelId">An identifier of the channel to edit the message in.</param>
     /// <param name="messageId">An identifier of the message to edit.</param>
@@ -166,5 +166,22 @@ public interface IMessageService : IHasFeatures<MessageServiceFeatures>
     Task UnpinAsync(Identifier channelId, MessageIdentifier messageId, CancellationToken cancellationToken = default)
     {
         throw HasFeaturesHelper.CreateUnsupportedException(this, MessageServiceFeatures.Unpin);
+    }
+
+    /// <summary>
+    /// Answers to the button press with the specified text.
+    /// </summary>
+    /// <param name="requestId">An identifier of the request to answer.</param>
+    /// <param name="text">A text to answer with.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to cancel the operation.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    /// <exception cref="UnsupportedFeatureException">
+    /// The method is not supported by the service implementation.
+    /// </exception>
+    Task AnswerButtonPressAsync(Identifier requestId, string text, CancellationToken cancellationToken = default)
+    {
+        throw HasFeaturesHelper.CreateUnsupportedException(this, MessageServiceFeatures.AnswerButtonPress);
     }
 }

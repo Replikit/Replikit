@@ -51,6 +51,12 @@ namespace Replikit.Abstractions.Resources {
             }
         }
         
+        internal static string EmptyIdentifierValue {
+            get {
+                return ResourceManager.GetString("EmptyIdentifierValue", resourceCulture);
+            }
+        }
+        
         internal static string CustomDataNotFound {
             get {
                 return ResourceManager.GetString("CustomDataNotFound", resourceCulture);
@@ -78,6 +84,12 @@ namespace Replikit.Abstractions.Resources {
         internal static string ValueCannotBeNullOrWhiteSpace {
             get {
                 return ResourceManager.GetString("ValueCannotBeNullOrWhiteSpace", resourceCulture);
+            }
+        }
+        
+        internal static string CollectionCannotBeEmpty {
+            get {
+                return ResourceManager.GetString("CollectionCannotBeEmpty", resourceCulture);
             }
         }
         

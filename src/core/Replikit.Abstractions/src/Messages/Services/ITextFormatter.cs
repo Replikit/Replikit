@@ -13,7 +13,7 @@ public interface ITextFormatter
     /// <param name="textTokens">A collection of text tokens to format.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to cancel the operation.</param>
     /// <returns>
-    /// A task that represents the asynchronous operation.The task result contains the formatted string.
+    /// A task that represents the asynchronous operation. The task result contains the formatted string.
     /// </returns>
     ValueTask<string> FormatTextAsync(IReadOnlyCollection<TextToken> textTokens,
         CancellationToken cancellationToken = default);

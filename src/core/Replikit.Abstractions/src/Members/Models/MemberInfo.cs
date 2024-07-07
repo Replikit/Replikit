@@ -37,5 +37,8 @@ public sealed class MemberInfo : IHasCustomData
     /// </summary>
     public MemberPermissions Permissions { get; init; }
 
+    /// <summary>
+    /// <inheritdoc cref="IHasCustomData.CustomData"/>
+    /// </summary>
     public IReadOnlyList<object> CustomData { get; init; } = ImmutableArray<object>.Empty;
 }

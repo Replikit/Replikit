@@ -64,5 +64,8 @@ public abstract class Attachment : IHasCustomData
     /// </summary>
     public Identifier? UploadId { get; init; }
 
+    /// <summary>
+    /// <inheritdoc cref="IHasCustomData.CustomData"/>
+    /// </summary>
     public IReadOnlyList<object> CustomData { get; init; } = ImmutableArray<object>.Empty;
 }

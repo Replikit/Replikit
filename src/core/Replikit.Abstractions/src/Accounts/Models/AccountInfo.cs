@@ -37,21 +37,21 @@ public sealed class AccountInfo : IHasCustomData
     /// <summary>
     /// The first name of the account.
     /// <br/>
-    /// May be null if the account doesn't have a first name or it is not available to the bot.
+    /// May be null if the account doesn't have a first name, or it is not available to the bot.
     /// </summary>
     public string? FirstName { get; init; }
 
     /// <summary>
     /// The last name of the account.
     /// <br/>
-    /// May be null if the account doesn't have a last name or it is not available to the bot.
+    /// May be null if the account doesn't have a last name, or it is not available to the bot.
     /// </summary>
     public string? LastName { get; init; }
 
     /// <summary>
     /// The attachment containing the profile picture of the account.
     /// <br/>
-    /// May be null if the account doesn't have a profile picture or it is not available to the bot
+    /// May be null if the account doesn't have a profile picture, or it is not available to the bot,
     /// or it should be fetched manually via <see cref="IAccountService.GetAvatarAsync"/> method.
     /// </summary>
     public PhotoAttachment? Avatar { get; init; }
@@ -59,9 +59,12 @@ public sealed class AccountInfo : IHasCustomData
     /// <summary>
     /// The language of the account.
     /// <br/>
-    /// May be null if the account doesn't have a language or it is not available to the bot.
+    /// May be null if the account doesn't have a language, or it is not available to the bot.
     /// </summary>
     public CultureInfo? CultureInfo { get; init; }
 
+    /// <summary>
+    /// <inheritdoc cref="IHasCustomData.CustomData"/>
+    /// </summary>
     public IReadOnlyList<object> CustomData { get; init; } = ImmutableArray<object>.Empty;
 }

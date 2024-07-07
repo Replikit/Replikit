@@ -11,9 +11,9 @@ namespace Replikit.Abstractions.Messages.Models;
 /// <summary>
 /// Represents the model of an outgoing message which should be sent by the bot.
 /// </summary>
-public class OutMessage
+public record OutMessage
 {
-    private TextTokenList _text = new();
+    private OutMessageText _text = new();
     private IList<OutAttachment> _attachments = new List<OutAttachment>();
     private IList<ChannelMessageIdentifier> _forwardedMessages = new List<ChannelMessageIdentifier>();
     private ButtonMatrix<IInlineButton> _inlineButtons = new();
@@ -23,7 +23,7 @@ public class OutMessage
     /// <summary>
     /// The collection of text tokens to send.
     /// </summary>
-    public TextTokenList Text
+    public OutMessageText Text
     {
         get => _text;
         set => _text = Check.NotNull(value);
@@ -100,6 +100,16 @@ public class OutMessage
     /// <param name="text">Text to send.</param>
     /// <returns>The created <see cref="OutMessage"/>.</returns>
     public static implicit operator OutMessage(string text)
+    {
+        return new OutMessage { Text = text };
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="OutMessage"/> containing the specified text.
+    /// </summary>
+    /// <param name="text">Text to send.</param>
+    /// <returns>The created <see cref="OutMessage"/>.</returns>
+    public static implicit operator OutMessage(OutMessageText text)
     {
         return new OutMessage { Text = text };
     }

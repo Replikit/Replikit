@@ -8,23 +8,17 @@ namespace Replikit.Abstractions.Channels.Models;
 /// <summary>
 /// Represents a channel on some platform (messenger or social network).
 /// </summary>
-public sealed class ChannelInfo : IHasCustomData
+public sealed class ChannelInfo(GlobalIdentifier id, ChannelType type) : IHasCustomData
 {
-    public ChannelInfo(GlobalIdentifier id, ChannelType type)
-    {
-        Id = Check.NotDefault(id);
-        Type = type;
-    }
-
     /// <summary>
     /// The global identifier of the channel.
     /// </summary>
-    public GlobalIdentifier Id { get; }
+    public GlobalIdentifier Id { get; } = Check.NotDefault(id);
 
     /// <summary>
     /// The type of the channel.
     /// </summary>
-    public ChannelType Type { get; }
+    public ChannelType Type { get; } = type;
 
     /// <summary>
     /// The title of the channel.
@@ -38,5 +32,8 @@ public sealed class ChannelInfo : IHasCustomData
     /// </summary>
     public GlobalIdentifier? ParentId { get; init; }
 
+    /// <summary>
+    /// <inheritdoc cref="IHasCustomData.CustomData"/>
+    /// </summary>
     public IReadOnlyList<object> CustomData { get; init; } = ImmutableArray<object>.Empty;
 }

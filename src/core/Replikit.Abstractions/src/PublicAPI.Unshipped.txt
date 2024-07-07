@@ -2,7 +2,9 @@ override Replikit.Abstractions.Common.Models.BotIdentifier.ToString() -> string!
 override Replikit.Abstractions.Common.Models.GlobalIdentifier.ToString() -> string!
 override Replikit.Abstractions.Common.Models.Identifier.GetHashCode() -> int
 override Replikit.Abstractions.Common.Models.Identifier.ToString() -> string?
+override Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.ToString() -> string!
 override Replikit.Abstractions.Messages.Models.MessageIdentifier.GetHashCode() -> int
+override Replikit.Abstractions.Messages.Models.MessageIdentifier.ToString() -> string!
 Replikit.Abstractions.Accounts.Events.AccountEvent
 Replikit.Abstractions.Accounts.Events.AccountEvent.Account.get -> Replikit.Abstractions.Accounts.Models.AccountInfo!
 Replikit.Abstractions.Accounts.Events.AccountEvent.AccountEvent(Replikit.Abstractions.Common.Models.BotIdentifier botId, Replikit.Abstractions.Accounts.Models.AccountInfo! account) -> void
@@ -42,7 +44,6 @@ Replikit.Abstractions.Adapters.AdapterInfo.AdapterInfo(string! Type, string! Dis
 Replikit.Abstractions.Adapters.AdapterInfo.DisplayName.get -> string!
 Replikit.Abstractions.Adapters.AdapterInfo.Type.get -> string!
 Replikit.Abstractions.Adapters.Exceptions.AdapterNotFoundException
-Replikit.Abstractions.Adapters.Exceptions.AdapterNotFoundException.AdapterNotFoundException(Replikit.Abstractions.Common.Models.BotIdentifier botId) -> void
 Replikit.Abstractions.Adapters.Exceptions.AdapterServiceNotImplementedException
 Replikit.Abstractions.Adapters.Exceptions.AdapterServiceNotImplementedException.AdapterServiceNotImplementedException(Replikit.Abstractions.Adapters.IAdapter! adapter, System.Type! serviceType) -> void
 Replikit.Abstractions.Adapters.Factory.AdapterFactoryContext
@@ -86,7 +87,7 @@ Replikit.Abstractions.Attachments.Models.Attachment.CustomData.get -> System.Col
 Replikit.Abstractions.Attachments.Models.Attachment.CustomData.init -> void
 Replikit.Abstractions.Attachments.Models.Attachment.FileName.get -> string?
 Replikit.Abstractions.Attachments.Models.Attachment.FileName.init -> void
-Replikit.Abstractions.Attachments.Models.Attachment.FileSize.get -> int?
+Replikit.Abstractions.Attachments.Models.Attachment.FileSize.get -> long?
 Replikit.Abstractions.Attachments.Models.Attachment.FileSize.init -> void
 Replikit.Abstractions.Attachments.Models.Attachment.Id.get -> Replikit.Abstractions.Common.Models.GlobalIdentifier
 Replikit.Abstractions.Attachments.Models.Attachment.Type.get -> Replikit.Abstractions.Attachments.Models.AttachmentType
@@ -122,7 +123,7 @@ Replikit.Abstractions.Attachments.Models.PhotoAttachment.Small.get -> Replikit.A
 Replikit.Abstractions.Attachments.Models.PhotoSize
 Replikit.Abstractions.Attachments.Models.PhotoSize.CustomData.get -> System.Collections.Generic.IReadOnlyList<object!>!
 Replikit.Abstractions.Attachments.Models.PhotoSize.CustomData.init -> void
-Replikit.Abstractions.Attachments.Models.PhotoSize.FileSize.get -> int?
+Replikit.Abstractions.Attachments.Models.PhotoSize.FileSize.get -> long?
 Replikit.Abstractions.Attachments.Models.PhotoSize.FileSize.init -> void
 Replikit.Abstractions.Attachments.Models.PhotoSize.Height.get -> int?
 Replikit.Abstractions.Attachments.Models.PhotoSize.Height.init -> void
@@ -198,8 +199,8 @@ Replikit.Abstractions.Common.CustomData.IHasCustomData
 Replikit.Abstractions.Common.CustomData.IHasCustomData.CustomData.get -> System.Collections.Generic.IReadOnlyList<object!>!
 Replikit.Abstractions.Common.Exceptions.CustomDataNotFoundException
 Replikit.Abstractions.Common.Exceptions.CustomDataNotFoundException.CustomDataNotFoundException(System.Type! dataType) -> void
+Replikit.Abstractions.Common.Exceptions.EmptyIdentifierValueException
 Replikit.Abstractions.Common.Exceptions.InvalidIdentifierValueException
-Replikit.Abstractions.Common.Exceptions.InvalidIdentifierValueException.InvalidIdentifierValueException(Replikit.Abstractions.Common.Models.Identifier identifier, System.Type! expectedType) -> void
 Replikit.Abstractions.Common.Exceptions.ReplikitException
 Replikit.Abstractions.Common.Exceptions.ReplikitException.ReplikitException(string! message) -> void
 Replikit.Abstractions.Common.Exceptions.ReplikitException.ReplikitException(string! message, System.Exception? innerException) -> void
@@ -320,6 +321,7 @@ Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.ChannelMessageIde
 Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.Value.get -> Replikit.Abstractions.Messages.Models.MessageIdentifier
 Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier
 Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.ChannelId.get -> Replikit.Abstractions.Common.Models.GlobalIdentifier
+Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.GetPrimaryId() -> string!
 Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.GlobalMessageIdentifier() -> void
 Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.GlobalMessageIdentifier(Replikit.Abstractions.Common.Models.GlobalIdentifier channelId, Replikit.Abstractions.Common.Models.Identifier partIdentifier) -> void
 Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.GlobalMessageIdentifier(Replikit.Abstractions.Common.Models.GlobalIdentifier ChannelId, Replikit.Abstractions.Messages.Models.MessageIdentifier Value) -> void
@@ -362,6 +364,7 @@ Replikit.Abstractions.Messages.Models.Message.Text.get -> string?
 Replikit.Abstractions.Messages.Models.Message.Text.init -> void
 Replikit.Abstractions.Messages.Models.MessageIdentifier
 Replikit.Abstractions.Messages.Models.MessageIdentifier.Equals(Replikit.Abstractions.Messages.Models.MessageIdentifier other) -> bool
+Replikit.Abstractions.Messages.Models.MessageIdentifier.GetPrimaryId() -> string!
 Replikit.Abstractions.Messages.Models.MessageIdentifier.MessageIdentifier() -> void
 Replikit.Abstractions.Messages.Models.MessageIdentifier.MessageIdentifier(Replikit.Abstractions.Common.Models.Identifier partIdentifier) -> void
 Replikit.Abstractions.Messages.Models.MessageIdentifier.MessageIdentifier(System.Collections.Generic.IEnumerable<Replikit.Abstractions.Common.Models.Identifier>! partIdentifiers) -> void
@@ -375,12 +378,13 @@ Replikit.Abstractions.Messages.Models.OutMessage.InlineButtons.get -> Replikit.A
 Replikit.Abstractions.Messages.Models.OutMessage.InlineButtons.set -> void
 Replikit.Abstractions.Messages.Models.OutMessage.Keyboard.get -> Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard!
 Replikit.Abstractions.Messages.Models.OutMessage.Keyboard.set -> void
-Replikit.Abstractions.Messages.Models.OutMessage.OutMessage() -> void
 Replikit.Abstractions.Messages.Models.OutMessage.Reply.get -> Replikit.Abstractions.Common.Models.Identifier?
 Replikit.Abstractions.Messages.Models.OutMessage.Reply.set -> void
 Replikit.Abstractions.Messages.Models.OutMessage.Text.get -> Replikit.Abstractions.Messages.Models.OutMessageText!
 Replikit.Abstractions.Messages.Models.OutMessage.Text.set -> void
 Replikit.Abstractions.Messages.Models.OutMessageText
+Replikit.Abstractions.Messages.Models.OutMessageText.Add(Replikit.Abstractions.Messages.Models.OutMessageText! text) -> void
+Replikit.Abstractions.Messages.Models.OutMessageText.Add(Replikit.Abstractions.Messages.Models.TextTokens.TextToken! textToken) -> void
 Replikit.Abstractions.Messages.Models.OutMessageText.Add(System.Collections.Generic.IEnumerable<Replikit.Abstractions.Messages.Models.OutMessageText!>! texts) -> void
 Replikit.Abstractions.Messages.Models.OutMessageText.Add(System.Collections.Generic.IEnumerable<Replikit.Abstractions.Messages.Models.TextTokens.TextToken!>! tokens) -> void
 Replikit.Abstractions.Messages.Models.OutMessageText.OutMessageText() -> void
@@ -398,10 +402,6 @@ Replikit.Abstractions.Messages.Models.TextTokens.TextToken
 Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Modifiers.get -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
 Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Text.get -> string!
 Replikit.Abstractions.Messages.Models.TextTokens.TextToken.TextToken(string! Text, Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers Modifiers = Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.None) -> void
-Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList
-Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList.TextTokenList() -> void
-Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList.TextTokenList(int capacity) -> void
-Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList.TextTokenList(System.Collections.Generic.IEnumerable<Replikit.Abstractions.Messages.Models.TextTokens.TextToken!>! collection) -> void
 Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
 Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.Bold = 1 -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
 Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.Code = 16 -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
@@ -412,6 +412,7 @@ Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.Spoiler = 64
 Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.Strike = 8 -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
 Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers.Underline = 4 -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenModifiers
 Replikit.Abstractions.Messages.Services.IMessageService
+Replikit.Abstractions.Messages.Services.IMessageService.AnswerButtonPressAsync(Replikit.Abstractions.Common.Models.Identifier requestId, string! text, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 Replikit.Abstractions.Messages.Services.IMessageService.DeleteManyAsync(Replikit.Abstractions.Common.Models.Identifier channelId, System.Collections.Generic.IReadOnlyCollection<Replikit.Abstractions.Common.Models.Identifier>! messagePartIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 Replikit.Abstractions.Messages.Services.IMessageService.DeleteSingleAsync(Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Common.Models.Identifier messagePartId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 Replikit.Abstractions.Messages.Services.IMessageService.EditAsync(Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Messages.Models.MessageIdentifier messageId, Replikit.Abstractions.Messages.Models.OutMessage! message, Replikit.Abstractions.Messages.Models.OutMessage? oldMessage = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Replikit.Abstractions.Messages.Models.Message!>!
@@ -427,6 +428,7 @@ Replikit.Abstractions.Messages.Services.ITextTokenizer.Tokenize(Replikit.Abstrac
 Replikit.Abstractions.Messages.Services.MessageServiceExtensions
 Replikit.Abstractions.Messages.Services.MessageServiceFeatures
 Replikit.Abstractions.Messages.Services.MessageServiceFeatures.All = -1 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
+Replikit.Abstractions.Messages.Services.MessageServiceFeatures.AnswerButtonPress = 256 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
 Replikit.Abstractions.Messages.Services.MessageServiceFeatures.DeleteMany = 8 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
 Replikit.Abstractions.Messages.Services.MessageServiceFeatures.DeleteSingle = 4 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
 Replikit.Abstractions.Messages.Services.MessageServiceFeatures.Edit = 2 -> Replikit.Abstractions.Messages.Services.MessageServiceFeatures
@@ -470,15 +472,19 @@ static Replikit.Abstractions.Common.Models.Identifier.TryParse(string? value, ou
 static Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.implicit operator Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier(Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier identifier) -> Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier
 static Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier.implicit operator Replikit.Abstractions.Messages.Models.MessageIdentifier(Replikit.Abstractions.Messages.Models.ChannelMessageIdentifier identifier) -> Replikit.Abstractions.Messages.Models.MessageIdentifier
 static Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.implicit operator Replikit.Abstractions.Messages.Models.MessageIdentifier(Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier identifier) -> Replikit.Abstractions.Messages.Models.MessageIdentifier
+static Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier.TryParse(string? value, out Replikit.Abstractions.Messages.Models.GlobalMessageIdentifier result) -> bool
 static Replikit.Abstractions.Messages.Models.Keyboard.KeyboardButton.implicit operator Replikit.Abstractions.Messages.Models.Keyboard.KeyboardButton!(string! text) -> Replikit.Abstractions.Messages.Models.Keyboard.KeyboardButton!
 static Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard.Remove.get -> Replikit.Abstractions.Messages.Models.Keyboard.MessageKeyboard!
+static Replikit.Abstractions.Messages.Models.MessageIdentifier.implicit operator Replikit.Abstractions.Common.Models.Identifier(Replikit.Abstractions.Messages.Models.MessageIdentifier identifier) -> Replikit.Abstractions.Common.Models.Identifier
 static Replikit.Abstractions.Messages.Models.MessageIdentifier.implicit operator Replikit.Abstractions.Messages.Models.MessageIdentifier(Replikit.Abstractions.Common.Models.Identifier partIdentifier) -> Replikit.Abstractions.Messages.Models.MessageIdentifier
+static Replikit.Abstractions.Messages.Models.MessageIdentifier.TryParse(string? value, out Replikit.Abstractions.Messages.Models.MessageIdentifier result) -> bool
 static Replikit.Abstractions.Messages.Models.OutMessage.implicit operator Replikit.Abstractions.Messages.Models.OutMessage!(Replikit.Abstractions.Attachments.Models.OutAttachment! attachment) -> Replikit.Abstractions.Messages.Models.OutMessage!
 static Replikit.Abstractions.Messages.Models.OutMessage.implicit operator Replikit.Abstractions.Messages.Models.OutMessage!(Replikit.Abstractions.Messages.Models.OutMessageText! text) -> Replikit.Abstractions.Messages.Models.OutMessage!
 static Replikit.Abstractions.Messages.Models.OutMessage.implicit operator Replikit.Abstractions.Messages.Models.OutMessage!(Replikit.Abstractions.Messages.Models.TextTokens.TextToken! textToken) -> Replikit.Abstractions.Messages.Models.OutMessage!
 static Replikit.Abstractions.Messages.Models.OutMessage.implicit operator Replikit.Abstractions.Messages.Models.OutMessage!(string! text) -> Replikit.Abstractions.Messages.Models.OutMessage!
 static Replikit.Abstractions.Messages.Models.OutMessageText.implicit operator Replikit.Abstractions.Messages.Models.OutMessageText!(Replikit.Abstractions.Messages.Models.TextTokens.TextToken! token) -> Replikit.Abstractions.Messages.Models.OutMessageText!
 static Replikit.Abstractions.Messages.Models.OutMessageText.implicit operator Replikit.Abstractions.Messages.Models.OutMessageText!(string! text) -> Replikit.Abstractions.Messages.Models.OutMessageText!
+static Replikit.Abstractions.Messages.Models.OutMessageText.operator +(Replikit.Abstractions.Messages.Models.OutMessageText! left, Replikit.Abstractions.Messages.Models.OutMessageText! right) -> Replikit.Abstractions.Messages.Models.OutMessageText!
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Bold(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Code(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.implicit operator Replikit.Abstractions.Messages.Models.TextTokens.TextToken!(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
@@ -489,7 +495,8 @@ static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Link(string! t
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Spoiler(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Strike(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
 static Replikit.Abstractions.Messages.Models.TextTokens.TextToken.Underline(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextToken!
-static Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList.implicit operator Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList!(Replikit.Abstractions.Messages.Models.TextTokens.TextToken! token) -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList!
-static Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList.implicit operator Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList!(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList!
+static Replikit.Abstractions.Messages.Services.MessageServiceExtensions.DeleteAsync(this Replikit.Abstractions.Messages.Services.IMessageService! messageService, Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Messages.Models.MessageIdentifier messageId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static Replikit.Abstractions.Messages.Services.MessageServiceExtensions.DeleteMany(this Replikit.Abstractions.Messages.Services.IMessageService! messageService, Replikit.Abstractions.Common.Models.Identifier channelId, System.Collections.Generic.IReadOnlyCollection<Replikit.Abstractions.Messages.Models.MessageIdentifier>! messageIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+ Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList!(string! text) -> Replikit.Abstractions.Messages.Models.TextTokens.TextTokenList!
 static Replikit.Abstractions.Messages.Services.MessageServiceExtensions.DeleteAsync(this Replikit.Abstractions.Messages.Services.IMessageService! messageService, Replikit.Abstractions.Common.Models.Identifier channelId, Replikit.Abstractions.Messages.Models.MessageIdentifier messageId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static Replikit.Abstractions.Messages.Services.MessageServiceExtensions.DeleteMany(this Replikit.Abstractions.Messages.Services.IMessageService! messageService, Replikit.Abstractions.Common.Models.Identifier channelId, System.Collections.Generic.IReadOnlyCollection<Replikit.Abstractions.Messages.Models.MessageIdentifier>! messageIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!

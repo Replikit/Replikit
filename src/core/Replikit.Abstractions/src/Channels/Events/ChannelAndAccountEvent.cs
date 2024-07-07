@@ -22,5 +22,8 @@ public abstract class ChannelAndAccountEvent : ChannelEvent, IAccountEvent
         Account = account;
     }
 
+    /// <summary>
+    /// <inheritdoc cref="IAccountEvent.Account"/>
+    /// </summary>
     public AccountInfo Account { get; }
 }

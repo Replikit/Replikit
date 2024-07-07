@@ -52,6 +52,11 @@ public enum MessageServiceFeatures
     Unpin = 1 << 7,
 
     /// <summary>
+    /// The service supports <see cref="IMessageService.AnswerButtonPressAsync"/> method.
+    /// </summary>
+    AnswerButtonPress = 1 << 8,
+
+    /// <summary>
     /// The service supports all the features.
     /// </summary>
     All = ~0

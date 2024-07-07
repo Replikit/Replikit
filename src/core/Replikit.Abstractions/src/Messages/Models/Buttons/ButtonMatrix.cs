@@ -7,6 +7,17 @@ namespace Replikit.Abstractions.Messages.Models.Buttons;
 public class ButtonMatrix<TButton> : List<IList<TButton>> where TButton : notnull
 {
     /// <summary>
+    /// Creates an empty <see cref="ButtonMatrix{TButton}"/>.
+    /// </summary>
+    public ButtonMatrix() { }
+
+    /// <summary>
+    /// Creates a new <see cref="ButtonMatrix{TButton}"/> with the specified capacity.
+    /// </summary>
+    /// <param name="capacity">The number of rows that the new matrix can initially store.</param>
+    public ButtonMatrix(int capacity) : base(capacity) { }
+
+    /// <summary>
     /// Gets the button at the specified position.
     /// </summary>
     /// <param name="row">A zero-based row index.</param>

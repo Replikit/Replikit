@@ -20,8 +20,14 @@ public abstract class BotEvent : IBotEvent
         BotId = Check.NotDefault(botId);
     }
 
+    /// <summary>
+    /// <inheritdoc cref="IBotEvent.BotId"/>
+    /// </summary>
     public BotIdentifier BotId { get; }
 
+    /// <summary>
+    /// <inheritdoc cref="IBotEvent.CustomData"/>
+    /// </summary>
     public IReadOnlyList<object> CustomData
     {
         get => _customData;

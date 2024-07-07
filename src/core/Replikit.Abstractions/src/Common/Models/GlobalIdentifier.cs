@@ -6,8 +6,8 @@ namespace Replikit.Abstractions.Common.Models;
 /// The global identifier for a Replikit entity.
 /// <br/>
 /// In the simplest case, just contains the identifier of the entity itself.
-/// May optionally contain the identifier of the platform, where the entity is located.
-/// May optionally contain the identifier of the bot, which is used to access the entity.
+/// It may optionally contain the identifier of the platform, where the entity is located.
+/// It may optionally contain the identifier of the bot, which is used to access the entity.
 /// </summary>
 public readonly record struct GlobalIdentifier
 {

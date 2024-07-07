@@ -10,6 +10,9 @@ insert_final_newline = true
 indent_size = 4
 dotnet_sort_system_directives_first = true
 
+resharper_csharp_empty_block_style = together_same_line
+csharp_space_after_cast = true
+
 [*.{xml,config,*proj,nuspec,props,resx,targets,yml,tasks}]
 indent_size = 2
 

@@ -22,7 +22,7 @@ public enum MemberPermissions
     EditMessages = 1 << 1,
 
     /// <summary>
-    /// The user can delete it's messages in the channel.
+    /// The user can delete its messages in the channel.
     /// </summary>
     DeleteMessages = 1 << 2,
 
@@ -52,7 +52,7 @@ public enum MemberPermissions
     RemoveUsers = 1 << 7,
 
     /// <summary>
-    /// The user have all permissions in the channel.
+    /// The user has all permissions in the channel.
     /// </summary>
     All = ~0
 }

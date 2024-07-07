@@ -23,7 +23,7 @@ public class MessageDeletedEvent : ChannelAndAccountEvent
     /// <summary>
     /// The message that was deleted.
     /// <br/>
-    /// Most likely this will be null, but in some scenarios platform might give access to the deleted message.
+    /// Most likely, this will be null, but in some scenarios the platform might give access to the deleted message.
     /// </summary>
     public Message? Message { get; init; }
 }

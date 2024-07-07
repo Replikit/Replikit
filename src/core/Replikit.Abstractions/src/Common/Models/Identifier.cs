@@ -89,6 +89,11 @@ public readonly record struct Identifier
     /// <exception cref="InvalidIdentifierValueException">The identifier value is not int.</exception>
     public static implicit operator int(Identifier identifier)
     {
+        if (identifier._value is null)
+        {
+            throw new EmptyIdentifierValueException(typeof(string));
+        }
+
         return identifier._value switch
         {
             int intValue => intValue,
@@ -105,6 +110,11 @@ public readonly record struct Identifier
     /// <exception cref="InvalidIdentifierValueException">The identifier value is not long.</exception>
     public static implicit operator long(Identifier identifier)
     {
+        if (identifier._value is null)
+        {
+            throw new EmptyIdentifierValueException(typeof(string));
+        }
+
         return identifier._value switch
         {
             int intValue => intValue,
@@ -121,9 +131,14 @@ public readonly record struct Identifier
     /// <exception cref="InvalidIdentifierValueException">The identifier value is not a string.</exception>
     public static implicit operator string(Identifier identifier)
     {
+        if (identifier._value is null)
+        {
+            throw new EmptyIdentifierValueException(typeof(string));
+        }
+
         if (identifier._value is not string value)
         {
-            throw new InvalidIdentifierValueException(identifier, typeof(string));
+            throw new InvalidIdentifierValueException(identifier._value, typeof(string));
         }
 
         return value;
@@ -137,6 +152,11 @@ public readonly record struct Identifier
     /// <exception cref="InvalidIdentifierValueException">The identifier value is not a Guid.</exception>
     public static implicit operator Guid(Identifier identifier)
     {
+        if (identifier._value is null)
+        {
+            throw new EmptyIdentifierValueException(typeof(string));
+        }
+
         if (identifier._value is not Guid value)
         {
             throw new InvalidIdentifierValueException(identifier, typeof(Guid));

@@ -23,7 +23,7 @@ public class MessageEditedEvent : MessageEvent
     /// <summary>
     /// The previous message.
     /// <br/>
-    /// May be null if the platform is not tracking message history or it is not accessible to the bot.
+    /// May be null if the platform is not tracking message history, or it is not accessible to the bot.
     /// </summary>
     public Message? OldMessage { get; init; }
 }

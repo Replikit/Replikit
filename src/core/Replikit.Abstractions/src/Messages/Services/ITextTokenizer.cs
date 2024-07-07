@@ -4,7 +4,7 @@ using Replikit.Abstractions.Messages.Models.TextTokens;
 namespace Replikit.Abstractions.Messages.Services;
 
 /// <summary>
-/// Used to parse text into token array.
+/// Used to parse text into a token array.
 /// </summary>
 public interface ITextTokenizer
 {

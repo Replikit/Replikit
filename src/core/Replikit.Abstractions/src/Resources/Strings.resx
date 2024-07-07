@@ -26,6 +26,12 @@
   <data name="InvalidIdentifierValue" xml:space="preserve">
     <value>The identifier value is expected to be of type "{0}" but it is of type "{1}".</value>
   </data>
+  <data name="EmptyIdentifierValue" xml:space="preserve">
+    <value>
+      The identifier value is expected to be of type "{0}" but it does not have a value.
+      Probably the default value of the Identifier type is used.
+    </value>
+  </data>
   <data name="CustomDataNotFound" xml:space="preserve">
     <value>No custom data of type "{0}" associated with this object.</value>
   </data>
@@ -40,6 +46,9 @@
   </data>
   <data name="ValueCannotBeNullOrWhiteSpace" xml:space="preserve">
     <value>Value cannot be null or white space.</value>
+  </data>
+  <data name="CollectionCannotBeEmpty" xml:space="preserve">
+    <value>Collection cannot be empty.</value>
   </data>
   <data name="AttachmentTypeCannotBeUnknown" xml:space="preserve">
     <value>Attachment type cannot be unknown.</value>

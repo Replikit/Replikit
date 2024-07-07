@@ -48,4 +48,40 @@ public readonly record struct GlobalMessageIdentifier(GlobalIdentifier ChannelId
     /// <param name="identifier">A <see cref="GlobalMessageIdentifier"/> to unwrap.</param>
     /// <returns>The <see cref="MessageIdentifier"/> instance.</returns>
     public static implicit operator MessageIdentifier(GlobalMessageIdentifier identifier) => identifier.Value;
+
+    public override string ToString() => $"{ChannelId}:{Value}";
+
+    public string GetPrimaryId() => $"{ChannelId}:{Value.GetPrimaryId()}";
+
+    public static bool TryParse(string? value, out GlobalMessageIdentifier result)
+    {
+        if (value is null)
+        {
+            result = default;
+            return false;
+        }
+
+        var parts = value.Split(':', 2);
+
+        if (parts.Length != 2)
+        {
+            result = default;
+            return false;
+        }
+
+        if (!GlobalIdentifier.TryParse(parts[0], out var channelId))
+        {
+            result = default;
+            return false;
+        }
+
+        if (!MessageIdentifier.TryParse(parts[1], out var messageIdentifier))
+        {
+            result = default;
+            return false;
+        }
+
+        result = new GlobalMessageIdentifier(channelId, messageIdentifier);
+        return true;
+    }
 }

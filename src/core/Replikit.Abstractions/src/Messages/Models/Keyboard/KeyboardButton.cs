@@ -3,7 +3,7 @@ using Replikit.Abstractions.Common.Utilities;
 namespace Replikit.Abstractions.Messages.Models.Keyboard;
 
 /// <summary>
-/// Represents a button that is used in keyboards.
+/// Represents a button used in keyboards.
 /// </summary>
 /// <param name="Text">A text of the button.</param>
 public record KeyboardButton(string Text)

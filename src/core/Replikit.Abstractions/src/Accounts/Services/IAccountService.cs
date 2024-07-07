@@ -35,7 +35,7 @@ public interface IAccountService : IHasFeatures<AccountServiceFeatures>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to cancel the operation.</param>
     /// <returns>
     /// A task that represents the asynchronous operation.
-    /// The task result contains the avatar or <c>null</c> if account was not found or has no avatar
+    /// The task result contains the avatar or <c>null</c> if an account was not found or has no avatar,
     /// or it is not accessible to the bot.
     /// </returns>
     /// <exception cref="UnsupportedFeatureException">

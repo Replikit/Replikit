@@ -7,7 +7,7 @@ using Replikit.Abstractions.Messages.Models;
 namespace Replikit.Abstractions.Messages.Events;
 
 /// <summary>
-/// Represents an event that is raised when something occurred with a message and this message is always accessible.
+/// Represents an event raised when something occurred with a message, and this message is always accessible.
 /// </summary>
 public abstract class MessageEvent : ChannelAndAccountEvent
 {

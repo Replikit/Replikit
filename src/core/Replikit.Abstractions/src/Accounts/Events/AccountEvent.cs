@@ -19,5 +19,8 @@ public abstract class AccountEvent : BotEvent, IAccountEvent
         Account = account;
     }
 
+    /// <summary>
+    /// <inheritdoc cref="IAccountEvent.Account"/>
+    /// </summary>
     public AccountInfo Account { get; }
 }

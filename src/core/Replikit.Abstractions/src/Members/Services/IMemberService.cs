@@ -31,7 +31,7 @@ public interface IMemberService : IHasFeatures<MemberServiceFeatures>
 
     /// <summary>
     /// Gets the members with the specified account identifiers.
-    /// Can return less members that ids specified, if some members could not be found.
+    /// Can return fewer members than ids specified if some members could not be found.
     /// </summary>
     /// <param name="channelId">An identifier of the channel.</param>
     /// <param name="accountIds">A collection of account identifiers.</param>

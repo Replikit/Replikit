@@ -19,5 +19,8 @@ public abstract class ChannelEvent : BotEvent, IChannelEvent
         Channel = channel;
     }
 
+    /// <summary>
+    /// <inheritdoc cref="IChannelEvent.Channel"/>
+    /// </summary>
     public ChannelInfo Channel { get; }
 }
