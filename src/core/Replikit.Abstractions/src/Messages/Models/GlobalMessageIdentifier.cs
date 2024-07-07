@@ -51,8 +51,18 @@ public readonly record struct GlobalMessageIdentifier(GlobalIdentifier ChannelId
 
     public override string ToString() => $"{ChannelId}:{Value}";
 
+    /// <summary>
+    /// Gets the primary identifier of the message.
+    /// </summary>
+    /// <returns>The primary identifier of the message.</returns>
     public string GetPrimaryId() => $"{ChannelId}:{Value.GetPrimaryId()}";
 
+    /// <summary>
+    /// Try to parse the string representation of the global message identifier.
+    /// </summary>
+    /// <param name="value">A string representation of the global message identifier.</param>
+    /// <param name="result">The parsed global message identifier.</param>
+    /// <returns>True if the parsing was successful, otherwise false.</returns>
     public static bool TryParse(string? value, out GlobalMessageIdentifier result)
     {
         if (value is null)
